@@ -189,7 +189,6 @@
             cursor: pointer;
         }
 
-        /* Стили профиля */
         .profile-header {
             display: flex;
             gap: 30px;
@@ -280,7 +279,6 @@
             color: #f9a826;
         }
 
-        /* Путь к славе */
         .path-track {
             background: rgba(0,0,0,0.6);
             border-radius: 40px;
@@ -347,7 +345,6 @@
             cursor: pointer;
         }
 
-        /* Настройки */
         .settings-row {
             display: flex;
             justify-content: space-between;
@@ -373,7 +370,6 @@
             cursor: pointer;
         }
 
-        /* Таблица лидеров */
         .leaders-tabs {
             display: flex;
             gap: 15px;
@@ -569,25 +565,9 @@
         <button onclick="openModal('link')">🔗 ПРИВЯЗКА АККАУНТА</button>
     </div>
 
-    <!-- НАСТРОЙКИ -->
-    <div id="settingsModal" class="modal">
-        <div class="settings-container">
-            <button class="close-modal" onclick="closeModal('settingsModal')">✖</button>
-            <h2 style="text-align:center; margin-bottom:30px;">⚙️ НАСТРОЙКИ</h2>
-            <div class="settings-row">
-                <span class="settings-label">🌐 ЯЗЫК</span>
-                <select id="languageSelect" class="lang-select">
-                    <option value="ru">Русский</option>
-                    <option value="en">English</option>
-                </select>
-            </div>
-        </div>
-    </div>
-
-    <!-- ИСТОРИЯ БОЕВ (заглушка) -->
+    <div id="settingsModal" class="modal"><div class="settings-container"><button class="close-modal" onclick="closeModal('settingsModal')">✖</button><h2 style="text-align:center; margin-bottom:30px;">⚙️ НАСТРОЙКИ</h2><div class="settings-row"><span class="settings-label">🌐 ЯЗЫК</span><select id="languageSelect" class="lang-select"><option value="ru">Русский</option><option value="en">English</option></select></div></div></div>
     <div id="historyModal" class="modal"><div class="profile-container"><button class="close-modal" onclick="closeModal('historyModal')">✖</button><h2>📜 ИСТОРИЯ БОЕВ</h2><p style="margin:20px">Здесь будут твои последние бои</p></div></div>
-
-    <!-- СПИСКИ ЛИДЕРОВ -->
+    
     <div id="leadersModal" class="modal">
         <div class="leaders-container">
             <button class="close-modal" onclick="closeModal('leadersModal')">✖</button>
@@ -600,84 +580,21 @@
         </div>
     </div>
 
-    <!-- ВХОДЯЩИЕ (заглушка) -->
     <div id="inboxModal" class="modal"><div class="profile-container"><button class="close-modal" onclick="closeModal('inboxModal')">✖</button><h2>📥 ВХОДЯЩИЕ</h2><p style="margin:20px">Сообщения, подарки, приглашения</p></div></div>
-
-    <!-- ПРИВЯЗКА АККАУНТА (заглушка) -->
     <div id="linkModal" class="modal"><div class="profile-container"><button class="close-modal" onclick="closeModal('linkModal')">✖</button><h2>🔗 ПРИВЯЗКА АККАУНТА</h2><p style="margin:20px">Привяжи Google, Supercell ID или почту</p></div></div>
 
-    <!-- ПРОФИЛЬ (основной) -->
-    <div id="profileModal" class="modal">
-        <div class="profile-container">
-            <button class="close-modal" onclick="closeProfileModal()">✖</button>
-            <div class="profile-header">
-                <div class="avatar-section">
-                    <div class="avatar-large" id="largeAvatar" onclick="openAvatarPicker()">🎮</div>
-                    <div class="player-tag-static" id="profileTag">#----</div>
-                </div>
-                <div class="info-section">
-                    <div class="nickname-wrapper">
-                        <div class="profile-nickname" id="profileNick">-</div>
-                        <div class="edit-icon" onclick="openNicknameEditor()">✏️</div>
-                        <div class="color-icon" onclick="openColorPicker()">🎨</div>
-                    </div>
-                    <div class="profile-cups">🏆 <span id="profileCups">0</span> кубков</div>
-                </div>
-            </div>
-            <div class="stats-grid">
-                <div class="stat-card"><h3>🎲 ОТКРЫТО ЯЩИКОВ</h3><div class="stat-value" id="profileBoxes">0</div></div>
-                <div class="stat-card"><h3>💰 МОНЕТЫ</h3><div class="stat-value" id="profileCoins">0</div></div>
-                <div class="stat-card"><h3>🏆 КУБКОВ ВСЕГО</h3><div class="stat-value" id="profileTotalCups">0</div></div>
-                <div class="stat-card"><h3>⭐ ЛУЧШИЙ РЕКОРД</h3><div class="stat-value" id="recordCups">0</div></div>
-            </div>
-        </div>
-    </div>
+    <div id="profileModal" class="modal"><div class="profile-container"><button class="close-modal" onclick="closeProfileModal()">✖</button><div class="profile-header"><div class="avatar-section"><div class="avatar-large" id="largeAvatar" onclick="openAvatarPicker()">🎮</div><div class="player-tag-static" id="profileTag">#----</div></div><div class="info-section"><div class="nickname-wrapper"><div class="profile-nickname" id="profileNick">-</div><div class="edit-icon" onclick="openNicknameEditor()">✏️</div><div class="color-icon" onclick="openColorPicker()">🎨</div></div><div class="profile-cups">🏆 <span id="profileCups">0</span> кубков</div></div></div><div class="stats-grid"><div class="stat-card"><h3>🎲 ОТКРЫТО ЯЩИКОВ</h3><div class="stat-value" id="profileBoxes">0</div></div><div class="stat-card"><h3>💰 МОНЕТЫ</h3><div class="stat-value" id="profileCoins">0</div></div><div class="stat-card"><h3>🏆 КУБКОВ ВСЕГО</h3><div class="stat-value" id="profileTotalCups">0</div></div><div class="stat-card"><h3>⭐ ЛУЧШИЙ РЕКОРД</h3><div class="stat-value" id="recordCups">0</div></div></div></div></div>
 
-    <!-- ПРОСМОТР ЧУЖОГО ПРОФИЛЯ -->
-    <div id="viewProfileModal" class="modal">
-        <div class="profile-container">
-            <button class="close-modal" onclick="closeViewProfileModal()">✖</button>
-            <div class="profile-header">
-                <div class="avatar-section">
-                    <div class="avatar-large" id="viewAvatar">🎮</div>
-                    <div class="player-tag-static" id="viewTag">#----</div>
-                </div>
-                <div class="info-section">
-                    <div class="nickname-wrapper">
-                        <div class="profile-nickname" id="viewNickname">-</div>
-                    </div>
-                    <div class="profile-cups">🏆 <span id="viewCups">0</span> кубков</div>
-                </div>
-            </div>
-            <div class="stats-grid">
-                <div class="stat-card"><h3>🎲 ОТКРЫТО ЯЩИКОВ</h3><div class="stat-value" id="viewBoxes">0</div></div>
-                <div class="stat-card"><h3>💰 МОНЕТЫ</h3><div class="stat-value" id="viewCoins">0</div></div>
-                <div class="stat-card"><h3>🏆 КУБКОВ ВСЕГО</h3><div class="stat-value" id="viewTotalCups">0</div></div>
-                <div class="stat-card"><h3>⭐ ЛУЧШИЙ РЕКОРД</h3><div class="stat-value" id="viewRecordCups">0</div></div>
-            </div>
-        </div>
-    </div>
+    <div id="viewProfileModal" class="modal"><div class="profile-container"><button class="close-modal" onclick="closeViewProfileModal()">✖</button><div class="profile-header"><div class="avatar-section"><div class="avatar-large" id="viewAvatar">🎮</div><div class="player-tag-static" id="viewTag">#----</div></div><div class="info-section"><div class="nickname-wrapper"><div class="profile-nickname" id="viewNickname">-</div></div><div class="profile-cups">🏆 <span id="viewCups">0</span> кубков</div></div></div><div class="stats-grid"><div class="stat-card"><h3>🎲 ОТКРЫТО ЯЩИКОВ</h3><div class="stat-value" id="viewBoxes">0</div></div><div class="stat-card"><h3>💰 МОНЕТЫ</h3><div class="stat-value" id="viewCoins">0</div></div><div class="stat-card"><h3>🏆 КУБКОВ ВСЕГО</h3><div class="stat-value" id="viewTotalCups">0</div></div><div class="stat-card"><h3>⭐ ЛУЧШИЙ РЕКОРД</h3><div class="stat-value" id="viewRecordCups">0</div></div></div></div></div>
 
-    <!-- ПУТЬ К СЛАВЕ -->
-    <div id="pathModal" class="modal">
-        <div class="glory-container">
-            <button class="close-modal" onclick="closePathModal()">✖</button>
-            <div class="glory-header"><h1>🏆 ПУТЬ К СЛАВЕ 🏆</h1><p>Собирай кубки, чтобы получать награды!</p></div>
-            <div class="progress-info"><div><div style="font-size:14px; color:#aaa;">ТВОИ КУБКИ</div><div class="current-cups" id="currentCupsDisplay">0</div></div><div class="next-milestone"><div style="font-size:14px; color:#aaa;">ДО СЛЕДУЮЩЕЙ НАГРАДЫ</div><div class="milestone-cups" id="nextMilestone">0</div></div></div>
-            <div class="progress-bar-container"><div class="progress-bar" id="progressBar"></div></div>
-            <div class="track-container"><div class="track-scroll" id="trackScroll"></div><div class="scroll-buttons"><button class="scroll-btn" onclick="scrollTrack(-150)">◀</button><button class="scroll-btn" onclick="scrollTrack(150)">▶</button></div></div>
-        </div>
-    </div>
+    <div id="pathModal" class="modal"><div class="glory-container"><button class="close-modal" onclick="closePathModal()">✖</button><div class="glory-header"><h1>🏆 ПУТЬ К СЛАВЕ 🏆</h1><p>Собирай кубки, чтобы получать награды!</p></div><div class="progress-info"><div><div style="font-size:14px; color:#aaa;">ТВОИ КУБКИ</div><div class="current-cups" id="currentCupsDisplay">0</div></div><div class="next-milestone"><div style="font-size:14px; color:#aaa;">ДО СЛЕДУЮЩЕЙ НАГРАДЫ</div><div class="milestone-cups" id="nextMilestone">0</div></div></div><div class="progress-bar-container"><div class="progress-bar" id="progressBar"></div></div><div class="track-container"><div class="track-scroll" id="trackScroll"></div><div class="scroll-buttons"><button class="scroll-btn" onclick="scrollTrack(-150)">◀</button><button class="scroll-btn" onclick="scrollTrack(150)">▶</button></div></div></div></div>
 
-    <!-- Окна выбора аватарки, ника, цвета -->
     <div id="avatarPickerModal" class="modal"><div class="avatar-selector"><div id="avatarSelector" style="display:flex; gap:20px; flex-wrap:wrap; justify-content:center;"></div></div></div>
     <div id="nicknameEditorModal" class="modal"><div class="nickname-container"><h3>✏️ СМЕНИТЬ НИКНЕЙМ</h3><input type="text" id="newNicknameInput" placeholder="Новый никнейм"><button class="btn" onclick="changeNickname()">СОХРАНИТЬ</button><button class="btn" onclick="closeNicknameEditor()" style="background:#2a2a5a;">ОТМЕНА</button></div></div>
     <div id="colorPickerModal" class="modal"><div class="color-container"><h3>🎨 ВЫБЕРИ ЦВЕТ НИКНЕЙМА</h3><div class="color-options" id="colorOptions"></div></div></div>
 
-    <!-- ВХОД -->
     <div id="authPanel" class="modal" style="display:flex; background:rgba(0,0,0,0.95);"><div class="profile-container" style="max-width:400px;"><h2>🔐 ВХОД</h2><input type="text" id="nickname" placeholder="Никнейм"><div id="adminPasswordGroup" class="hidden"><input type="password" id="adminPassword" placeholder="Пароль админа"></div><button class="btn" onclick="login()">ВОЙТИ</button><div id="authMessage" style="color:#ff6b6b; margin-top:10px;"></div></div></div>
 
-    <!-- ГЛАВНОЕ МЕНЮ -->
     <div id="gamePanel" class="hidden"><div class="main-menu"><h1>⚡ BRAWL BOX ⚡</h1><div class="game-placeholder"><p style="color:#aaa; font-size:18px;">Здесь скоро появится игровой автомат</p></div></div></div>
 
     <script>
@@ -687,7 +604,6 @@
         let currentLeaderTab = 'cups';
         const DEV_AVATAR_URL = "https://yt3.googleusercontent.com/wEnonoxntKdkIuHZbNouYlz6YoCchSbx7tpBRaVS6V08XzJYkvNZaG34RwZV7khnoF6hqI-kGw=s900-c-k-c0x00ffffff-no-rj";
 
-        // Переводы
         const translations = {
             ru: { settings: "⚙️ НАСТРОЙКИ", history: "📜 ИСТОРИЯ БОЕВ", leaders: "🏆 СПИСКИ ЛИДЕРОВ", inbox: "📥 ВХОДЯЩИЕ", link: "🔗 ПРИВЯЗКА АККАУНТА", language: "🌐 ЯЗЫК", empty: "Здесь скоро появится игровой автомат" },
             en: { settings: "⚙️ SETTINGS", history: "📜 BATTLE HISTORY", leaders: "🏆 LEADERBOARDS", inbox: "📥 INBOX", link: "🔗 ACCOUNT LINK", language: "🌐 LANGUAGE", empty: "Game machine will appear soon" }
@@ -705,33 +621,30 @@
             document.querySelector('.game-placeholder p').innerHTML = t.empty;
         }
 
-        // Таблица лидеров
         async function loadLeaders() {
             const res = await fetch('/api/users');
             let users = await res.json();
-            if (currentLeaderTab === 'cups') {
-                users.sort((a, b) => (b.cups || 0) - (a.cups || 0));
-            } else {
-                users.sort((a, b) => (b.total_boxes || 0) - (a.total_boxes || 0));
-            }
+            if (currentLeaderTab === 'cups') users.sort((a, b) => (b.cups || 0) - (a.cups || 0));
+            else users.sort((a, b) => (b.total_boxes || 0) - (a.total_boxes || 0));
             const topUsers = users.slice(0, 100);
             const container = document.getElementById('leadersList');
             if (!container) return;
             container.innerHTML = '';
-            topUsers.forEach((user, idx) => {
+            for (let i = 0; i < topUsers.length; i++) {
+                const u = topUsers[i];
                 const div = document.createElement('div');
                 div.className = 'leader-item';
-                div.onclick = () => showUserProfile(user.id);
+                div.onclick = () => showUserProfile(u.id);
                 div.innerHTML = `
-                    <div class="leader-rank">${idx + 1}</div>
-                    <div class="leader-avatar">${user.avatar || '🎮'}</div>
+                    <div class="leader-rank">${i + 1}</div>
+                    <div class="leader-avatar">${u.avatar || '🎮'}</div>
                     <div class="leader-info">
-                        <div class="leader-name">${user.nickname}</div>
-                        <div class="leader-value">${currentLeaderTab === 'cups' ? (user.cups || 0) + ' 🏆' : (user.total_boxes || 0) + ' 🎲'}</div>
+                        <div class="leader-name">${u.nickname}</div>
+                        <div class="leader-value">${currentLeaderTab === 'cups' ? (u.cups || 0) + ' 🏆' : (u.total_boxes || 0) + ' 🎲'}</div>
                     </div>
                 `;
                 container.appendChild(div);
-            });
+            }
         }
 
         function switchLeaderTab(tab) {
@@ -742,7 +655,6 @@
             loadLeaders();
         }
 
-        // Показать чужой профиль
         async function showUserProfile(userId) {
             const res = await fetch('/api/player/' + userId);
             const data = await res.json();
@@ -759,11 +671,8 @@
             }
         }
 
-        function closeViewProfileModal() {
-            document.getElementById('viewProfileModal').style.display = 'none';
-        }
+        function closeViewProfileModal() { document.getElementById('viewProfileModal').style.display = 'none'; }
 
-        // Остальной код (путь к славе, профиль и т.д.) без изменений
         const pathData = [
             { cups: 250, reward: "50💰", label: "50 Монет" }, { cups: 500, reward: "🎁", label: "Обычный ящик" }, { cups: 1000, reward: "100💰", label: "100 Монет" },
             { cups: 1500, reward: "🎁", label: "Обычный ящик" }, { cups: 2000, reward: "🎁✨", label: "Редкий ящик" }, { cups: 2500, reward: "250💰", label: "250 Монет" },
