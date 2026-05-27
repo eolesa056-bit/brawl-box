@@ -19,7 +19,6 @@
             overflow-x: hidden;
         }
 
-        /* Неоновая анимация */
         @keyframes neonPulse {
             0% { text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #e94560, 0 0 30px #e94560; }
             100% { text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e94560, 0 0 40px #e94560; }
@@ -29,11 +28,6 @@
             0% { transform: translateY(0px); }
             50% { transform: translateY(-10px); }
             100% { transform: translateY(0px); }
-        }
-
-        @keyframes glow {
-            0% { box-shadow: 0 0 5px #e94560; }
-            100% { box-shadow: 0 0 20px #e94560, 0 0 30px #ff6b8b; }
         }
 
         .game-container {
@@ -53,7 +47,6 @@
             animation: neonPulse 2s infinite alternate;
         }
 
-        /* Стили для авторизации */
         .auth-box, .game-box {
             background: rgba(15, 25, 45, 0.85);
             backdrop-filter: blur(12px);
@@ -101,7 +94,6 @@
         button:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 25px rgba(233,69,96,0.5);
-            animation: glow 0.5s;
         }
 
         .open-btn {
@@ -154,7 +146,6 @@
             width: 100%;
         }
 
-        /* ========== АДМИН-ПАНЕЛЬ ========== */
         .admin-overlay {
             display: none;
             position: fixed;
@@ -241,12 +232,6 @@
         .status-banned { background: #dc2626; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; }
         .status-active { background: #10b981; color: black; padding: 4px 12px; border-radius: 20px; font-size: 12px; }
 
-        input, select {
-            background: #0f172a;
-            border: 1px solid #e94560;
-            border-radius: 40px;
-        }
-
         @media (max-width: 480px) {
             h1 { font-size: 32px; }
             .open-btn { font-size: 18px; padding: 12px 25px; }
@@ -306,7 +291,6 @@
         let currentUserId = null;
         let isAdmin = false;
 
-        // Регистрация
         async function register() {
             const login = document.getElementById('login').value.trim();
             const password = document.getElementById('password').value;
@@ -322,7 +306,6 @@
             else document.getElementById('authMessage').innerText = data.message;
         }
 
-        // Вход
         async function login() {
             const login = document.getElementById('login').value;
             const password = document.getElementById('password').value;
@@ -366,14 +349,14 @@
             setTimeout(() => document.getElementById('reward').innerHTML = '', 2000);
         });
 
-        socket.on('session_terminated', () => {
-            alert("⛔ СЕССИЯ ЗАВЕРШЕНА ⛔\nВас забанил администратор.");
+        socket.on('session_terminated', (data) => {
+            const reason = data && data.reason ? data.reason : 'Нарушение правил';
+            alert(`⛔ СЕССИЯ ЗАВЕРШЕНА! ПЕРЕЗАГРУЗИТЕ ИГРУ ⛔\n\nПричина бана: ${reason}`);
             window.location.reload();
         });
 
         setInterval(updateStats, 3000);
 
-        // ========== АДМИН-ПАНЕЛЬ ==========
         function openAdminWindow() { document.getElementById('adminOverlay').style.display = 'flex'; }
         function closeAdminWindow() { document.getElementById('adminOverlay').style.display = 'none'; }
         function toggleMenu() {
@@ -420,7 +403,8 @@
             const res = await fetch('/api/promocodes');
             const promos = await res.json();
             let html = `<h3>🎁 ПРОМОКОДЫ</h3><div id="promoList">`;
-            for (const p of promos) html += `<div class="promo-item"><strong>${p.code}</strong> — ${p.reward}<br>Активаций: ${p.current_activations}/${p.max_activations}</div>`;
+            if (promos.length === 0) html += `<p>Пока нет промокодов</p>`;
+            else for (const p of promos) html += `<div class="promo-item"><strong>${p.code}</strong> — ${p.reward}<br>Активаций: ${p.current_activations}/${p.max_activations}</div>`;
             html += `</div><h4>➕ СОЗДАТЬ</h4><input type="text" id="promoCode" placeholder="Код"><br><input type="text" id="promoReward" placeholder="Награда (100 монет)"><br><input type="number" id="promoMax" placeholder="Лимит"><br><button onclick="createPromo()">СОЗДАТЬ</button>`;
             container.innerHTML = html;
         }
@@ -438,7 +422,8 @@
             const res = await fetch('/api/reports');
             const reports = await res.json();
             let html = `<h3>📋 ЖАЛОБЫ ИГРОКОВ</h3>`;
-            for (const r of reports) html += `<div class="report-item"><strong>От:</strong> ${r.from_nick}<br><strong>На:</strong> ${r.to_nick}<br><strong>Причина:</strong> ${r.reason}<br><button onclick="resolveReport(${r.id}, 'ban')">🔨 ЗАБАНИТЬ НАРУШИТЕЛЯ</button> <button onclick="resolveReport(${r.id}, 'reject')">❌ ОТКЛОНИТЬ</button></div>`;
+            if (reports.length === 0) html += `<p>Нет жалоб</p>`;
+            else for (const r of reports) html += `<div class="report-item"><strong>От:</strong> ${r.from_nick}<br><strong>На:</strong> ${r.to_nick}<br><strong>Причина:</strong> ${r.reason}<br><button onclick="resolveReport(${r.id}, 'ban')">🔨 ЗАБАНИТЬ НАРУШИТЕЛЯ</button> <button onclick="resolveReport(${r.id}, 'reject')">❌ ОТКЛОНИТЬ</button></div>`;
             container.innerHTML = html;
         }
 
@@ -451,7 +436,8 @@
             const res = await fetch('/api/events');
             const events = await res.json();
             let html = `<h3>🎉 ИВЕНТЫ</h3><div id="eventsList">`;
-            for (const e of events) html += `<div class="promo-item"><strong>${e.name}</strong> (${e.event_type})<br><button onclick="stopEvent(${e.id})">⏹ ОСТАНОВИТЬ</button></div>`;
+            if (events.length === 0) html += `<p>Нет активных ивентов</p>`;
+            else for (const e of events) html += `<div class="promo-item"><strong>${e.name}</strong> (${e.event_type})<br><button onclick="stopEvent(${e.id})">⏹ ОСТАНОВИТЬ</button></div>`;
             html += `</div><h4>➕ НОВЫЙ ИВЕНТ</h4><input type="text" id="eventName" placeholder="Название"><br><select id="eventType"><option value="double_cups">x2 Кубки</option><option value="free_box">Бесплатный ящик</option><option value="guaranteed_legendary">Гарант легендарки</option></select><br><input type="datetime-local" id="eventEnd"><br><button onclick="createEvent()">СОЗДАТЬ</button>`;
             container.innerHTML = html;
         }
