@@ -13,99 +13,148 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            background: radial-gradient(circle at 20% 30%, #0a0a2a, #050510);
             color: white;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* Контейнер игры */
+        /* Неоновая анимация */
+        @keyframes neonPulse {
+            0% { text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #e94560, 0 0 30px #e94560; }
+            100% { text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e94560, 0 0 40px #e94560; }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px #e94560; }
+            100% { box-shadow: 0 0 20px #e94560, 0 0 30px #ff6b8b; }
+        }
+
         .game-container {
-            max-width: 500px;
+            max-width: 550px;
             margin: 0 auto;
             padding: 20px;
             text-align: center;
         }
 
+        h1 {
+            font-size: 48px;
+            margin: 20px 0;
+            background: linear-gradient(135deg, #fff, #e94560);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: neonPulse 2s infinite alternate;
+        }
+
         /* Стили для авторизации */
         .auth-box, .game-box {
-            background: rgba(22, 33, 62, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 30px;
-            border-radius: 20px;
+            background: rgba(15, 25, 45, 0.85);
+            backdrop-filter: blur(12px);
+            padding: 35px;
+            border-radius: 30px;
             margin: 20px auto;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 15px rgba(233,69,96,0.3);
+            border: 1px solid rgba(233,69,96,0.5);
         }
 
         input {
-            padding: 12px;
-            margin: 8px;
-            border-radius: 10px;
+            padding: 14px;
+            margin: 10px;
+            border-radius: 50px;
             border: none;
-            width: 250px;
-            font-size: 14px;
-            background: #0f3460;
+            width: 260px;
+            font-size: 15px;
+            background: #0f172a;
             color: white;
+            text-align: center;
+            transition: all 0.3s;
         }
 
-        input::placeholder {
-            color: #8899aa;
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 15px #e94560;
+            transform: scale(1.02);
         }
 
         button {
-            background: linear-gradient(135deg, #e94560, #c72a48);
+            background: linear-gradient(135deg, #e94560, #b91c3c);
             color: white;
             border: none;
-            padding: 12px 25px;
+            padding: 12px 28px;
             font-size: 16px;
+            font-weight: bold;
             margin: 10px;
-            border-radius: 10px;
+            border-radius: 50px;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(233,69,96,0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(233,69,96,0.5);
+            animation: glow 0.5s;
         }
 
         .open-btn {
-            background: linear-gradient(135deg, #00ff88, #00cc66);
-            color: black;
-            font-size: 20px;
-            padding: 15px 40px;
+            background: linear-gradient(135deg, #00ff88, #00aa55);
+            color: #000;
+            font-size: 22px;
+            padding: 18px 45px;
+            font-weight: bold;
+            box-shadow: 0 0 15px #00ff88;
+        }
+
+        .open-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px #00ff88;
         }
 
         .reward {
-            font-size: 24px;
+            font-size: 28px;
             margin: 20px 0;
-            color: #f9a826;
-            animation: fadeIn 0.5s;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
+            background: linear-gradient(135deg, #f9a826, #ffd700);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: bold;
+            animation: float 0.5s ease-out;
         }
 
         .stats {
-            background: #0f3460;
+            background: rgba(10, 20, 40, 0.8);
             padding: 20px;
-            border-radius: 15px;
+            border-radius: 25px;
             margin-top: 20px;
+            border: 1px solid #e94560;
         }
 
         .stats p {
-            margin: 10px 0;
+            margin: 12px 0;
             font-size: 18px;
         }
 
-        h1 {
-            font-size: 36px;
-            margin-bottom: 20px;
-            text-shadow: 0 0 10px #e94560;
+        .stats span {
+            color: #f9a826;
+            font-weight: bold;
+            font-size: 22px;
         }
 
-        /* ========== АДМИН-ПАНЕЛЬ (отдельное окно) ========== */
+        .admin-btn {
+            background: linear-gradient(135deg, #7c3aed, #5b21b6);
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        /* ========== АДМИН-ПАНЕЛЬ ========== */
         .admin-overlay {
             display: none;
             position: fixed;
@@ -113,216 +162,141 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.9);
             z-index: 1000;
             justify-content: center;
             align-items: center;
         }
 
         .admin-window {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            width: 90%;
-            max-width: 500px;
-            height: 80%;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            background: linear-gradient(145deg, #0f172a, #020617);
+            width: 95%;
+            max-width: 600px;
+            height: 85%;
+            border-radius: 30px;
+            box-shadow: 0 0 50px rgba(233,69,96,0.4);
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            animation: slideIn 0.3s;
+            border: 1px solid #e94560;
         }
 
-        @keyframes slideIn {
-            from { transform: scale(0.9); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        /* Шапка админ-окна */
         .admin-header {
-            background: #0f3460;
-            padding: 15px 20px;
+            background: #1e1b4b;
+            padding: 18px 25px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid #e94560;
         }
 
-        .admin-header h2 {
-            font-size: 20px;
-        }
-
         .close-btn {
             background: #e94560;
-            padding: 8px 15px;
+            padding: 6px 18px;
             margin: 0;
-            font-size: 14px;
         }
 
-        /* Меню-гамбургер */
         .burger-menu {
-            background: #16213e;
+            background: #111827;
             padding: 15px;
-            border-bottom: 1px solid #0f3460;
+            border-bottom: 1px solid #e94560;
         }
 
         .burger-btn {
             background: #e94560;
-            padding: 10px 20px;
-            margin: 0;
-            font-size: 16px;
             width: 100%;
+            padding: 12px;
+            font-size: 18px;
         }
 
         .menu-items {
             display: none;
             flex-direction: column;
-            margin-top: 10px;
+            margin-top: 12px;
         }
 
         .menu-items button {
-            background: #0f3460;
-            margin: 5px 0;
+            background: #1e293b;
             text-align: left;
-            padding: 12px;
+            margin: 5px 0;
         }
 
-        .menu-items button:hover {
-            background: #e94560;
-        }
-
-        /* Контент админ-окна */
         .admin-content {
             flex: 1;
             overflow-y: auto;
             padding: 20px;
         }
 
-        .modal {
-            display: none;
-            background: #16213e;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-        }
-
-        .modal h3 {
-            margin-bottom: 15px;
-            color: #e94560;
-        }
-
-        .modal input, .modal select {
-            width: 100%;
-            margin: 10px 0;
-        }
-
-        .modal button {
-            margin: 5px;
-            padding: 10px;
-        }
-
-        .user-list {
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-        .user-item {
-            background: #0f3460;
-            padding: 10px;
-            margin: 8px 0;
-            border-radius: 10px;
+        .user-item, .promo-item, .report-item {
+            background: #1e293b;
+            padding: 15px;
+            margin: 12px 0;
+            border-radius: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-left: 4px solid #e94560;
         }
 
-        .user-item button {
-            padding: 5px 10px;
-            margin: 0;
-            font-size: 12px;
+        .status-banned { background: #dc2626; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; }
+        .status-active { background: #10b981; color: black; padding: 4px 12px; border-radius: 20px; font-size: 12px; }
+
+        input, select {
+            background: #0f172a;
+            border: 1px solid #e94560;
+            border-radius: 40px;
         }
 
-        .report-item {
-            background: #0f3460;
-            padding: 10px;
-            margin: 8px 0;
-            border-radius: 10px;
-        }
-
-        .promo-item {
-            background: #0f3460;
-            padding: 10px;
-            margin: 8px 0;
-            border-radius: 10px;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 11px;
-        }
-
-        .status-banned { background: #e94560; }
-        .status-active { background: #00ff88; color: black; }
-
-        .back-btn {
-            background: #0f3460;
-            margin-top: 10px;
+        @media (max-width: 480px) {
+            h1 { font-size: 32px; }
+            .open-btn { font-size: 18px; padding: 12px 25px; }
+            .user-item { flex-direction: column; text-align: center; gap: 10px; }
         }
     </style>
 </head>
 <body>
     <div class="game-container">
-        <h1>🎁 Brawl Box Simulator</h1>
+        <h1>🎁 BRAWL BOX SIMULATOR</h1>
         
         <div id="authBox" class="auth-box">
-            <h2>🔐 Вход / Регистрация</h2>
+            <h2>⚡ ВОЙДИ В ИГРУ ⚡</h2>
             <input type="text" id="login" placeholder="Логин"><br>
             <input type="password" id="password" placeholder="Пароль"><br>
             <input type="text" id="nickname" placeholder="Ник (для регистрации)"><br>
-            <button onclick="register()">📝 Регистрация</button>
-            <button onclick="login()">🔓 Вход</button>
-            <div id="authMessage" style="color: #e94560; margin-top: 10px;"></div>
+            <button onclick="register()">📝 РЕГИСТРАЦИЯ</button>
+            <button onclick="login()">🔓 ВХОД</button>
+            <div id="authMessage" style="color: #f97316; margin-top: 15px;"></div>
         </div>
         
         <div id="gameBox" class="game-box" style="display:none">
-            <h2>📦 Ящик</h2>
-            <button id="openBtn" class="open-btn">🔓 ОТКРЫТЬ ЯЩИК</button>
+            <div style="font-size: 60px; margin-bottom: 10px;">🎁</div>
+            <button id="openBtn" class="open-btn">🔥 ОТКРЫТЬ ЯЩИК 🔥</button>
             <div id="reward" class="reward"></div>
             <div class="stats">
-                <p>💰 Монет: <span id="coins">0</span></p>
-                <p>🎁 Открыто ящиков: <span id="boxes">0</span></p>
-                <p>👤 Игрок: <span id="nicknameDisplay"></span></p>
-                <button id="adminBtn" style="display:none; margin-top: 15px;" onclick="openAdminWindow()">👑 АДМИН-ПАНЕЛЬ</button>
+                <p>💰 МОНЕТЫ: <span id="coins">0</span></p>
+                <p>🎲 ОТКРЫТО ЯЩИКОВ: <span id="boxes">0</span></p>
+                <p>🏆 ИГРОК: <span id="nicknameDisplay"></span></p>
+                <button id="adminBtn" class="admin-btn" style="display:none" onclick="openAdminWindow()">👑 АДМИН-ПАНЕЛЬ</button>
             </div>
         </div>
     </div>
 
-    <!-- ОТДЕЛЬНОЕ ОКНО АДМИН-ПАНЕЛИ -->
     <div id="adminOverlay" class="admin-overlay">
         <div class="admin-window">
             <div class="admin-header">
-                <h2>👑 Админ-панель</h2>
-                <button class="close-btn" onclick="closeAdminWindow()">✖ Закрыть</button>
+                <h2>🔧 АДМИН-ПАНЕЛЬ</h2>
+                <button class="close-btn" onclick="closeAdminWindow()">✖ ЗАКРЫТЬ</button>
             </div>
-            
             <div class="burger-menu">
-                <button class="burger-btn" onclick="toggleMenu()">☰ Меню</button>
+                <button class="burger-btn" onclick="toggleMenu()">☰ МЕНЮ</button>
                 <div id="menuItems" class="menu-items">
-                    <button onclick="showSection('users')">👥 Управление игроками</button>
-                    <button onclick="showSection('promocodes')">🎁 Промокоды</button>
-                    <button onclick="showSection('reports')">📋 Репорты</button>
-                    <button onclick="showSection('events')">🎉 Ивенты</button>
-                    <button onclick="showSection('clans')">🏰 Кланы</button>
-                    <button onclick="showSection('tournaments')">🏆 Турниры</button>
+                    <button onclick="showSection('users')">👥 УПРАВЛЕНИЕ ИГРОКАМИ</button>
+                    <button onclick="showSection('promocodes')">🎁 ПРОМОКОДЫ</button>
+                    <button onclick="showSection('reports')">📋 РЕПОРТЫ</button>
+                    <button onclick="showSection('events')">🎉 ИВЕНТЫ</button>
                 </div>
             </div>
-            
-            <div id="adminContent" class="admin-content">
-                <div style="text-align: center; padding: 20px;">
-                    <p>Выберите раздел из меню ☰</p>
-                </div>
-            </div>
+            <div id="adminContent" class="admin-content"></div>
         </div>
     </div>
 
@@ -331,36 +305,31 @@
         const socket = io();
         let currentUserId = null;
         let isAdmin = false;
-        
-        // ========== АВТОРИЗАЦИЯ ==========
+
+        // Регистрация
         async function register() {
-            const login = document.getElementById('login').value;
+            const login = document.getElementById('login').value.trim();
             const password = document.getElementById('password').value;
-            const nickname = document.getElementById('nickname').value;
-            if (!login || !password || !nickname) {
-                alert('Заполни все поля');
-                return;
-            }
+            const nickname = document.getElementById('nickname').value.trim();
+            if (!login || !password || !nickname) return alert('Заполни все поля!');
             const res = await fetch('/api/register', {
                 method: 'POST',
-                headers: {'Content-Type':'application/json'},
-                body: JSON.stringify({login, password, nickname})
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ login, password, nickname })
             });
             const data = await res.json();
-            if (data.success) {
-                alert('Регистрация успешна! Теперь войди.');
-            } else {
-                document.getElementById('authMessage').innerText = data.message;
-            }
+            if (data.success) alert('✅ Регистрация успешна! Теперь войди.');
+            else document.getElementById('authMessage').innerText = data.message;
         }
-        
+
+        // Вход
         async function login() {
             const login = document.getElementById('login').value;
             const password = document.getElementById('password').value;
             const res = await fetch('/api/login', {
                 method: 'POST',
-                headers: {'Content-Type':'application/json'},
-                body: JSON.stringify({login, password})
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ login, password })
             });
             const data = await res.json();
             if (data.success) {
@@ -369,18 +338,14 @@
                 document.getElementById('nicknameDisplay').innerText = data.user.nickname;
                 document.getElementById('authBox').style.display = 'none';
                 document.getElementById('gameBox').style.display = 'block';
-                if (isAdmin) {
-                    document.getElementById('adminBtn').style.display = 'inline-block';
-                }
-                socket.emit('auth', currentUserId, (resp) => {
-                    if (!resp.success) alert('Ошибка подключения');
-                });
+                if (isAdmin) document.getElementById('adminBtn').style.display = 'block';
+                socket.emit('auth', currentUserId);
                 updateStats();
             } else {
                 document.getElementById('authMessage').innerText = data.message;
             }
         }
-        
+
         async function updateStats() {
             if (!currentUserId) return;
             const res = await fetch('/api/user/' + currentUserId);
@@ -390,280 +355,122 @@
                 document.getElementById('boxes').innerText = data.total_boxes;
             }
         }
-        
+
         document.getElementById('openBtn').onclick = () => {
             if (currentUserId) socket.emit('open_box');
         };
-        
+
         socket.on('box_opened', (reward) => {
-            document.getElementById('reward').innerHTML = `🎉 Выпало: ${reward.name}! 🎉`;
+            document.getElementById('reward').innerHTML = `✨ ${reward.name} ✨`;
             updateStats();
+            setTimeout(() => document.getElementById('reward').innerHTML = '', 2000);
         });
-        
+
         socket.on('session_terminated', () => {
-            alert("СЕССИЯ ЗАВЕРШЕНА. ПЕРЕЗАГРУЗИТЕ ИГРУ");
+            alert("⛔ СЕССИЯ ЗАВЕРШЕНА ⛔\nВас забанил администратор.");
             window.location.reload();
         });
-        
-        setInterval(updateStats, 5000);
-        
-        // ========== АДМИН-ПАНЕЛЬ (отдельное окно) ==========
-        function openAdminWindow() {
-            document.getElementById('adminOverlay').style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-        
-        function closeAdminWindow() {
-            document.getElementById('adminOverlay').style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-        
+
+        setInterval(updateStats, 3000);
+
+        // ========== АДМИН-ПАНЕЛЬ ==========
+        function openAdminWindow() { document.getElementById('adminOverlay').style.display = 'flex'; }
+        function closeAdminWindow() { document.getElementById('adminOverlay').style.display = 'none'; }
         function toggleMenu() {
             const menu = document.getElementById('menuItems');
             menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
         }
-        
+
         function showSection(section) {
             const content = document.getElementById('adminContent');
-            if (section === 'users') showUsersPanel(content);
-            else if (section === 'promocodes') showPromocodesPanel(content);
-            else if (section === 'reports') showReportsPanel(content);
-            else if (section === 'events') showEventsPanel(content);
-            else if (section === 'clans') showClansPanel(content);
-            else if (section === 'tournaments') showTournamentsPanel(content);
+            if (section === 'users') loadUsersPanel(content);
+            else if (section === 'promocodes') loadPromosPanel(content);
+            else if (section === 'reports') loadReportsPanel(content);
+            else if (section === 'events') loadEventsPanel(content);
             toggleMenu();
         }
-        
-        // ========== 1. УПРАВЛЕНИЕ ИГРОКАМИ ==========
-        async function showUsersPanel(container) {
+
+        async function loadUsersPanel(container) {
             const res = await fetch('/api/users');
             const users = await res.json();
-            let html = `
-                <div class="modal" style="display:block">
-                    <h3>👥 Управление игроками</h3>
-                    <div class="user-list">
-            `;
+            let html = `<h3>👥 УПРАВЛЕНИЕ ИГРОКАМИ</h3>`;
             for (const u of users) {
                 html += `
                     <div class="user-item">
-                        <div>
-                            <strong>${u.nickname}</strong><br>
-                            <small>${u.login}</small><br>
-                            💰 ${u.coins} | 🎁 ${u.total_boxes}
-                            <span class="status-badge ${u.is_banned ? 'status-banned' : 'status-active'}">${u.is_banned ? '⛔ Забанен' : '✅ Активен'}</span>
-                        </div>
-                        <div>
-                            ${u.is_banned ? 
-                                `<button onclick="unbanUser(${u.id})">Разбанить</button>` : 
-                                (u.login !== 'unity' ? `<button onclick="showBanModal(${u.id}, '${u.nickname}')">Забанить</button>` : '')
-                            }
-                        </div>
-                    </div>
-                `;
+                        <div><strong>${u.nickname}</strong><br>${u.login}<br>💰 ${u.coins} | 🎁 ${u.total_boxes}<br><span class="${u.is_banned ? 'status-banned' : 'status-active'}">${u.is_banned ? '⛔ ЗАБАНЕН' : '✅ АКТИВЕН'}</span></div>
+                        <div>${u.is_banned ? `<button onclick="unbanUser(${u.id})">✅ РАЗБАНИТЬ</button>` : (u.login !== 'unity' ? `<button onclick="banUser(${u.id}, '${u.nickname}')">🔨 ЗАБАНИТЬ</button>` : '👑 АДМИН')}</div>
+                    </div>`;
             }
-            html += `</div><button class="back-btn" onclick="showSection('users')">🔄 Обновить</button></div>`;
             container.innerHTML = html;
         }
-        
-        function showBanModal(userId, nickname) {
+
+        window.banUser = async (userId, nickname) => {
             const reason = prompt(`Причина бана для ${nickname}:`, 'Нарушение правил');
             if (!reason) return;
-            const hours = parseInt(prompt('Длительность (часы, 0=навсегда):', '24')) || 0;
-            banUser(userId, reason, hours);
-        }
-        
-        async function banUser(userId, reason, hours) {
-            await fetch('/api/ban', {
-                method: 'POST',
-                headers: {'Content-Type':'application/json'},
-                body: JSON.stringify({userId, reason, hours})
-            });
-            showSection('users');
-        }
-        
-        async function unbanUser(userId) {
-            await fetch('/api/unban', {
-                method: 'POST',
-                headers: {'Content-Type':'application/json'},
-                body: JSON.stringify({userId})
-            });
-            showSection('users');
-        }
-        
-        // ========== 2. ПРОМОКОДЫ ==========
-        function showPromocodesPanel(container) {
-            container.innerHTML = `
-                <div class="modal" style="display:block">
-                    <h3>🎁 Промокоды</h3>
-                    <div id="promoList"></div>
-                    <h4>➕ Создать промокод</h4>
-                    <input type="text" id="promoCode" placeholder="Код"><br>
-                    <input type="text" id="promoReward" placeholder="Награда (100 монет, 1 ящик...)"><br>
-                    <input type="number" id="promoMax" placeholder="Лимит активаций"><br>
-                    <button onclick="createPromocode()">Создать</button>
-                    <button class="back-btn" onclick="showSection('promocodes')">🔄 Обновить</button>
-                </div>
-            `;
-            loadPromocodes();
-        }
-        
-        async function loadPromocodes() {
+            await fetch('/api/ban', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId, reason }) });
+            loadUsersPanel(document.getElementById('adminContent'));
+        };
+
+        window.unbanUser = async (userId) => {
+            await fetch('/api/unban', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId }) });
+            loadUsersPanel(document.getElementById('adminContent'));
+        };
+
+        async function loadPromosPanel(container) {
             const res = await fetch('/api/promocodes');
             const promos = await res.json();
-            const container = document.getElementById('promoList');
-            if (!container) return;
-            let html = '<h4>📋 Активные промокоды</h4>';
-            for (const p of promos) {
-                html += `<div class="promo-item"><strong>${p.code}</strong> — ${p.reward}<br>Активаций: ${p.current}/${p.max}</div>`;
-            }
+            let html = `<h3>🎁 ПРОМОКОДЫ</h3><div id="promoList">`;
+            for (const p of promos) html += `<div class="promo-item"><strong>${p.code}</strong> — ${p.reward}<br>Активаций: ${p.current_activations}/${p.max_activations}</div>`;
+            html += `</div><h4>➕ СОЗДАТЬ</h4><input type="text" id="promoCode" placeholder="Код"><br><input type="text" id="promoReward" placeholder="Награда (100 монет)"><br><input type="number" id="promoMax" placeholder="Лимит"><br><button onclick="createPromo()">СОЗДАТЬ</button>`;
             container.innerHTML = html;
         }
-        
-        async function createPromocode() {
+
+        window.createPromo = async () => {
             const code = document.getElementById('promoCode').value;
             const reward = document.getElementById('promoReward').value;
             const max = parseInt(document.getElementById('promoMax').value);
-            if (!code || !reward || !max) {
-                alert('Заполни все поля');
-                return;
-            }
-            await fetch('/api/create_promo', {
-                method: 'POST',
-                headers: {'Content-Type':'application/json'},
-                body: JSON.stringify({code, reward, max})
-            });
+            if (!code || !reward || !max) return alert('Заполни все поля!');
+            await fetch('/api/create_promo', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code, reward, max }) });
             showSection('promocodes');
-        }
-        
-        // ========== 3. РЕПОРТЫ ==========
-        function showReportsPanel(container) {
-            container.innerHTML = `
-                <div class="modal" style="display:block">
-                    <h3>📋 Жалобы игроков</h3>
-                    <div id="reportsList"></div>
-                    <button class="back-btn" onclick="showSection('reports')">🔄 Обновить</button>
-                </div>
-            `;
-            loadReports();
-        }
-        
-        async function loadReports() {
+        };
+
+        async function loadReportsPanel(container) {
             const res = await fetch('/api/reports');
             const reports = await res.json();
-            const container = document.getElementById('reportsList');
-            if (!container) return;
-            if (reports.length === 0) {
-                container.innerHTML = '<p>Нет жалоб</p>';
-                return;
-            }
-            let html = '';
-            for (const r of reports) {
-                html += `<div class="report-item">
-                    <strong>От:</strong> ${r.from_nick} | <strong>На:</strong> ${r.to_nick}<br>
-                    <strong>Причина:</strong> ${r.reason}<br>
-                    <strong>Доказательства:</strong> <a href="${r.evidence}" target="_blank">Открыть</a><br>
-                    <button onclick="resolveReport(${r.id}, 'reject')">❌ Отклонить</button>
-                    <button onclick="resolveReport(${r.id}, 'ban')">🔨 Забанить нарушителя</button>
-                </div>`;
-            }
+            let html = `<h3>📋 ЖАЛОБЫ ИГРОКОВ</h3>`;
+            for (const r of reports) html += `<div class="report-item"><strong>От:</strong> ${r.from_nick}<br><strong>На:</strong> ${r.to_nick}<br><strong>Причина:</strong> ${r.reason}<br><button onclick="resolveReport(${r.id}, 'ban')">🔨 ЗАБАНИТЬ НАРУШИТЕЛЯ</button> <button onclick="resolveReport(${r.id}, 'reject')">❌ ОТКЛОНИТЬ</button></div>`;
             container.innerHTML = html;
         }
-        
-        async function resolveReport(reportId, action) {
-            await fetch('/api/resolve_report', {
-                method: 'POST',
-                headers: {'Content-Type':'application/json'},
-                body: JSON.stringify({reportId, action})
-            });
+
+        window.resolveReport = async (reportId, action) => {
+            await fetch('/api/resolve_report', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reportId, action }) });
             showSection('reports');
-        }
-        
-        // ========== 4. ИВЕНТЫ ==========
-        function showEventsPanel(container) {
-            container.innerHTML = `
-                <div class="modal" style="display:block">
-                    <h3>🎉 Управление ивентами</h3>
-                    <div id="eventsList"></div>
-                    <h4>➕ Создать ивент</h4>
-                    <input type="text" id="eventName" placeholder="Название"><br>
-                    <select id="eventType">
-                        <option value="double_cups">x2 Кубки</option>
-                        <option value="free_box">Бесплатный ящик</option>
-                        <option value="guaranteed_legendary">Гарант легендарки</option>
-                    </select><br>
-                    <input type="datetime-local" id="eventEnd"><br>
-                    <button onclick="createEvent()">Создать</button>
-                    <button class="back-btn" onclick="showSection('events')">🔄 Обновить</button>
-                </div>
-            `;
-            loadEvents();
-        }
-        
-        async function loadEvents() {
+        };
+
+        async function loadEventsPanel(container) {
             const res = await fetch('/api/events');
             const events = await res.json();
-            const container = document.getElementById('eventsList');
-            if (!container) return;
-            let html = '<h4>📋 Активные ивенты</h4>';
-            for (const e of events) {
-                html += `<div class="promo-item"><strong>${e.name}</strong> — ${e.type}<br>До: ${new Date(e.end_time).toLocaleString()}<br><button onclick="stopEvent(${e.id})">⏹ Остановить</button></div>`;
-            }
+            let html = `<h3>🎉 ИВЕНТЫ</h3><div id="eventsList">`;
+            for (const e of events) html += `<div class="promo-item"><strong>${e.name}</strong> (${e.event_type})<br><button onclick="stopEvent(${e.id})">⏹ ОСТАНОВИТЬ</button></div>`;
+            html += `</div><h4>➕ НОВЫЙ ИВЕНТ</h4><input type="text" id="eventName" placeholder="Название"><br><select id="eventType"><option value="double_cups">x2 Кубки</option><option value="free_box">Бесплатный ящик</option><option value="guaranteed_legendary">Гарант легендарки</option></select><br><input type="datetime-local" id="eventEnd"><br><button onclick="createEvent()">СОЗДАТЬ</button>`;
             container.innerHTML = html;
         }
-        
-        async function createEvent() {
+
+        window.stopEvent = async (eventId) => {
+            await fetch('/api/stop_event', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ eventId }) });
+            showSection('events');
+        };
+
+        window.createEvent = async () => {
             const name = document.getElementById('eventName').value;
             const type = document.getElementById('eventType').value;
-            const endTime = document.getElementById('eventEnd').value;
-            if (!name || !endTime) {
-                alert('Заполни все поля');
-                return;
-            }
-            await fetch('/api/create_event', {
-                method: 'POST',
-                headers: {'Content-Type':'application/json'},
-                body: JSON.stringify({name, type, end_time: endTime})
-            });
+            const end_time = document.getElementById('eventEnd').value;
+            if (!name || !end_time) return alert('Заполни поля!');
+            await fetch('/api/create_event', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, type, end_time }) });
             showSection('events');
-        }
-        
-        async function stopEvent(eventId) {
-            await fetch('/api/stop_event', {
-                method: 'POST',
-                headers: {'Content-Type':'application/json'},
-                body: JSON.stringify({eventId})
-            });
-            showSection('events');
-        }
-        
-        // ========== 5. КЛАНЫ (заглушка) ==========
-        function showClansPanel(container) {
-            container.innerHTML = `
-                <div class="modal" style="display:block">
-                    <h3>🏰 Управление кланами</h3>
-                    <p>Функция в разработке</p>
-                    <button class="back-btn" onclick="showSection('clans')">🔄 Обновить</button>
-                </div>
-            `;
-        }
-        
-        // ========== 6. ТУРНИРЫ (заглушка) ==========
-        function showTournamentsPanel(container) {
-            container.innerHTML = `
-                <div class="modal" style="display:block">
-                    <h3>🏆 Управление турнирами</h3>
-                    <p>Функция в разработке</p>
-                    <button class="back-btn" onclick="showSection('tournaments')">🔄 Обновить</button>
-                </div>
-            `;
-        }
-        
-        // Закрытие оверлея по клику вне окна
-        document.getElementById('adminOverlay').onclick = (e) => {
-            if (e.target === document.getElementById('adminOverlay')) {
-                closeAdminWindow();
-            }
         };
+
+        document.getElementById('adminOverlay').onclick = (e) => { if (e.target === document.getElementById('adminOverlay')) closeAdminWindow(); };
     </script>
 </body>
 </html>
