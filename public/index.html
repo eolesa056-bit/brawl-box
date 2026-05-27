@@ -79,7 +79,7 @@
             cursor: pointer;
         }
 
-        /* Верхняя часть: аватарка (кликабельна для смены) */
+        /* Верхняя часть: аватарка (кликабельна) + ник (тоже кликабелен) */
         .profile-header {
             display: flex;
             gap: 30px;
@@ -111,13 +111,27 @@
             flex: 1;
         }
 
+        .nickname-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            cursor: pointer;
+        }
+
         .profile-nickname {
             font-size: 36px;
             font-weight: bold;
-            background: linear-gradient(135deg, #fff, #e94560);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            transition: 0.2s;
+        }
+
+        .profile-nickname:hover {
+            text-shadow: 0 0 5px currentColor;
+        }
+
+        .edit-icon {
+            font-size: 20px;
+            opacity: 0.7;
         }
 
         .profile-tag {
@@ -206,11 +220,67 @@
             box-shadow: 0 0 15px #e94560;
         }
 
+        /* Окно смены никнейма */
+        .nickname-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 300;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .nickname-container {
+            background: #0f172a;
+            padding: 30px;
+            border-radius: 40px;
+            border: 1px solid #e94560;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .nickname-container input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 50px;
+            background: #1a1a3e;
+            border: 1px solid #e94560;
+            color: white;
+            font-size: 18px;
+            margin: 20px 0;
+        }
+
+        /* Выбор цвета ника */
+        .color-options {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .color-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #fff;
+            transition: 0.2s;
+        }
+
+        .color-circle:hover {
+            transform: scale(1.1);
+        }
+
         .hidden {
             display: none;
         }
 
-        input {
+        input, .btn {
             width: 100%;
             padding: 12px;
             border-radius: 50px;
@@ -223,16 +293,12 @@
 
         .btn {
             background: linear-gradient(135deg, #e94560, #b91c3c);
-            padding: 10px 20px;
-            border: none;
-            border-radius: 50px;
-            color: white;
             cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <!-- Мини-аватарка (показывает, кто зашёл) -->
+    <!-- Мини-аватарка -->
     <div class="floating-avatar" onclick="openProfile()">
         <div class="mini-avatar" id="miniAvatar">🎮</div>
     </div>
@@ -243,37 +309,27 @@
             <button class="close-profile" onclick="closeProfile()">✖</button>
             
             <div class="profile-header">
-                <!-- Большая аватарка (клик по ней → выбор новой) -->
                 <div class="avatar-large" id="largeAvatar" onclick="openAvatarPicker()">🎮</div>
                 <div class="profile-info">
-                    <div class="profile-nickname" id="profileNick">-</div>
+                    <div class="nickname-wrapper" onclick="openNicknameEditor()">
+                        <div class="profile-nickname" id="profileNick">-</div>
+                        <div class="edit-icon">✏️</div>
+                    </div>
                     <div class="profile-tag" id="profileTag">#----</div>
                     <div class="profile-cups">🏆 <span id="profileCups">0</span> кубков</div>
                 </div>
             </div>
 
             <div class="stats-grid">
-                <div class="stat-card">
-                    <h3>🎲 ОТКРЫТО ЯЩИКОВ</h3>
-                    <div class="stat-value" id="profileBoxes">0</div>
-                </div>
-                <div class="stat-card">
-                    <h3>💰 МОНЕТЫ</h3>
-                    <div class="stat-value" id="profileCoins">0</div>
-                </div>
-                <div class="stat-card">
-                    <h3>🏆 КУБКОВ ВСЕГО</h3>
-                    <div class="stat-value" id="profileTotalCups">0</div>
-                </div>
-                <div class="stat-card">
-                    <h3>⭐ ЛУЧШИЙ РЕКОРД</h3>
-                    <div class="stat-value" id="recordCups">0</div>
-                </div>
+                <div class="stat-card"><h3>🎲 ОТКРЫТО ЯЩИКОВ</h3><div class="stat-value" id="profileBoxes">0</div></div>
+                <div class="stat-card"><h3>💰 МОНЕТЫ</h3><div class="stat-value" id="profileCoins">0</div></div>
+                <div class="stat-card"><h3>🏆 КУБКОВ ВСЕГО</h3><div class="stat-value" id="profileTotalCups">0</div></div>
+                <div class="stat-card"><h3>⭐ ЛУЧШИЙ РЕКОРД</h3><div class="stat-value" id="recordCups">0</div></div>
             </div>
         </div>
     </div>
 
-    <!-- ОКНО ВЫБОРА АВАТАРКИ (появляется при клике на большую аватарку) -->
+    <!-- ОКНО ВЫБОРА АВАТАРКИ -->
     <div id="avatarPickerModal" class="avatar-modal">
         <div class="avatar-selector">
             <div class="avatar-option" data-avatar="🎮">🎮</div>
@@ -287,20 +343,40 @@
         </div>
     </div>
 
-    <!-- Окно входа (первое) -->
+    <!-- ОКНО СМЕНЫ НИКНЕЙМА И ЦВЕТА -->
+    <div id="nicknameEditorModal" class="nickname-modal">
+        <div class="nickname-container">
+            <h3>✏️ СМЕНИТЬ НИКНЕЙМ</h3>
+            <input type="text" id="newNicknameInput" placeholder="Новый никнейм">
+            
+            <h4>🎨 ВЫБЕРИ ЦВЕТ НИКА</h4>
+            <div class="color-options">
+                <div class="color-circle" style="background:#ffffff;" data-color="#ffffff"></div>
+                <div class="color-circle" style="background:#f9a826;" data-color="#f9a826"></div>
+                <div class="color-circle" style="background:#ff69b4;" data-color="#ff69b4"></div>
+                <div class="color-circle" style="background:#00bfff;" data-color="#00bfff"></div>
+                <div class="color-circle" style="background:#c084fc;" data-color="#c084fc"></div>
+            </div>
+            
+            <button class="btn" onclick="changeNickname()">СОХРАНИТЬ</button>
+            <button class="btn" onclick="closeNicknameEditor()" style="background:#2a2a5a;">ОТМЕНА</button>
+        </div>
+    </div>
+
+    <!-- Окно входа -->
     <div id="authPanel" class="modal" style="display:flex; background:rgba(0,0,0,0.95);">
         <div class="profile-container" style="max-width:400px;">
-            <h2 style="text-align:center;">🔐 ВХОД</h2>
+            <h2>🔐 ВХОД</h2>
             <input type="text" id="nickname" placeholder="Никнейм">
             <div id="adminPasswordGroup" class="hidden">
                 <input type="password" id="adminPassword" placeholder="Пароль админа">
             </div>
-            <button class="btn" style="width:100%" onclick="login()">ВОЙТИ</button>
-            <div id="authMessage" style="color:#ff6b6b; text-align:center; margin-top:10px;"></div>
+            <button class="btn" onclick="login()">ВОЙТИ</button>
+            <div id="authMessage" style="color:#ff6b6b; margin-top:10px;"></div>
         </div>
     </div>
 
-    <!-- Главное меню (пока пустое) -->
+    <!-- Главное меню (пустое) -->
     <div id="gamePanel" class="hidden" style="max-width:600px; margin:100px auto 0; text-align:center;">
         <h1 style="font-size:42px; background:linear-gradient(135deg,#fff,#e94560); -webkit-background-clip:text; background-clip:text; color:transparent;">⚡ BRAWL BOX ⚡</h1>
         <div style="background:rgba(15,25,45,0.85); border-radius:32px; padding:40px; margin-top:20px;">
@@ -310,8 +386,9 @@
 
     <script>
         let currentPlayerId = null;
+        let selectedColor = "#ffffff";
 
-        // Загрузка данных профиля
+        // Загрузка профиля
         async function refreshProfileData() {
             if (!currentPlayerId) return;
             const res = await fetch('/api/player/' + currentPlayerId);
@@ -321,6 +398,7 @@
                 document.getElementById('miniAvatar').innerText = avatar;
                 document.getElementById('largeAvatar').innerText = avatar;
                 document.getElementById('profileNick').innerText = data.nickname;
+                document.getElementById('profileNick').style.color = data.nickname_color || '#ffffff';
                 document.getElementById('profileTag').innerText = data.tag || '#----';
                 document.getElementById('profileCups').innerText = data.cups || 0;
                 document.getElementById('profileBoxes').innerText = data.total_boxes || 0;
@@ -330,7 +408,7 @@
             }
         }
 
-        // Смена аватарки (вызывается при клике в галерее)
+        // Смена аватарки
         async function changeAvatar(avatar) {
             await fetch('/api/change_avatar', {
                 method: 'POST',
@@ -338,26 +416,35 @@
                 body: JSON.stringify({ playerId: currentPlayerId, avatar: avatar })
             });
             await refreshProfileData();
-            closeAvatarPicker(); // закрываем окно выбора аватарок
+            closeAvatarPicker();
         }
 
-        // Открытие / закрытие окон
-        function openProfile() {
-            refreshProfileData();
-            document.getElementById('profileModal').style.display = 'flex';
+        // Смена никнейма и цвета
+        async function changeNickname() {
+            const newNick = document.getElementById('newNicknameInput').value.trim();
+            if (!newNick) return alert("Введи никнейм");
+            
+            const res = await fetch('/api/change_nickname', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ playerId: currentPlayerId, newNickname: newNick, color: selectedColor })
+            });
+            const data = await res.json();
+            if (data.success) {
+                await refreshProfileData();
+                closeNicknameEditor();
+            } else {
+                alert(data.message || "Ошибка");
+            }
         }
 
-        function closeProfile() {
-            document.getElementById('profileModal').style.display = 'none';
-        }
-
-        function openAvatarPicker() {
-            document.getElementById('avatarPickerModal').style.display = 'flex';
-        }
-
-        function closeAvatarPicker() {
-            document.getElementById('avatarPickerModal').style.display = 'none';
-        }
+        // Открытие/закрытие окон
+        function openProfile() { refreshProfileData(); document.getElementById('profileModal').style.display = 'flex'; }
+        function closeProfile() { document.getElementById('profileModal').style.display = 'none'; }
+        function openAvatarPicker() { document.getElementById('avatarPickerModal').style.display = 'flex'; }
+        function closeAvatarPicker() { document.getElementById('avatarPickerModal').style.display = 'none'; }
+        function openNicknameEditor() { document.getElementById('nicknameEditorModal').style.display = 'flex'; }
+        function closeNicknameEditor() { document.getElementById('nicknameEditorModal').style.display = 'none'; }
 
         // Вход
         async function login() {
@@ -379,28 +466,26 @@
                 document.getElementById('authPanel').style.display = 'none';
                 document.getElementById('gamePanel').classList.remove('hidden');
                 await refreshProfileData();
-
-                // Назначить обработчики для аватарок в галерее
+                
                 document.querySelectorAll('.avatar-option').forEach(opt => {
                     opt.onclick = () => changeAvatar(opt.getAttribute('data-avatar'));
+                });
+                document.querySelectorAll('.color-circle').forEach(circle => {
+                    circle.onclick = () => { selectedColor = circle.getAttribute('data-color'); };
                 });
             } else {
                 document.getElementById('authMessage').innerText = data.message;
             }
         }
 
-        // Поле пароля для админа
         document.getElementById('nickname').addEventListener('input', function(e) {
-            const adminGroup = document.getElementById('adminPasswordGroup');
-            adminGroup.classList.toggle('hidden', e.target.value !== 'unity');
+            document.getElementById('adminPasswordGroup').classList.toggle('hidden', e.target.value !== 'unity');
         });
 
-        // Закрытие окон по клику на фон
         window.onclick = function(event) {
-            const profile = document.getElementById('profileModal');
-            const picker = document.getElementById('avatarPickerModal');
-            if (event.target === profile) closeProfile();
-            if (event.target === picker) closeAvatarPicker();
+            if (event.target === document.getElementById('profileModal')) closeProfile();
+            if (event.target === document.getElementById('avatarPickerModal')) closeAvatarPicker();
+            if (event.target === document.getElementById('nicknameEditorModal')) closeNicknameEditor();
         };
     </script>
 </body>
