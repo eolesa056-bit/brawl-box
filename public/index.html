@@ -19,14 +19,13 @@
             padding: 20px;
         }
 
-        /* Плавающая аватарка (левый верхний угол) */
+        /* Плавающая аватарка */
         .floating-avatar {
             position: fixed;
             top: 20px;
             left: 20px;
             z-index: 100;
             cursor: pointer;
-            transition: 0.2s;
         }
 
         .avatar-icon {
@@ -48,7 +47,7 @@
             box-shadow: 0 0 25px #e94560;
         }
 
-        /* Модальное окно профиля */
+        /* Модальные окна */
         .modal {
             display: none;
             position: fixed;
@@ -66,13 +65,11 @@
             background: linear-gradient(145deg, #0f172a, #020617);
             width: 90%;
             max-width: 500px;
-            max-height: 85vh;
-            border-radius: 32px;
+            border-radius: 40px;
             border: 1px solid #e94560;
             box-shadow: 0 0 40px rgba(233,69,96,0.4);
-            overflow-y: auto;
+            padding: 25px 20px 30px;
             position: relative;
-            padding: 20px;
         }
 
         .close-modal {
@@ -86,71 +83,47 @@
             border-radius: 50%;
             font-size: 20px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             transition: 0.2s;
         }
 
-        .close-modal:hover {
-            transform: scale(1.1);
-            background: #ff6b8b;
-        }
-
-        /* Заголовок */
-        .game-title {
+        /* Профиль (первое окно) */
+        .profile-top {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             text-align: center;
-            margin-bottom: 30px;
-            margin-top: 10px;
+            margin-bottom: 20px;
         }
 
-        .game-title h1 {
-            font-size: 42px;
+        .profile-avatar-large {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #2a2a5a, #1a1a3e);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 70px;
+            border: 2px solid #e94560;
+            margin-bottom: 15px;
+        }
+
+        .nickname-text {
+            font-size: 28px;
+            font-weight: bold;
             background: linear-gradient(135deg, #fff, #e94560);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
         }
 
-        /* Стили панелей */
-        .glass-panel {
-            background: rgba(15, 25, 45, 0.85);
-            backdrop-filter: blur(12px);
-            border-radius: 32px;
-            border: 1px solid rgba(233, 69, 96, 0.4);
-            padding: 20px;
-            margin-bottom: 20px;
+        .player-tag {
+            font-size: 13px;
+            color: #aaa;
+            margin: 5px 0;
         }
 
-        /* Аватарки в профиле */
-        .avatar-selector {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin: 20px 0;
-            justify-content: center;
-        }
-
-        .avatar-option {
-            width: 60px;
-            height: 60px;
-            background: #1a1a3e;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 35px;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: 0.2s;
-        }
-
-        .avatar-option:hover, .avatar-option.selected {
-            border-color: #e94560;
-            transform: scale(1.05);
-            box-shadow: 0 0 15px #e94560;
-        }
-
+        /* Кнопки */
         .btn {
             background: linear-gradient(135deg, #e94560, #b91c3c);
             padding: 10px 20px;
@@ -158,22 +131,57 @@
             border-radius: 50px;
             color: white;
             cursor: pointer;
-            margin-top: 10px;
+            margin: 10px auto;
+            font-weight: bold;
+            display: inline-block;
         }
 
         .stat-item {
             display: flex;
             justify-content: space-between;
-            padding: 10px;
+            padding: 12px;
             background: rgba(255,255,255,0.05);
-            border-radius: 16px;
+            border-radius: 20px;
             margin-bottom: 10px;
         }
 
-        .cooldown {
-            font-size: 12px;
-            color: #aaa;
-            margin-top: 5px;
+        /* Галерея аватарок */
+        .avatar-selector {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .avatar-option {
+            width: 70px;
+            height: 70px;
+            background: #1a1a3e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 45px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: 0.2s;
+        }
+
+        .avatar-option:hover {
+            border-color: #e94560;
+            transform: scale(1.05);
+            box-shadow: 0 0 15px #e94560;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            text-align: center;
+            margin-top: 10px;
         }
 
         input {
@@ -187,54 +195,55 @@
             margin: 10px 0;
         }
 
-        .hidden {
-            display: none;
-        }
-
-        .error-message {
-            color: #ff6b6b;
-            text-align: center;
-            margin-top: 10px;
-        }
-
-        .player-tag {
-            font-size: 12px;
-            color: #aaa;
-            text-align: center;
-            margin: 10px 0;
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 15px;
         }
     </style>
 </head>
 <body>
-    <!-- Плавающая аватарка (левый верхний угол) -->
-    <div class="floating-avatar" id="floatingAvatar" onclick="openProfileModal()">
+    <!-- Плавающая аватарка -->
+    <div class="floating-avatar" onclick="openProfileModal()">
         <div class="avatar-icon" id="avatarIcon">🎮</div>
     </div>
 
-    <!-- Модальное окно профиля -->
+    <!-- ОКНО 1: ПРОФИЛЬ -->
     <div id="profileModal" class="modal">
         <div class="modal-content">
             <button class="close-modal" onclick="closeProfileModal()">✖</button>
-            <h2 style="text-align:center; margin-bottom:20px;">👤 ПРОФИЛЬ</h2>
             
-            <div class="stat-item">
-                <span>🏷️ ТЕГ</span>
-                <span id="modalTag">#----</span>
+            <div class="profile-top">
+                <div class="profile-avatar-large" id="profileAvatar">🎮</div>
+                <div class="nickname-text" id="profileNickname">-</div>
+                <div class="player-tag" id="profileTag">#----</div>
             </div>
+
             <div class="stat-item">
                 <span>🏆 КУБКИ</span>
-                <span id="modalCups">0</span>
+                <span id="profileCups">0</span>
             </div>
             <div class="stat-item">
                 <span>🎲 ОТКРЫТО ЯЩИКОВ</span>
-                <span id="modalBoxes">0</span>
+                <span id="profileBoxes">0</span>
             </div>
             <div class="stat-item">
                 <span>💰 МОНЕТЫ</span>
-                <span id="modalCoins">0</span>
+                <span id="profileCoins">0</span>
             </div>
 
-            <h3 style="margin:20px 0 10px">🎨 СМЕНИТЬ АВАТАРКУ</h3>
+            <div class="button-group">
+                <button class="btn" onclick="openAvatarModal()">🎨 СМЕНИТЬ АВАТАРКУ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ОКНО 2: ВЫБОР АВАТАРКИ -->
+    <div id="avatarModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeAvatarModal()">✖</button>
+            <h3 style="text-align:center; margin-bottom:20px;">🎨 ВЫБЕРИ АВАТАРКУ</h3>
             <div class="avatar-selector" id="avatarSelector">
                 <div class="avatar-option" data-avatar="🎮">🎮</div>
                 <div class="avatar-option" data-avatar="⭐">⭐</div>
@@ -244,107 +253,63 @@
                 <div class="avatar-option" data-avatar="👑">👑</div>
                 <div class="avatar-option" data-avatar="⚡">⚡</div>
             </div>
-
-            <h3 style="margin:20px 0 10px">✏️ СМЕНИТЬ НИКНЕЙМ</h3>
-            <input type="text" id="newNickname" placeholder="Новый никнейм">
-            <button class="btn" onclick="changeNickname()">СМЕНИТЬ</button>
-            <div id="nicknameCooldown" class="cooldown"></div>
         </div>
     </div>
 
     <!-- Вход -->
-    <div id="authPanel" class="glass-panel" style="max-width:400px; margin:50px auto;">
-        <h2 style="text-align:center;">🔐 ВХОД</h2>
-        <input type="text" id="nickname" placeholder="Никнейм">
-        <div id="adminPasswordGroup" class="hidden">
-            <input type="password" id="adminPassword" placeholder="Пароль админа">
+    <div id="authPanel" class="modal" style="display:flex; background:rgba(0,0,0,0.95);">
+        <div class="modal-content">
+            <h2 style="text-align:center;">🔐 ВХОД</h2>
+            <input type="text" id="nickname" placeholder="Никнейм">
+            <div id="adminPasswordGroup" class="hidden">
+                <input type="password" id="adminPassword" placeholder="Пароль админа">
+            </div>
+            <button class="btn" style="width:100%" onclick="login()">ВОЙТИ</button>
+            <div id="authMessage" class="error-message"></div>
         </div>
-        <button class="btn" style="width:100%" onclick="login()">ВОЙТИ</button>
-        <div id="authMessage" class="error-message"></div>
     </div>
 
-    <!-- Главное меню (пока пустое) -->
-    <div id="gamePanel" class="hidden">
-        <div class="game-title">
-            <h1>⚡ BRAWL BOX ⚡</h1>
-        </div>
-        <div class="glass-panel" style="text-align:center">
-            <h2>🎮 ДОБРО ПОЖАЛОВАТЬ 🎮</h2>
-            <p style="color:#aaa; margin:20px">Здесь скоро появится игровой автомат</p>
+    <!-- Главное меню (пустое) -->
+    <div id="gamePanel" class="hidden" style="max-width:600px; margin:100px auto 0; text-align:center;">
+        <h1 style="font-size:42px; background:linear-gradient(135deg,#fff,#e94560); -webkit-background-clip:text; background-clip:text; color:transparent;">⚡ BRAWL BOX ⚡</h1>
+        <div style="background:rgba(15,25,45,0.85); border-radius:32px; padding:40px; margin-top:20px;">
+            <p style="color:#aaa;">Здесь скоро появится игровой автомат</p>
         </div>
     </div>
 
     <script>
         let currentPlayerId = null;
-        let nextFreeNicknameChange = null;
 
-        async function loadPlayerData() {
+        // Загрузка данных профиля
+        async function loadProfileData() {
             if (!currentPlayerId) return;
             const res = await fetch('/api/player/' + currentPlayerId);
             const data = await res.json();
             if (!data.error) {
                 document.getElementById('avatarIcon').innerText = data.avatar || '🎮';
-                document.getElementById('modalTag').innerText = data.tag || '#----';
-                document.getElementById('modalCups').innerText = data.cups || 0;
-                document.getElementById('modalBoxes').innerText = data.total_boxes || 0;
-                document.getElementById('modalCoins').innerText = data.coins || 0;
-                
-                if (data.next_free_nickname_change) {
-                    nextFreeNicknameChange = new Date(data.next_free_nickname_change);
-                    updateNicknameCooldown();
-                }
+                document.getElementById('profileAvatar').innerText = data.avatar || '🎮';
+                document.getElementById('profileNickname').innerText = data.nickname;
+                document.getElementById('profileTag').innerText = data.tag || '#----';
+                document.getElementById('profileCups').innerText = data.cups || 0;
+                document.getElementById('profileBoxes').innerText = data.total_boxes || 0;
+                document.getElementById('profileCoins').innerText = data.coins || 0;
             }
         }
 
+        // Смена аватарки
         async function changeAvatar(avatar) {
             await fetch('/api/change_avatar', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ playerId: currentPlayerId, avatar: avatar })
             });
-            document.getElementById('avatarIcon').innerText = avatar;
+            await loadProfileData();
+            closeAvatarModal();
         }
 
-        async function changeNickname() {
-            const newNick = document.getElementById('newNickname').value.trim();
-            if (!newNick) return alert('Введи никнейм');
-            
-            const res = await fetch('/api/change_nickname', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ playerId: currentPlayerId, newNickname: newNick })
-            });
-            const data = await res.json();
-            if (data.success) {
-                alert('Никнейм изменён!');
-                if (data.next_free_change) {
-                    nextFreeNicknameChange = new Date(data.next_free_change);
-                    updateNicknameCooldown();
-                }
-            } else {
-                alert(data.message || 'Ошибка');
-            }
-        }
-
-        function updateNicknameCooldown() {
-            const cooldownDiv = document.getElementById('nicknameCooldown');
-            if (!nextFreeNicknameChange) {
-                cooldownDiv.innerText = '✅ Бесплатная смена доступна';
-                return;
-            }
-            const now = new Date();
-            if (now >= nextFreeNicknameChange) {
-                cooldownDiv.innerText = '✅ Бесплатная смена доступна';
-                nextFreeNicknameChange = null;
-            } else {
-                const hours = Math.ceil((nextFreeNicknameChange - now) / (1000 * 60 * 60));
-                cooldownDiv.innerText = `⏳ Следующая бесплатная смена через ${hours} часов`;
-                setTimeout(updateNicknameCooldown, 60 * 60 * 1000);
-            }
-        }
-
+        // Открытие / закрытие окон
         function openProfileModal() {
-            loadPlayerData();
+            loadProfileData();
             document.getElementById('profileModal').style.display = 'flex';
         }
 
@@ -352,6 +317,15 @@
             document.getElementById('profileModal').style.display = 'none';
         }
 
+        function openAvatarModal() {
+            document.getElementById('avatarModal').style.display = 'flex';
+        }
+
+        function closeAvatarModal() {
+            document.getElementById('avatarModal').style.display = 'none';
+        }
+
+        // Вход
         async function login() {
             const nickname = document.getElementById('nickname').value.trim();
             if (!nickname) return;
@@ -368,11 +342,11 @@
             const data = await res.json();
             if (data.success) {
                 currentPlayerId = data.player.id;
-                document.getElementById('authPanel').classList.add('hidden');
+                document.getElementById('authPanel').style.display = 'none';
                 document.getElementById('gamePanel').classList.remove('hidden');
-                document.getElementById('floatingAvatar').classList.remove('hidden');
-                loadPlayerData();
+                await loadProfileData();
                 
+                // Назначаем обработчики аватарок
                 document.querySelectorAll('.avatar-option').forEach(opt => {
                     opt.onclick = () => changeAvatar(opt.getAttribute('data-avatar'));
                 });
@@ -381,15 +355,18 @@
             }
         }
 
+        // Поле пароля для админа
         document.getElementById('nickname').addEventListener('input', function(e) {
             const adminGroup = document.getElementById('adminPasswordGroup');
             adminGroup.classList.toggle('hidden', e.target.value !== 'unity');
         });
 
-        // Закрытие модалки по клику вне окна
+        // Закрытие окон по клику вне их
         window.onclick = function(event) {
-            const modal = document.getElementById('profileModal');
-            if (event.target === modal) closeProfileModal();
+            const profileModal = document.getElementById('profileModal');
+            const avatarModal = document.getElementById('avatarModal');
+            if (event.target === profileModal) closeProfileModal();
+            if (event.target === avatarModal) closeAvatarModal();
         };
     </script>
 </body>
