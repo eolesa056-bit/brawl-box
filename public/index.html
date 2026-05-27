@@ -157,7 +157,9 @@
             align-items: center;
         }
 
-        .profile-container, .glory-container, .settings-container {
+        .profile-container,
+        .glory-container,
+        .settings-container {
             background: linear-gradient(145deg, #0f172a, #020617);
             width: 90%;
             max-width: 600px;
@@ -167,7 +169,10 @@
             position: relative;
         }
 
-        .glory-container { max-width: 1000px; }
+        .glory-container {
+            max-width: 1000px;
+        }
+
         .close-modal {
             position: absolute;
             top: 20px;
@@ -181,28 +186,161 @@
             cursor: pointer;
         }
 
-        .profile-header { display: flex; gap: 30px; margin-bottom: 30px; align-items: center; flex-wrap: wrap; }
-        .avatar-large { width: 120px; height: 120px; background: linear-gradient(135deg, #2a2a5a, #1a1a3e); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 75px; border: 3px solid #e94560; cursor: pointer; overflow: hidden; }
-        .player-tag-static { font-size: 12px; color: #aaa; background: rgba(0,0,0,0.5); padding: 4px 10px; border-radius: 30px; display: inline-block; margin-top: 10px; }
-        .info-section { flex: 1; }
-        .nickname-wrapper { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
-        .profile-nickname { font-size: 34px; font-weight: bold; }
-        .edit-icon, .color-icon { font-size: 18px; cursor: pointer; background: rgba(0,0,0,0.5); padding: 4px 10px; border-radius: 30px; }
-        .profile-cups { font-size: 22px; color: #f9a826; font-weight: bold; }
-        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
-        .stat-card { background: rgba(255,255,255,0.05); border-radius: 25px; padding: 15px; text-align: center; }
-        .stat-card h3 { font-size: 14px; color: #aaa; margin-bottom: 8px; }
-        .stat-value { font-size: 26px; font-weight: bold; color: #f9a826; }
+        .profile-header {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
 
-        .path-track { background: rgba(0,0,0,0.6); border-radius: 40px; padding: 20px; }
-        .track-scroll { display: flex; overflow-x: auto; gap: 15px; padding: 10px 5px; scroll-behavior: smooth; }
-        .reward-tier { flex: 0 0 140px; background: linear-gradient(145deg, #1e293b, #0f172a); border-radius: 30px; padding: 15px; text-align: center; border: 1px solid #2a2a5a; }
-        .reward-tier.available { border-color: #f9a826; background: linear-gradient(145deg, #2a2a5a, #1e293b); }
-        .tier-cups { font-size: 18px; font-weight: bold; color: #f9a826; }
-        .tier-reward { font-size: 26px; margin: 10px 0; }
-        .claim-tier-btn { background: #e94560; border: none; padding: 6px 15px; border-radius: 30px; cursor: pointer; margin-top: 10px; color: white; }
-        .scroll-buttons { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
-        .scroll-btn { background: #e94560; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 20px; cursor: pointer; }
+        .avatar-large {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #2a2a5a, #1a1a3e);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 75px;
+            border: 3px solid #e94560;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .player-tag-static {
+            font-size: 12px;
+            color: #aaa;
+            background: rgba(0,0,0,0.5);
+            padding: 4px 10px;
+            border-radius: 30px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .info-section {
+            flex: 1;
+        }
+
+        .nickname-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .profile-nickname {
+            font-size: 34px;
+            font-weight: bold;
+        }
+
+        .edit-icon,
+        .color-icon {
+            font-size: 18px;
+            cursor: pointer;
+            background: rgba(0,0,0,0.5);
+            padding: 4px 10px;
+            border-radius: 30px;
+        }
+
+        .profile-cups {
+            font-size: 22px;
+            color: #f9a826;
+            font-weight: bold;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 25px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 14px;
+            color: #aaa;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 26px;
+            font-weight: bold;
+            color: #f9a826;
+        }
+
+        .path-track {
+            background: rgba(0,0,0,0.6);
+            border-radius: 40px;
+            padding: 20px;
+        }
+
+        .track-scroll {
+            display: flex;
+            overflow-x: auto;
+            gap: 15px;
+            padding: 10px 5px;
+            scroll-behavior: smooth;
+        }
+
+        .reward-tier {
+            flex: 0 0 140px;
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border-radius: 30px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #2a2a5a;
+        }
+
+        .reward-tier.available {
+            border-color: #f9a826;
+            background: linear-gradient(145deg, #2a2a5a, #1e293b);
+        }
+
+        .tier-cups {
+            font-size: 18px;
+            font-weight: bold;
+            color: #f9a826;
+        }
+
+        .tier-reward {
+            font-size: 26px;
+            margin: 10px 0;
+        }
+
+        .claim-tier-btn {
+            background: #e94560;
+            border: none;
+            padding: 6px 15px;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-top: 10px;
+            color: white;
+        }
+
+        .scroll-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .scroll-btn {
+            background: #e94560;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+        }
 
         .settings-row {
             display: flex;
@@ -213,10 +351,12 @@
             background: rgba(255,255,255,0.05);
             border-radius: 40px;
         }
+
         .settings-label {
             font-size: 20px;
             font-weight: bold;
         }
+
         .toggle-switch {
             width: 60px;
             height: 30px;
@@ -226,9 +366,11 @@
             position: relative;
             transition: 0.2s;
         }
+
         .toggle-switch.on {
             background: #00ff88;
         }
+
         .toggle-slider {
             width: 26px;
             height: 26px;
@@ -239,9 +381,11 @@
             left: 2px;
             transition: 0.2s;
         }
+
         .toggle-switch.on .toggle-slider {
             left: 32px;
         }
+
         .lang-select {
             background: #1e293b;
             border: 1px solid #e94560;
@@ -251,14 +395,53 @@
             font-size: 16px;
             cursor: pointer;
         }
-        .hidden { display: none; }
-        input, .btn { width: 100%; padding: 12px; border-radius: 50px; background: #0f172a; border: none; color: white; text-align: center; margin: 10px 0; }
-        .btn { background: linear-gradient(135deg, #e94560, #b91c3c); cursor: pointer; }
-        .main-menu { max-width: 700px; margin: 120px auto 0; text-align: center; }
-        .main-menu h1 { font-size: 48px; background: linear-gradient(135deg, #fff, #e94560); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 30px; }
-        .game-placeholder { background: rgba(15,25,45,0.85); border-radius: 40px; padding: 50px; margin-top: 25px; }
 
-        .avatar-selector, .nickname-container, .color-container {
+        .hidden {
+            display: none;
+        }
+
+        input,
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 50px;
+            background: #0f172a;
+            border: none;
+            color: white;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #e94560, #b91c3c);
+            cursor: pointer;
+        }
+
+        .main-menu {
+            max-width: 700px;
+            margin: 120px auto 0;
+            text-align: center;
+        }
+
+        .main-menu h1 {
+            font-size: 48px;
+            background: linear-gradient(135deg, #fff, #e94560);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 30px;
+        }
+
+        .game-placeholder {
+            background: rgba(15,25,45,0.85);
+            border-radius: 40px;
+            padding: 50px;
+            margin-top: 25px;
+        }
+
+        .avatar-selector,
+        .nickname-container,
+        .color-container {
             background: #0f172a;
             padding: 35px;
             border-radius: 60px;
@@ -267,11 +450,47 @@
             width: 90%;
             text-align: center;
         }
-        .avatar-selector { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
-        .avatar-option { width: 85px; height: 85px; background: #1a1a3e; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 55px; cursor: pointer; border: 2px solid transparent; }
-        .avatar-option:hover { border-color: #e94560; transform: scale(1.05); }
-        .color-options { display: flex; gap: 20px; justify-content: center; margin: 30px 0; flex-wrap: wrap; }
-        .color-circle { width: 55px; height: 55px; border-radius: 50%; cursor: pointer; border: 3px solid #fff; }
+
+        .avatar-selector {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .avatar-option {
+            width: 85px;
+            height: 85px;
+            background: #1a1a3e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 55px;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .avatar-option:hover {
+            border-color: #e94560;
+            transform: scale(1.05);
+        }
+
+        .color-options {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .color-circle {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid #fff;
+        }
     </style>
 </head>
 <body>
@@ -294,7 +513,7 @@
         <button onclick="openModal('link')">🔗 ПРИВЯЗКА АККАУНТА</button>
     </div>
 
-    <!-- ОКНО НАСТРОЕК (полноценное) -->
+    <!-- ОКНО НАСТРОЕК -->
     <div id="settingsModal" class="modal">
         <div class="settings-container">
             <button class="close-modal" onclick="closeModal('settingsModal')">✖</button>
@@ -307,7 +526,7 @@
                 </select>
             </div>
             <div class="settings-row">
-                <span class="settings-label">🎵 МУЗЫКА</span>
+                <span class="settings-label">🎵 МУЗЫКА В МЕНЮ</span>
                 <div id="musicToggle" class="toggle-switch on">
                     <div class="toggle-slider"></div>
                 </div>
@@ -315,22 +534,143 @@
         </div>
     </div>
 
-    <div id="historyModal" class="modal"><div class="profile-container"><button class="close-modal" onclick="closeModal('historyModal')">✖</button><h2>📜 ИСТОРИЯ БОЕВ</h2><p style="margin:20px">Здесь будут твои последние бои</p></div></div>
-    <div id="leadersModal" class="modal"><div class="profile-container"><button class="close-modal" onclick="closeModal('leadersModal')">✖</button><h2>🏆 СПИСКИ ЛИДЕРОВ</h2><p style="margin:20px">Топ игроки по кубкам, победам и т.д.</p></div></div>
-    <div id="inboxModal" class="modal"><div class="profile-container"><button class="close-modal" onclick="closeModal('inboxModal')">✖</button><h2>📥 ВХОДЯЩИЕ</h2><p style="margin:20px">Сообщения, подарки, приглашения</p></div></div>
-    <div id="linkModal" class="modal"><div class="profile-container"><button class="close-modal" onclick="closeModal('linkModal')">✖</button><h2>🔗 ПРИВЯЗКА АККАУНТА</h2><p style="margin:20px">Привяжи Google, Supercell ID или почту</p></div></div>
+    <div id="historyModal" class="modal">
+        <div class="profile-container">
+            <button class="close-modal" onclick="closeModal('historyModal')">✖</button>
+            <h2>📜 ИСТОРИЯ БОЕВ</h2>
+            <p style="margin:20px">Здесь будут твои последние бои</p>
+        </div>
+    </div>
+    <div id="leadersModal" class="modal">
+        <div class="profile-container">
+            <button class="close-modal" onclick="closeModal('leadersModal')">✖</button>
+            <h2>🏆 СПИСКИ ЛИДЕРОВ</h2>
+            <p style="margin:20px">Топ игроки по кубкам, победам и т.д.</p>
+        </div>
+    </div>
+    <div id="inboxModal" class="modal">
+        <div class="profile-container">
+            <button class="close-modal" onclick="closeModal('inboxModal')">✖</button>
+            <h2>📥 ВХОДЯЩИЕ</h2>
+            <p style="margin:20px">Сообщения, подарки, приглашения</p>
+        </div>
+    </div>
+    <div id="linkModal" class="modal">
+        <div class="profile-container">
+            <button class="close-modal" onclick="closeModal('linkModal')">✖</button>
+            <h2>🔗 ПРИВЯЗКА АККАУНТА</h2>
+            <p style="margin:20px">Привяжи Google, Supercell ID или почту</p>
+        </div>
+    </div>
 
-    <div id="profileModal" class="modal"><div class="profile-container"><button class="close-modal" onclick="closeProfileModal()">✖</button><div class="profile-header"><div class="avatar-section"><div class="avatar-large" id="largeAvatar" onclick="openAvatarPicker()">🎮</div><div class="player-tag-static" id="profileTag">#----</div></div><div class="info-section"><div class="nickname-wrapper"><div class="profile-nickname" id="profileNick">-</div><div class="edit-icon" onclick="openNicknameEditor()">✏️</div><div class="color-icon" onclick="openColorPicker()">🎨</div></div><div class="profile-cups">🏆 <span id="profileCups">0</span> кубков</div></div></div><div class="stats-grid"><div class="stat-card"><h3>🎲 ОТКРЫТО ЯЩИКОВ</h3><div class="stat-value" id="profileBoxes">0</div></div><div class="stat-card"><h3>💰 МОНЕТЫ</h3><div class="stat-value" id="profileCoins">0</div></div><div class="stat-card"><h3>🏆 КУБКОВ ВСЕГО</h3><div class="stat-value" id="profileTotalCups">0</div></div><div class="stat-card"><h3>⭐ ЛУЧШИЙ РЕКОРД</h3><div class="stat-value" id="recordCups">0</div></div></div></div></div>
+    <div id="profileModal" class="modal">
+        <div class="profile-container">
+            <button class="close-modal" onclick="closeProfileModal()">✖</button>
+            <div class="profile-header">
+                <div class="avatar-section">
+                    <div class="avatar-large" id="largeAvatar" onclick="openAvatarPicker()">🎮</div>
+                    <div class="player-tag-static" id="profileTag">#----</div>
+                </div>
+                <div class="info-section">
+                    <div class="nickname-wrapper">
+                        <div class="profile-nickname" id="profileNick">-</div>
+                        <div class="edit-icon" onclick="openNicknameEditor()">✏️</div>
+                        <div class="color-icon" onclick="openColorPicker()">🎨</div>
+                    </div>
+                    <div class="profile-cups">🏆 <span id="profileCups">0</span> кубков</div>
+                </div>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>🎲 ОТКРЫТО ЯЩИКОВ</h3>
+                    <div class="stat-value" id="profileBoxes">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>💰 МОНЕТЫ</h3>
+                    <div class="stat-value" id="profileCoins">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>🏆 КУБКОВ ВСЕГО</h3>
+                    <div class="stat-value" id="profileTotalCups">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>⭐ ЛУЧШИЙ РЕКОРД</h3>
+                    <div class="stat-value" id="recordCups">0</div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <div id="pathModal" class="modal"><div class="glory-container"><button class="close-modal" onclick="closePathModal()">✖</button><div class="glory-header"><h1>🏆 ПУТЬ К СЛАВЕ 🏆</h1><p>Собирай кубки, чтобы получать награды!</p></div><div class="progress-info"><div><div style="font-size:14px; color:#aaa;">ТВОИ КУБКИ</div><div class="current-cups" id="currentCupsDisplay">0</div></div><div class="next-milestone"><div style="font-size:14px; color:#aaa;">ДО СЛЕДУЮЩЕЙ НАГРАДЫ</div><div class="milestone-cups" id="nextMilestone">0</div></div></div><div class="progress-bar-container"><div class="progress-bar" id="progressBar"></div></div><div class="track-container"><div class="track-scroll" id="trackScroll"></div><div class="scroll-buttons"><button class="scroll-btn" onclick="scrollTrack(-150)">◀</button><button class="scroll-btn" onclick="scrollTrack(150)">▶</button></div></div></div></div>
+    <div id="pathModal" class="modal">
+        <div class="glory-container">
+            <button class="close-modal" onclick="closePathModal()">✖</button>
+            <div class="glory-header">
+                <h1>🏆 ПУТЬ К СЛАВЕ 🏆</h1>
+                <p>Собирай кубки, чтобы получать награды!</p>
+            </div>
+            <div class="progress-info">
+                <div>
+                    <div style="font-size:14px; color:#aaa;">ТВОИ КУБКИ</div>
+                    <div class="current-cups" id="currentCupsDisplay">0</div>
+                </div>
+                <div class="next-milestone">
+                    <div style="font-size:14px; color:#aaa;">ДО СЛЕДУЮЩЕЙ НАГРАДЫ</div>
+                    <div class="milestone-cups" id="nextMilestone">0</div>
+                </div>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="track-container">
+                <div class="track-scroll" id="trackScroll"></div>
+                <div class="scroll-buttons">
+                    <button class="scroll-btn" onclick="scrollTrack(-150)">◀</button>
+                    <button class="scroll-btn" onclick="scrollTrack(150)">▶</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <div id="avatarPickerModal" class="modal"><div class="avatar-selector"><div id="avatarSelector" style="display:flex; gap:20px; flex-wrap:wrap; justify-content:center;"></div></div></div>
-    <div id="nicknameEditorModal" class="modal"><div class="nickname-container"><h3>✏️ СМЕНИТЬ НИКНЕЙМ</h3><input type="text" id="newNicknameInput" placeholder="Новый никнейм"><button class="btn" onclick="changeNickname()">СОХРАНИТЬ</button><button class="btn" onclick="closeNicknameEditor()" style="background:#2a2a5a;">ОТМЕНА</button></div></div>
-    <div id="colorPickerModal" class="modal"><div class="color-container"><h3>🎨 ВЫБЕРИ ЦВЕТ НИКНЕЙМА</h3><div class="color-options" id="colorOptions"></div></div></div>
+    <div id="avatarPickerModal" class="modal">
+        <div class="avatar-selector">
+            <div id="avatarSelector" style="display:flex; gap:20px; flex-wrap:wrap; justify-content:center;"></div>
+        </div>
+    </div>
+    <div id="nicknameEditorModal" class="modal">
+        <div class="nickname-container">
+            <h3>✏️ СМЕНИТЬ НИКНЕЙМ</h3>
+            <input type="text" id="newNicknameInput" placeholder="Новый никнейм">
+            <button class="btn" onclick="changeNickname()">СОХРАНИТЬ</button>
+            <button class="btn" onclick="closeNicknameEditor()" style="background:#2a2a5a;">ОТМЕНА</button>
+        </div>
+    </div>
+    <div id="colorPickerModal" class="modal">
+        <div class="color-container">
+            <h3>🎨 ВЫБЕРИ ЦВЕТ НИКНЕЙМА</h3>
+            <div class="color-options" id="colorOptions"></div>
+        </div>
+    </div>
 
-    <div id="authPanel" class="modal" style="display:flex; background:rgba(0,0,0,0.95);"><div class="profile-container" style="max-width:400px;"><h2>🔐 ВХОД</h2><input type="text" id="nickname" placeholder="Никнейм"><div id="adminPasswordGroup" class="hidden"><input type="password" id="adminPassword" placeholder="Пароль админа"></div><button class="btn" onclick="login()">ВОЙТИ</button><div id="authMessage" style="color:#ff6b6b; margin-top:10px;"></div></div></div>
+    <div id="authPanel" class="modal" style="display:flex; background:rgba(0,0,0,0.95);">
+        <div class="profile-container" style="max-width:400px;">
+            <h2>🔐 ВХОД</h2>
+            <input type="text" id="nickname" placeholder="Никнейм">
+            <div id="adminPasswordGroup" class="hidden">
+                <input type="password" id="adminPassword" placeholder="Пароль админа">
+            </div>
+            <button class="btn" onclick="login()">ВОЙТИ</button>
+            <div id="authMessage" style="color:#ff6b6b; margin-top:10px;"></div>
+        </div>
+    </div>
 
-    <div id="gamePanel" class="hidden"><div class="main-menu"><h1>⚡ BRAWL BOX ⚡</h1><div class="game-placeholder"><p style="color:#aaa; font-size:18px;">Здесь скоро появится игровой автомат</p></div></div></div>
+    <div id="gamePanel" class="hidden">
+        <div class="main-menu">
+            <h1>⚡ BRAWL BOX ⚡</h1>
+            <div class="game-placeholder">
+                <p style="color:#aaa; font-size:18px;">Здесь скоро появится игровой автомат</p>
+            </div>
+        </div>
+    </div>
 
     <script>
         let currentPlayerId = null;
@@ -338,16 +678,23 @@
         let musicEnabled = true;
         let audioElement = null;
         const DEV_AVATAR_URL = "https://yt3.googleusercontent.com/wEnonoxntKdkIuHZbNouYlz6YoCchSbx7tpBRaVS6V08XzJYkvNZaG34RwZV7khnoF6hqI-kGw=s900-c-k-c0x00ffffff-no-rj";
-        
-        // Простая музыкальная дорожка (зацикленный генератор звука, можно заменить на mp3)
+
+        // Функция для инициализации музыки (будет вызвана после авторизации)
         function initMusic() {
             if (!audioElement) {
-                audioElement = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3');
+                // Пытаемся загрузить музыку из папки public (файл music.mp3)
+                audioElement = new Audio('/music.mp3');
                 audioElement.loop = true;
                 audioElement.volume = 0.3;
+                // Обработчик, чтобы играть только после взаимодействия с сайтом
+                document.body.addEventListener('click', () => {
+                    if (musicEnabled && audioElement.paused) {
+                        audioElement.play().catch(e => console.log('Автовоспроизведение заблокировано, нажмите на страницу'));
+                    }
+                }, { once: true });
             }
             if (musicEnabled) {
-                audioElement.play().catch(e => console.log('Автовоспроизведение заблокировано, нажмите на страницу'));
+                audioElement.play().catch(e => console.log('Нужно взаимодействие'));
             } else {
                 audioElement.pause();
             }
@@ -359,7 +706,6 @@
             if (musicEnabled) {
                 toggle.classList.add('on');
                 if (audioElement) audioElement.play().catch(e => console.log('Нужно взаимодействие'));
-                else initMusic();
             } else {
                 toggle.classList.remove('on');
                 if (audioElement) audioElement.pause();
@@ -392,7 +738,12 @@
                 const nickname = data.nickname;
                 const nicknameColor = data.nickname_color || '#ffffff';
                 currentCups = data.cups || 0;
-                if (data.path_data) { try { const saved = JSON.parse(data.path_data); if (saved.claimed) claimedStatus = saved.claimed; } catch(e) {} }
+                if (data.path_data) {
+                    try {
+                        const saved = JSON.parse(data.path_data);
+                        if (saved.claimed) claimedStatus = saved.claimed;
+                    } catch (e) {}
+                }
                 document.getElementById('miniNickname').innerText = nickname.length > 10 ? nickname.slice(0, 9) + '…' : nickname;
                 document.getElementById('miniNickname').style.color = nicknameColor;
                 if (avatar.startsWith('http')) {
@@ -417,11 +768,21 @@
         function updateGloryUI() {
             document.getElementById('currentCupsDisplay').innerText = currentCups;
             let nextCups = 0;
-            for (let tier of pathData) { if (tier.cups > currentCups) { nextCups = tier.cups; break; } }
+            for (let tier of pathData) {
+                if (tier.cups > currentCups) {
+                    nextCups = tier.cups;
+                    break;
+                }
+            }
             document.getElementById('nextMilestone').innerText = nextCups > 0 ? `${nextCups} 🏆` : 'МАКСИМУМ!';
-            let lastCups = 0, nextCupsBar = pathData[0]?.cups || 0;
-            for (let i = pathData.length-1; i >= 0; i--) {
-                if (pathData[i].cups <= currentCups) { lastCups = pathData[i].cups; nextCupsBar = pathData[i+1]?.cups || pathData[i].cups; break; }
+            let lastCups = 0,
+                nextCupsBar = pathData[0]?.cups || 0;
+            for (let i = pathData.length - 1; i >= 0; i--) {
+                if (pathData[i].cups <= currentCups) {
+                    lastCups = pathData[i].cups;
+                    nextCupsBar = pathData[i + 1]?.cups || pathData[i].cups;
+                    break;
+                }
             }
             let progressPercent = nextCupsBar > lastCups ? ((currentCups - lastCups) / (nextCupsBar - lastCups)) * 100 : 100;
             progressPercent = Math.min(100, Math.max(0, progressPercent));
@@ -433,10 +794,16 @@
                 const isAvailable = currentCups >= tier.cups && !claimedStatus[idx];
                 const div = document.createElement('div');
                 div.className = `reward-tier ${isAvailable ? 'available' : (claimedStatus[idx] ? 'claimed' : '')}`;
-                div.innerHTML = `<div class="tier-cups">${tier.cups}🏆</div><div class="tier-reward">${tier.reward}</div><div class="tier-label">${tier.label}</div>${isAvailable ? '<button class="claim-tier-btn" data-idx="'+idx+'">ЗАБРАТЬ</button>' : (claimedStatus[idx] ? '<div style="font-size:20px; margin-top:8px;">✅</div>' : '<div style="font-size:20px; margin-top:8px;">🔒</div>')}`;
+                div.innerHTML = `<div class="tier-cups">${tier.cups}🏆</div><div class="tier-reward">${tier.reward}</div><div class="tier-label">${tier.label}</div>${isAvailable ? '<button class="claim-tier-btn" data-idx="' + idx + '">ЗАБРАТЬ</button>' : (claimedStatus[idx] ? '<div style="font-size:20px; margin-top:8px;">✅</div>' : '<div style="font-size:20px; margin-top:8px;">🔒</div>')}`;
                 container.appendChild(div);
             });
-            document.querySelectorAll('.claim-tier-btn').forEach(btn => { btn.onclick = (e) => { e.stopPropagation(); const idx = parseInt(btn.getAttribute('data-idx')); claimReward(idx); }; });
+            document.querySelectorAll('.claim-tier-btn').forEach(btn => {
+                btn.onclick = (e) => {
+                    e.stopPropagation();
+                    const idx = parseInt(btn.getAttribute('data-idx'));
+                    claimReward(idx);
+                };
+            });
         }
 
         async function claimReward(idx) {
@@ -444,17 +811,54 @@
             if (currentCups < tier.cups || claimedStatus[idx]) return;
             claimedStatus[idx] = true;
             alert(`🎉 Вы получили: ${tier.reward} (${tier.label})!`);
-            await fetch('/api/save_path', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ playerId: currentPlayerId, pathData: { claimed: claimedStatus } }) });
+            await fetch('/api/save_path', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    playerId: currentPlayerId,
+                    pathData: {
+                        claimed: claimedStatus
+                    }
+                })
+            });
             updateGloryUI();
         }
 
-        function scrollTrack(delta) { const container = document.getElementById('trackScroll'); if (container) container.scrollBy({ left: delta, behavior: 'smooth' }); }
-        function toggleMenu() { const m = document.getElementById('menuPanel'); m.style.display = m.style.display === 'block' ? 'none' : 'block'; }
-        function openModal(id) { toggleMenu(); document.getElementById(id + 'Modal').style.display = 'flex'; }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        function scrollTrack(delta) {
+            const container = document.getElementById('trackScroll');
+            if (container) container.scrollBy({
+                left: delta,
+                behavior: 'smooth'
+            });
+        }
+
+        function toggleMenu() {
+            const m = document.getElementById('menuPanel');
+            m.style.display = m.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function openModal(id) {
+            toggleMenu();
+            document.getElementById(id + 'Modal').style.display = 'flex';
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
 
         async function changeAvatar(avatarValue, isUrl = false) {
-            await fetch('/api/change_avatar', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ playerId: currentPlayerId, avatar: isUrl ? DEV_AVATAR_URL : avatarValue }) });
+            await fetch('/api/change_avatar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    playerId: currentPlayerId,
+                    avatar: isUrl ? DEV_AVATAR_URL : avatarValue
+                })
+            });
             await refreshProfileData();
             closeAvatarPicker();
         }
@@ -462,33 +866,111 @@
         async function changeNickname() {
             const newNick = document.getElementById('newNicknameInput').value.trim();
             if (!newNick) return alert("Введи никнейм");
-            const res = await fetch('/api/change_nickname', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ playerId: currentPlayerId, newNickname: newNick, color: null }) });
+            const res = await fetch('/api/change_nickname', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    playerId: currentPlayerId,
+                    newNickname: newNick,
+                    color: null
+                })
+            });
             const data = await res.json();
-            if (data.success) { await refreshProfileData(); closeNicknameEditor(); } else alert(data.message || "Ошибка");
+            if (data.success) {
+                await refreshProfileData();
+                closeNicknameEditor();
+            } else alert(data.message || "Ошибка");
         }
 
         async function changeColorOnly(color) {
-            await fetch('/api/change_nickname', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ playerId: currentPlayerId, color: color }) });
+            await fetch('/api/change_nickname', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    playerId: currentPlayerId,
+                    color: color
+                })
+            });
             await refreshProfileData();
         }
 
-        function openProfileModal() { refreshProfileData(); document.getElementById('profileModal').style.display = 'flex'; }
-        function closeProfileModal() { document.getElementById('profileModal').style.display = 'none'; }
-        function openPathModal() { refreshProfileData(); document.getElementById('pathModal').style.display = 'flex'; }
-        function closePathModal() { document.getElementById('pathModal').style.display = 'none'; }
-        function openAvatarPicker() { document.getElementById('avatarPickerModal').style.display = 'flex'; const container = document.getElementById('avatarSelector'); const avatars = ['🎮','⭐','🔥','🐺','🤖','👑','⚡','😈']; if (isAdmin) avatars.push('👑 DEV'); container.innerHTML = avatars.map(a => `<div class="avatar-option" data-avatar="${a}">${a}</div>`).join(''); document.querySelectorAll('.avatar-option').forEach(opt => opt.onclick = () => changeAvatar(opt.getAttribute('data-avatar'), opt.getAttribute('data-avatar') === '👑 DEV')); }
-        function closeAvatarPicker() { document.getElementById('avatarPickerModal').style.display = 'none'; }
-        function openNicknameEditor() { document.getElementById('nicknameEditorModal').style.display = 'flex'; }
-        function closeNicknameEditor() { document.getElementById('nicknameEditorModal').style.display = 'none'; }
-        function openColorPicker() { document.getElementById('colorPickerModal').style.display = 'flex'; const container = document.getElementById('colorOptions'); const colors = ['#ffffff','#f9a826','#ff69b4','#00bfff','#c084fc','#ff0000','#00ff88']; container.innerHTML = colors.map(c => `<div class="color-circle" style="background:${c};" data-color="${c}"></div>`).join(''); document.querySelectorAll('.color-circle').forEach(circle => circle.onclick = async () => { await changeColorOnly(circle.getAttribute('data-color')); closeColorPicker(); openProfileModal(); }); }
-        function closeColorPicker() { document.getElementById('colorPickerModal').style.display = 'none'; }
+        function openProfileModal() {
+            refreshProfileData();
+            document.getElementById('profileModal').style.display = 'flex';
+        }
+
+        function closeProfileModal() {
+            document.getElementById('profileModal').style.display = 'none';
+        }
+
+        function openPathModal() {
+            refreshProfileData();
+            document.getElementById('pathModal').style.display = 'flex';
+        }
+
+        function closePathModal() {
+            document.getElementById('pathModal').style.display = 'none';
+        }
+
+        function openAvatarPicker() {
+            document.getElementById('avatarPickerModal').style.display = 'flex';
+            const container = document.getElementById('avatarSelector');
+            const avatars = ['🎮', '⭐', '🔥', '🐺', '🤖', '👑', '⚡', '😈'];
+            if (isAdmin) avatars.push('👑 DEV');
+            container.innerHTML = avatars.map(a => `<div class="avatar-option" data-avatar="${a}">${a}</div>`).join('');
+            document.querySelectorAll('.avatar-option').forEach(opt => opt.onclick = () => changeAvatar(opt.getAttribute('data-avatar'), opt.getAttribute('data-avatar') === '👑 DEV'));
+        }
+
+        function closeAvatarPicker() {
+            document.getElementById('avatarPickerModal').style.display = 'none';
+        }
+
+        function openNicknameEditor() {
+            document.getElementById('nicknameEditorModal').style.display = 'flex';
+        }
+
+        function closeNicknameEditor() {
+            document.getElementById('nicknameEditorModal').style.display = 'none';
+        }
+
+        function openColorPicker() {
+            document.getElementById('colorPickerModal').style.display = 'flex';
+            const container = document.getElementById('colorOptions');
+            const colors = ['#ffffff', '#f9a826', '#ff69b4', '#00bfff', '#c084fc', '#ff0000', '#00ff88'];
+            container.innerHTML = colors.map(c => `<div class="color-circle" style="background:${c};" data-color="${c}"></div>`).join('');
+            document.querySelectorAll('.color-circle').forEach(circle => circle.onclick = async () => {
+                await changeColorOnly(circle.getAttribute('data-color'));
+                closeColorPicker();
+                openProfileModal();
+            });
+        }
+
+        function closeColorPicker() {
+            document.getElementById('colorPickerModal').style.display = 'none';
+        }
 
         async function login() {
             const nickname = document.getElementById('nickname').value.trim();
             if (!nickname) return;
             let password = '';
-            if (nickname === 'unity') { password = document.getElementById('adminPassword').value; if (!password) return alert('Введи пароль админа'); }
-            const res = await fetch('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nickname, password }) });
+            if (nickname === 'unity') {
+                password = document.getElementById('adminPassword').value;
+                if (!password) return alert('Введи пароль админа');
+            }
+            const res = await fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    nickname,
+                    password
+                })
+            });
             const data = await res.json();
             if (data.success) {
                 currentPlayerId = data.player.id;
@@ -496,19 +978,31 @@
                 document.getElementById('authPanel').style.display = 'none';
                 document.getElementById('gamePanel').classList.remove('hidden');
                 await refreshProfileData();
+
+                // Загружаем настройки музыки
                 const savedMusic = localStorage.getItem('musicEnabled');
                 if (savedMusic !== null) musicEnabled = savedMusic === 'true';
                 const toggle = document.getElementById('musicToggle');
-                if (musicEnabled) toggle.classList.add('on'); else toggle.classList.remove('on');
+                if (musicEnabled) toggle.classList.add('on');
+                else toggle.classList.remove('on');
                 toggle.onclick = () => toggleMusic();
+
+                // Инициализируем музыку только после входа (играет в меню)
                 initMusic();
+
+                // Настройки языка
                 document.getElementById('languageSelect').value = localStorage.getItem('language') || 'ru';
-                document.getElementById('languageSelect').onchange = (e) => { localStorage.setItem('language', e.target.value); alert('Язык изменён, перезагрузите страницу для применения'); };
+                document.getElementById('languageSelect').onchange = (e) => {
+                    localStorage.setItem('language', e.target.value);
+                    alert('Язык изменён, перезагрузите страницу для применения');
+                };
             } else document.getElementById('authMessage').innerText = data.message;
         }
 
         document.getElementById('nickname').addEventListener('input', e => document.getElementById('adminPasswordGroup').classList.toggle('hidden', e.target.value !== 'unity'));
-        window.onclick = event => { if (event.target.classList.contains('modal')) event.target.style.display = 'none'; };
+        window.onclick = event => {
+            if (event.target.classList.contains('modal')) event.target.style.display = 'none';
+        };
     </script>
 </body>
 </html>
