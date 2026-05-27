@@ -14,7 +14,7 @@
 
         body {
             font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: radial-gradient(ellipse at 20% 30%, #0f0c29, #1a1a3e, #0a0a1a);
+            background: radial-gradient(ellipse at 20% 30%, #2a2a3a, #1e1e2f, #12121a);
             min-height: 100vh;
             padding: 20px;
         }
@@ -84,11 +84,11 @@
             white-space: nowrap;
         }
 
-        /* Гамбургер-меню */
+        /* Гамбургер-меню (серый фон, белые полоски) */
         .hamburger {
             font-size: 32px;
             cursor: pointer;
-            background: rgba(0,0,0,0.6);
+            background: #4a4a5a;
             width: 50px;
             height: 50px;
             border-radius: 50%;
@@ -96,12 +96,13 @@
             align-items: center;
             justify-content: center;
             backdrop-filter: blur(10px);
-            border: 1px solid #e94560;
+            border: 1px solid #6a6a7a;
             transition: 0.2s;
+            color: white;
         }
 
         .hamburger:hover {
-            background: #e94560;
+            background: #5a5a6a;
             transform: scale(1.05);
         }
 
@@ -179,7 +180,7 @@
             cursor: pointer;
         }
 
-        /* Остальные стили (профиль, путь к славе и т.д.) — сокращённо, без изменений */
+        /* Остальные стили (профиль, путь к славе и т.д.) */
         .profile-container, .glory-container {
             background: linear-gradient(145deg, #0f172a, #020617);
             width: 90%;
