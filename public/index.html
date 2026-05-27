@@ -19,17 +19,15 @@
             padding: 20px;
         }
 
-        /* Верхняя панель: аватарка (слева) и путь к славе (справа от неё) */
-        .top-bar {
+        /* Верхняя левая панель: аватарка и кнопка «Путь к славе» рядом */
+        .top-left-bar {
             position: fixed;
             top: 20px;
             left: 20px;
-            right: 20px;
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
             z-index: 100;
-            flex-wrap: wrap;
         }
 
         .floating-avatar {
@@ -65,7 +63,7 @@
             text-align: center;
         }
 
-        /* Кнопка ПУТЬ К СЛАВЕ (справа от аватарки) */
+        /* Кнопка ПУТЬ К СЛАВЕ (рядом с аватаркой) */
         .glory-button {
             background: linear-gradient(135deg, #e94560, #b91c3c);
             padding: 10px 20px;
@@ -77,6 +75,7 @@
             color: white;
             box-shadow: 0 0 10px rgba(233,69,96,0.5);
             transition: 0.2s;
+            white-space: nowrap;
         }
 
         .glory-button:hover {
@@ -210,7 +209,7 @@
             color: #f9a826;
         }
 
-        /* ========== ОКНО ПУТИ К СЛАВЕ (с наградами) ========== */
+        /* Окно пути к славе */
         .path-modal {
             display: none;
             position: fixed;
@@ -268,7 +267,6 @@
             padding: 15px;
             text-align: center;
             border: 1px solid #2a2a5a;
-            transition: 0.2s;
         }
 
         .path-step.completed {
@@ -418,8 +416,8 @@
     </style>
 </head>
 <body>
-    <!-- Верхняя панель: аватарка и КНОПКА ПУТЬ К СЛАВЕ СПРАВА -->
-    <div class="top-bar">
+    <!-- Верхняя левая панель: аватарка и кнопка «Путь к славе» рядом -->
+    <div class="top-left-bar">
         <div class="floating-avatar" onclick="openProfileModal()">
             <div class="mini-avatar" id="miniAvatar">🎮</div>
             <div class="nickname-overlay" id="miniNickname">-</div>
@@ -454,7 +452,7 @@
         </div>
     </div>
 
-    <!-- ОКНО ПУТИ К СЛАВЕ (с наградами) -->
+    <!-- ОКНО ПУТИ К СЛАВЕ -->
     <div id="pathModal" class="path-modal">
         <div class="path-container">
             <button class="close-modal" onclick="closePathModal()">✖</button>
@@ -469,7 +467,7 @@
         </div>
     </div>
 
-    <!-- ОКНА ВЫБОРА -->
+    <!-- ОКНА ВЫБОРА (аватарка, ник, цвет) -->
     <div id="avatarPickerModal" class="avatar-modal">
         <div class="avatar-selector" id="avatarSelector">
             <div class="avatar-option" data-avatar="🎮">🎮</div>
@@ -521,7 +519,7 @@
         </div>
     </div>
 
-    <!-- ГЛАВНОЕ МЕНЮ -->
+    <!-- ГЛАВНОЕ МЕНЮ (чистое, без лишних кнопок) -->
     <div id="gamePanel" class="hidden">
         <div class="main-menu">
             <h1>⚡ BRAWL BOX ⚡</h1>
