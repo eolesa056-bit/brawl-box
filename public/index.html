@@ -104,6 +104,9 @@
         const socket = io();
         let currentUserId = null;
         
+        socket.on('connect', () => console.log('✅ Сокет подключён'));
+        socket.on('connect_error', (err) => console.error('❌ Ошибка сокета:', err));
+        
         async function register() {
             const login = document.getElementById('login').value.trim();
             const password = document.getElementById('password').value;
@@ -151,10 +154,16 @@
         }
         
         document.getElementById('openBtn').onclick = () => {
-            if (currentUserId) socket.emit('open_box');
+            if (currentUserId) {
+                console.log('Открываю ящик, userId:', currentUserId);
+                socket.emit('open_box');
+            } else {
+                alert('Не авторизован');
+            }
         };
         
         socket.on('box_opened', (reward) => {
+            console.log('Награда:', reward);
             document.getElementById('reward').innerHTML = `✨ ${reward.name} ✨`;
             updateStats();
             setTimeout(() => document.getElementById('reward').innerHTML = '', 2000);
