@@ -19,7 +19,7 @@
             padding: 20px;
         }
 
-        /* Верхняя панель: аватарка (слева) и гамбургер (справа) */
+        /* Верхняя панель */
         .top-bar {
             position: fixed;
             top: 20px;
@@ -84,7 +84,12 @@
             white-space: nowrap;
         }
 
-        /* Гамбургер-меню (серый фон, белые полоски) */
+        .glory-button:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px #e94560;
+        }
+
+        /* Гамбургер */
         .hamburger {
             font-size: 32px;
             cursor: pointer;
@@ -106,7 +111,7 @@
             transform: scale(1.05);
         }
 
-        /* Меню (выпадающее) */
+        /* Выпадающее меню */
         .menu-panel {
             display: none;
             position: fixed;
@@ -142,7 +147,7 @@
             transform: translateX(5px);
         }
 
-        /* Окна (модальные) */
+        /* Модальные окна */
         .modal {
             display: none;
             position: fixed;
@@ -156,31 +161,6 @@
             align-items: center;
         }
 
-        .modal-content {
-            background: linear-gradient(145deg, #0f172a, #020617);
-            width: 90%;
-            max-width: 500px;
-            border-radius: 60px;
-            border: 1px solid #e94560;
-            padding: 35px;
-            position: relative;
-            text-align: center;
-        }
-
-        .close-modal {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            background: #e94560;
-            border: none;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            font-size: 20px;
-            cursor: pointer;
-        }
-
-        /* Остальные стили (профиль, путь к славе и т.д.) */
         .profile-container, .glory-container {
             background: linear-gradient(145deg, #0f172a, #020617);
             width: 90%;
@@ -192,6 +172,19 @@
         }
 
         .glory-container { max-width: 1000px; }
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            background: #e94560;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 22px;
+            cursor: pointer;
+        }
+
         .profile-header { display: flex; gap: 30px; margin-bottom: 30px; align-items: center; flex-wrap: wrap; }
         .avatar-large { width: 120px; height: 120px; background: linear-gradient(135deg, #2a2a5a, #1a1a3e); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 75px; border: 3px solid #e94560; cursor: pointer; overflow: hidden; }
         .player-tag-static { font-size: 12px; color: #aaa; background: rgba(0,0,0,0.5); padding: 4px 10px; border-radius: 30px; display: inline-block; margin-top: 10px; }
@@ -221,10 +214,24 @@
         .main-menu { max-width: 700px; margin: 120px auto 0; text-align: center; }
         .main-menu h1 { font-size: 48px; background: linear-gradient(135deg, #fff, #e94560); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 30px; }
         .game-placeholder { background: rgba(15,25,45,0.85); border-radius: 40px; padding: 50px; margin-top: 25px; }
+
+        .avatar-selector, .nickname-container, .color-container {
+            background: #0f172a;
+            padding: 35px;
+            border-radius: 60px;
+            border: 1px solid #e94560;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+        }
+        .avatar-selector { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+        .avatar-option { width: 85px; height: 85px; background: #1a1a3e; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 55px; cursor: pointer; border: 2px solid transparent; }
+        .avatar-option:hover { border-color: #e94560; transform: scale(1.05); }
+        .color-options { display: flex; gap: 20px; justify-content: center; margin: 30px 0; flex-wrap: wrap; }
+        .color-circle { width: 55px; height: 55px; border-radius: 50%; cursor: pointer; border: 3px solid #fff; }
     </style>
 </head>
 <body>
-    <!-- Верхняя панель: слева аватарка и путь к славе, справа гамбургер -->
     <div class="top-bar">
         <div class="left-group">
             <div class="floating-avatar" onclick="openProfileModal()">
@@ -246,11 +253,11 @@
     </div>
 
     <!-- Модальные окна для пунктов меню -->
-    <div id="settingsModal" class="modal"><div class="modal-content"><button class="close-modal" onclick="closeModal('settingsModal')">✖</button><h2>⚙️ НАСТРОЙКИ</h2><p style="margin:20px">Звук, графика, управление — скоро...</p></div></div>
-    <div id="historyModal" class="modal"><div class="modal-content"><button class="close-modal" onclick="closeModal('historyModal')">✖</button><h2>📜 ИСТОРИЯ БОЕВ</h2><p style="margin:20px">Здесь будут твои последние бои</p></div></div>
-    <div id="leadersModal" class="modal"><div class="modal-content"><button class="close-modal" onclick="closeModal('leadersModal')">✖</button><h2>🏆 СПИСКИ ЛИДЕРОВ</h2><p style="margin:20px">Топ игроки по кубкам, победам и т.д.</p></div></div>
-    <div id="inboxModal" class="modal"><div class="modal-content"><button class="close-modal" onclick="closeModal('inboxModal')">✖</button><h2>📥 ВХОДЯЩИЕ</h2><p style="margin:20px">Сообщения, подарки, приглашения</p></div></div>
-    <div id="linkModal" class="modal"><div class="modal-content"><button class="close-modal" onclick="closeModal('linkModal')">✖</button><h2>🔗 ПРИВЯЗКА АККАУНТА</h2><p style="margin:20px">Привяжи Google, Supercell ID или почту</p></div></div>
+    <div id="settingsModal" class="modal"><div class="profile-container"><button class="close-modal" onclick="closeModal('settingsModal')">✖</button><h2>⚙️ НАСТРОЙКИ</h2><p style="margin:20px">Звук, графика, управление — скоро...</p></div></div>
+    <div id="historyModal" class="modal"><div class="profile-container"><button class="close-modal" onclick="closeModal('historyModal')">✖</button><h2>📜 ИСТОРИЯ БОЕВ</h2><p style="margin:20px">Здесь будут твои последние бои</p></div></div>
+    <div id="leadersModal" class="modal"><div class="profile-container"><button class="close-modal" onclick="closeModal('leadersModal')">✖</button><h2>🏆 СПИСКИ ЛИДЕРОВ</h2><p style="margin:20px">Топ игроки по кубкам, победам и т.д.</p></div></div>
+    <div id="inboxModal" class="modal"><div class="profile-container"><button class="close-modal" onclick="closeModal('inboxModal')">✖</button><h2>📥 ВХОДЯЩИЕ</h2><p style="margin:20px">Сообщения, подарки, приглашения</p></div></div>
+    <div id="linkModal" class="modal"><div class="profile-container"><button class="close-modal" onclick="closeModal('linkModal')">✖</button><h2>🔗 ПРИВЯЗКА АККАУНТА</h2><p style="margin:20px">Привяжи Google, Supercell ID или почту</p></div></div>
 
     <!-- ОКНО ПРОФИЛЯ -->
     <div id="profileModal" class="modal">
@@ -279,7 +286,7 @@
         </div>
     </div>
 
-    <!-- ОКНО ПУТИ К СЛАВЕ (сокращённо, без изменений) -->
+    <!-- ОКНО ПУТИ К СЛАВЕ -->
     <div id="pathModal" class="modal">
         <div class="glory-container">
             <button class="close-modal" onclick="closePathModal()">✖</button>
@@ -291,9 +298,9 @@
     </div>
 
     <!-- Окна выбора аватарки, ника, цвета -->
-    <div id="avatarPickerModal" class="modal"><div class="avatar-selector" style="background:#0f172a; padding:35px; border-radius:60px; max-width:600px;"><div id="avatarSelector" style="display:flex; gap:20px; flex-wrap:wrap; justify-content:center;"></div></div></div>
-    <div id="nicknameEditorModal" class="modal"><div class="nickname-container" style="background:#0f172a; padding:35px; border-radius:60px; max-width:400px;"><h3>✏️ СМЕНИТЬ НИКНЕЙМ</h3><input type="text" id="newNicknameInput" placeholder="Новый никнейм"><button class="btn" onclick="changeNickname()">СОХРАНИТЬ</button><button class="btn" onclick="closeNicknameEditor()" style="background:#2a2a5a;">ОТМЕНА</button></div></div>
-    <div id="colorPickerModal" class="modal"><div class="color-container" style="background:#0f172a; padding:35px; border-radius:60px; max-width:400px;"><h3>🎨 ВЫБЕРИ ЦВЕТ НИКНЕЙМА</h3><div class="color-options" id="colorOptions"></div></div></div>
+    <div id="avatarPickerModal" class="modal"><div class="avatar-selector"><div id="avatarSelector" style="display:flex; gap:20px; flex-wrap:wrap; justify-content:center;"></div></div></div>
+    <div id="nicknameEditorModal" class="modal"><div class="nickname-container"><h3>✏️ СМЕНИТЬ НИКНЕЙМ</h3><input type="text" id="newNicknameInput" placeholder="Новый никнейм"><button class="btn" onclick="changeNickname()">СОХРАНИТЬ</button><button class="btn" onclick="closeNicknameEditor()" style="background:#2a2a5a;">ОТМЕНА</button></div></div>
+    <div id="colorPickerModal" class="modal"><div class="color-container"><h3>🎨 ВЫБЕРИ ЦВЕТ НИКНЕЙМА</h3><div class="color-options" id="colorOptions"></div></div></div>
 
     <!-- ВХОД -->
     <div id="authPanel" class="modal" style="display:flex; background:rgba(0,0,0,0.95);">
@@ -317,6 +324,9 @@
     <script>
         let currentPlayerId = null;
         let isAdmin = false;
+        const DEV_AVATAR_URL = "https://yt3.googleusercontent.com/wEnonoxntKdkIuHZbNouYlz6YoCchSbx7tpBRaVS6V08XzJYkvNZaG34RwZV7khnoF6hqI-kGw=s900-c-k-c0x00ffffff-no-rj";
+        
+        // Данные пути к славе
         const pathData = [
             { cups: 250, reward: "50💰", label: "50 Монет" }, { cups: 500, reward: "🎁", label: "Обычный ящик" }, { cups: 1000, reward: "100💰", label: "100 Монет" },
             { cups: 1500, reward: "🎁", label: "Обычный ящик" }, { cups: 2000, reward: "🎁✨", label: "Редкий ящик" }, { cups: 2500, reward: "250💰", label: "250 Монет" },
@@ -333,27 +343,129 @@
         let claimedStatus = new Array(pathData.length).fill(false);
         let currentCups = 0;
 
+        async function refreshProfileData() {
+            if (!currentPlayerId) return;
+            const res = await fetch('/api/player/' + currentPlayerId);
+            const data = await res.json();
+            if (!data.error) {
+                const avatar = data.avatar || '🎮';
+                const nickname = data.nickname;
+                const nicknameColor = data.nickname_color || '#ffffff';
+                currentCups = data.cups || 0;
+                if (data.path_data) {
+                    try { const saved = JSON.parse(data.path_data); if (saved.claimed) claimedStatus = saved.claimed; } catch(e) {}
+                }
+                document.getElementById('miniNickname').innerText = nickname.length > 10 ? nickname.slice(0, 9) + '…' : nickname;
+                document.getElementById('miniNickname').style.color = nicknameColor;
+                if (avatar.startsWith('http')) {
+                    document.getElementById('miniAvatar').innerHTML = `<img src="${avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+                    document.getElementById('largeAvatar').innerHTML = `<img src="${avatar}" style="width:100%;height:100%;object-fit:cover;">`;
+                } else {
+                    document.getElementById('miniAvatar').innerText = avatar;
+                    document.getElementById('largeAvatar').innerHTML = avatar;
+                }
+                document.getElementById('profileNick').innerText = nickname;
+                document.getElementById('profileNick').style.color = nicknameColor;
+                document.getElementById('profileTag').innerText = data.tag || '#----';
+                document.getElementById('profileCups').innerText = currentCups;
+                document.getElementById('profileTotalCups').innerText = currentCups;
+                document.getElementById('recordCups').innerText = data.record_cups || currentCups;
+                document.getElementById('profileBoxes').innerText = data.total_boxes || 0;
+                document.getElementById('profileCoins').innerText = data.coins || 0;
+                updateGloryUI();
+            }
+        }
+
+        function updateGloryUI() {
+            document.getElementById('currentCupsDisplay').innerText = currentCups;
+            let nextCups = 0;
+            for (let tier of pathData) {
+                if (tier.cups > currentCups) { nextCups = tier.cups; break; }
+            }
+            document.getElementById('nextMilestone').innerText = nextCups > 0 ? `${nextCups} 🏆` : 'МАКСИМУМ!';
+            let lastCups = 0, nextCupsBar = pathData[0]?.cups || 0;
+            for (let i = pathData.length-1; i >= 0; i--) {
+                if (pathData[i].cups <= currentCups) {
+                    lastCups = pathData[i].cups;
+                    nextCupsBar = pathData[i+1]?.cups || pathData[i].cups;
+                    break;
+                }
+            }
+            let progressPercent = nextCupsBar > lastCups ? ((currentCups - lastCups) / (nextCupsBar - lastCups)) * 100 : 100;
+            progressPercent = Math.min(100, Math.max(0, progressPercent));
+            document.getElementById('progressBar').style.width = `${progressPercent}%`;
+            const container = document.getElementById('trackScroll');
+            if (!container) return;
+            container.innerHTML = '';
+            pathData.forEach((tier, idx) => {
+                const isAvailable = currentCups >= tier.cups && !claimedStatus[idx];
+                const isClaimed = claimedStatus[idx];
+                const div = document.createElement('div');
+                div.className = `reward-tier ${isAvailable ? 'available' : (isClaimed ? 'claimed' : '')}`;
+                div.innerHTML = `<div class="tier-cups">${tier.cups}🏆</div><div class="tier-reward">${tier.reward}</div><div class="tier-label">${tier.label}</div>${isAvailable ? '<button class="claim-tier-btn" data-idx="'+idx+'">ЗАБРАТЬ</button>' : (isClaimed ? '<div style="font-size:20px; margin-top:8px;">✅</div>' : '<div style="font-size:20px; margin-top:8px;">🔒</div>')}`;
+                container.appendChild(div);
+            });
+            document.querySelectorAll('.claim-tier-btn').forEach(btn => {
+                btn.onclick = (e) => { e.stopPropagation(); const idx = parseInt(btn.getAttribute('data-idx')); claimReward(idx); };
+            });
+        }
+
+        async function claimReward(idx) {
+            const tier = pathData[idx];
+            if (currentCups < tier.cups || claimedStatus[idx]) return;
+            claimedStatus[idx] = true;
+            alert(`🎉 Вы получили: ${tier.reward} (${tier.label})!`);
+            await fetch('/api/save_path', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ playerId: currentPlayerId, pathData: { claimed: claimedStatus } }) });
+            updateGloryUI();
+        }
+
+        function scrollTrack(delta) { const container = document.getElementById('trackScroll'); if (container) container.scrollBy({ left: delta, behavior: 'smooth' }); }
         function toggleMenu() { const m = document.getElementById('menuPanel'); m.style.display = m.style.display === 'block' ? 'none' : 'block'; }
         function openModal(id) { toggleMenu(); document.getElementById(id + 'Modal').style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-        // Заглушки для остальных функций (профиль, путь к славе, смена аватарки и т.д.)
-        async function refreshProfileData() { /* ... (оставь без изменений, но для краткости опустим) ... */ }
-        function updateGloryUI() { /* ... */ }
-        function claimReward(idx) { /* ... */ }
-        function scrollTrack(delta) { document.getElementById('trackScroll').scrollBy({ left: delta, behavior: 'smooth' }); }
-        async function changeAvatar(avatarValue, isUrl) { /* ... */ }
-        async function changeNickname() { /* ... */ }
-        async function changeColorOnly(color) { /* ... */ }
-        function openProfileModal() { document.getElementById('profileModal').style.display = 'flex'; }
+        async function changeAvatar(avatarValue, isUrl = false) {
+            await fetch('/api/change_avatar', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ playerId: currentPlayerId, avatar: isUrl ? DEV_AVATAR_URL : avatarValue }) });
+            await refreshProfileData();
+            closeAvatarPicker();
+        }
+
+        async function changeNickname() {
+            const newNick = document.getElementById('newNicknameInput').value.trim();
+            if (!newNick) return alert("Введи никнейм");
+            const res = await fetch('/api/change_nickname', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ playerId: currentPlayerId, newNickname: newNick, color: null }) });
+            const data = await res.json();
+            if (data.success) { await refreshProfileData(); closeNicknameEditor(); }
+            else alert(data.message || "Ошибка");
+        }
+
+        async function changeColorOnly(color) {
+            await fetch('/api/change_nickname', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ playerId: currentPlayerId, color: color }) });
+            await refreshProfileData();
+        }
+
+        function openProfileModal() { refreshProfileData(); document.getElementById('profileModal').style.display = 'flex'; }
         function closeProfileModal() { document.getElementById('profileModal').style.display = 'none'; }
-        function openPathModal() { document.getElementById('pathModal').style.display = 'flex'; }
+        function openPathModal() { refreshProfileData(); document.getElementById('pathModal').style.display = 'flex'; }
         function closePathModal() { document.getElementById('pathModal').style.display = 'none'; }
-        function openAvatarPicker() { document.getElementById('avatarPickerModal').style.display = 'flex'; }
+        function openAvatarPicker() { 
+            document.getElementById('avatarPickerModal').style.display = 'flex';
+            const container = document.getElementById('avatarSelector');
+            const avatars = ['🎮','⭐','🔥','🐺','🤖','👑','⚡','😈'];
+            if (isAdmin) avatars.push('👑 DEV');
+            container.innerHTML = avatars.map(a => `<div class="avatar-option" data-avatar="${a}">${a}</div>`).join('');
+            document.querySelectorAll('.avatar-option').forEach(opt => opt.onclick = () => changeAvatar(opt.getAttribute('data-avatar'), opt.getAttribute('data-avatar') === '👑 DEV'));
+        }
         function closeAvatarPicker() { document.getElementById('avatarPickerModal').style.display = 'none'; }
         function openNicknameEditor() { document.getElementById('nicknameEditorModal').style.display = 'flex'; }
         function closeNicknameEditor() { document.getElementById('nicknameEditorModal').style.display = 'none'; }
-        function openColorPicker() { document.getElementById('colorPickerModal').style.display = 'flex'; }
+        function openColorPicker() { 
+            document.getElementById('colorPickerModal').style.display = 'flex';
+            const container = document.getElementById('colorOptions');
+            const colors = ['#ffffff','#f9a826','#ff69b4','#00bfff','#c084fc','#ff0000','#00ff88'];
+            container.innerHTML = colors.map(c => `<div class="color-circle" style="background:${c};" data-color="${c}"></div>`).join('');
+            document.querySelectorAll('.color-circle').forEach(circle => circle.onclick = async () => { await changeColorOnly(circle.getAttribute('data-color')); closeColorPicker(); openProfileModal(); });
+        }
         function closeColorPicker() { document.getElementById('colorPickerModal').style.display = 'none'; }
 
         async function login() {
@@ -369,9 +481,9 @@
                 document.getElementById('authPanel').style.display = 'none';
                 document.getElementById('gamePanel').classList.remove('hidden');
                 await refreshProfileData();
-                // Инициализация аватарок и цветов (заглушка)
             } else document.getElementById('authMessage').innerText = data.message;
         }
+
         document.getElementById('nickname').addEventListener('input', e => document.getElementById('adminPasswordGroup').classList.toggle('hidden', e.target.value !== 'unity'));
         window.onclick = event => { if (event.target.classList.contains('modal')) event.target.style.display = 'none'; };
     </script>
