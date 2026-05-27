@@ -69,7 +69,7 @@
         /* Заголовок */
         .title {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             filter: drop-shadow(0 0 20px rgba(233,69,96,0.5));
         }
 
@@ -169,12 +169,41 @@
             box-shadow: 0 10px 25px rgba(233,69,96,0.5);
         }
 
+        /* ===== БОЕЦ ПО ЦЕНТРУ ===== */
+        .fighter-container {
+            text-align: center;
+            margin: 15px 0 10px;
+            position: relative;
+        }
+
+        .fighter {
+            width: 140px;
+            height: 140px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #2a2a5a, #1a1a3e);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 30px rgba(233,69,96,0.5), inset 0 0 20px rgba(0,0,0,0.5);
+            border: 2px solid #e94560;
+            transition: 0.2s;
+        }
+
+        .fighter svg {
+            width: 90px;
+            height: 90px;
+            filter: drop-shadow(0 0 10px #e94560);
+        }
+
+        /* Кнопка открытия ящика */
         .btn-open {
             background: linear-gradient(135deg, #00ff88, #00aa55);
             color: #000;
             font-size: 22px;
             padding: 18px;
             box-shadow: 0 0 20px rgba(0,255,136,0.4);
+            margin: 15px 0;
         }
 
         .btn-open:hover {
@@ -185,11 +214,11 @@
         /* Блок ящика */
         .box-area {
             text-align: center;
-            margin: 20px 0;
+            margin: 10px 0;
         }
 
         .box-icon {
-            font-size: 90px;
+            font-size: 80px;
             cursor: pointer;
             transition: 0.2s;
             display: inline-block;
@@ -238,7 +267,6 @@
             color: #f9a826;
         }
 
-        /* Бейдж админа */
         .admin-badge {
             display: inline-block;
             background: linear-gradient(135deg, #e94560, #b91c3c);
@@ -250,7 +278,6 @@
             vertical-align: middle;
         }
 
-        /* Анимации */
         @keyframes pop {
             0% { transform: scale(0.5); opacity: 0; }
             80% { transform: scale(1.1); }
@@ -261,7 +288,6 @@
             animation: pop 0.4s ease-out;
         }
 
-        /* Сообщения */
         .error-message {
             color: #ff6b6b;
             text-align: center;
@@ -273,11 +299,12 @@
             display: none;
         }
 
-        /* Адаптив */
         @media (max-width: 480px) {
             .title h1 { font-size: 36px; }
             .panel-content { padding: 20px; }
             .stat-value { font-size: 18px; }
+            .fighter { width: 100px; height: 100px; }
+            .fighter svg { width: 60px; height: 60px; }
         }
     </style>
 </head>
@@ -313,6 +340,22 @@
                 <h2>🎁 ИГРОВОЙ АВТОМАТ 🎁</h2>
             </div>
             <div class="panel-content">
+                <!-- ===== БОЕЦ ПО ЦЕНТРУ ===== -->
+                <div class="fighter-container">
+                    <div class="fighter">
+                        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Силуэт бойца в стиле Brawl Stars -->
+                            <circle cx="50" cy="45" r="25" fill="#e94560" stroke="#fff" stroke-width="3"/>
+                            <rect x="35" y="65" width="30" height="25" rx="10" fill="#e94560" stroke="#fff" stroke-width="3"/>
+                            <circle cx="35" cy="70" r="8" fill="#e94560" stroke="#fff" stroke-width="2"/>
+                            <circle cx="65" cy="70" r="8" fill="#e94560" stroke="#fff" stroke-width="2"/>
+                            <circle cx="40" cy="40" r="4" fill="#fff"/>
+                            <circle cx="60" cy="40" r="4" fill="#fff"/>
+                            <path d="M45 52 Q50 58 55 52" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                </div>
+
                 <div class="box-area">
                     <div class="box-icon" onclick="openBox()">🎁</div>
                     <div id="reward" class="reward"></div>
@@ -341,7 +384,6 @@
         let currentPlayerId = null;
         let isAdminMode = false;
 
-        // Показываем поле для пароля при вводе 'unity'
         document.getElementById('nickname').addEventListener('input', function(e) {
             const adminGroup = document.getElementById('adminPasswordGroup');
             if (e.target.value === 'unity') {
@@ -396,7 +438,6 @@
         async function openBox() {
             if (!currentPlayerId) return;
             
-            // Анимация нажатия на ящик
             const boxIcon = document.querySelector('.box-icon');
             boxIcon.style.transform = 'scale(0.9)';
             setTimeout(() => { boxIcon.style.transform = 'scale(1)'; }, 100);
