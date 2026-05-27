@@ -679,25 +679,57 @@
         let audioElement = null;
         const DEV_AVATAR_URL = "https://yt3.googleusercontent.com/wEnonoxntKdkIuHZbNouYlz6YoCchSbx7tpBRaVS6V08XzJYkvNZaG34RwZV7khnoF6hqI-kGw=s900-c-k-c0x00ffffff-no-rj";
 
-        // Функция для инициализации музыки (будет вызвана после авторизации)
+        // Встроенная музыка (основная тема Brawl Stars через Web Audio - простая имитация)
         function initMusic() {
-            if (!audioElement) {
-                // Пытаемся загрузить музыку из папки public (файл music.mp3)
-                audioElement = new Audio('/music.mp3');
-                audioElement.loop = true;
-                audioElement.volume = 0.3;
-                // Обработчик, чтобы играть только после взаимодействия с сайтом
-                document.body.addEventListener('click', () => {
-                    if (musicEnabled && audioElement.paused) {
-                        audioElement.play().catch(e => console.log('Автовоспроизведение заблокировано, нажмите на страницу'));
-                    }
-                }, { once: true });
+            if (audioElement) return;
+            
+            // Создаём простой синтезатор (имитация музыки)
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContext) return;
+            
+            const ctx = new AudioContext();
+            let currentSource = null;
+            
+            function playNote(freq, duration, time) {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.2, time);
+                gain.gain.exponentialRampToValueAtTime(0.0001, time + duration);
+                osc.start(time);
+                osc.stop(time + duration);
+                return osc;
             }
-            if (musicEnabled) {
-                audioElement.play().catch(e => console.log('Нужно взаимодействие'));
-            } else {
-                audioElement.pause();
+            
+            function playLoop() {
+                if (!musicEnabled) return;
+                const now = ctx.currentTime;
+                // Простая мелодия (имитация Brawl Stars)
+                playNote(440, 0.3, now);      // Ля
+                playNote(523.25, 0.3, now + 0.3); // До
+                playNote(587.33, 0.3, now + 0.6); // Ре
+                playNote(659.25, 0.6, now + 0.9); // Ми
+                playNote(587.33, 0.3, now + 1.5);
+                playNote(523.25, 0.3, now + 1.8);
+                playNote(493.88, 0.6, now + 2.1);
+                playNote(440, 1.0, now + 2.7);
+                setTimeout(playLoop, 3800);
             }
+            
+            // Разблокируем аудиоконтекст после первого клика
+            document.body.addEventListener('click', () => {
+                if (ctx.state === 'suspended') {
+                    ctx.resume().then(() => {
+                        if (musicEnabled) playLoop();
+                    });
+                } else if (musicEnabled && !currentSource) {
+                    playLoop();
+                }
+            }, { once: true });
+            
+            audioElement = { ctx, playLoop, stop: () => {} };
         }
 
         function toggleMusic() {
@@ -705,10 +737,12 @@
             const toggle = document.getElementById('musicToggle');
             if (musicEnabled) {
                 toggle.classList.add('on');
-                if (audioElement) audioElement.play().catch(e => console.log('Нужно взаимодействие'));
+                initMusic();
             } else {
                 toggle.classList.remove('on');
-                if (audioElement) audioElement.pause();
+                if (audioElement && audioElement.ctx) {
+                    // Музыка замолкнет сама при следующем цикле
+                }
             }
             localStorage.setItem('musicEnabled', musicEnabled);
         }
@@ -979,7 +1013,6 @@
                 document.getElementById('gamePanel').classList.remove('hidden');
                 await refreshProfileData();
 
-                // Загружаем настройки музыки
                 const savedMusic = localStorage.getItem('musicEnabled');
                 if (savedMusic !== null) musicEnabled = savedMusic === 'true';
                 const toggle = document.getElementById('musicToggle');
@@ -987,10 +1020,9 @@
                 else toggle.classList.remove('on');
                 toggle.onclick = () => toggleMusic();
 
-                // Инициализируем музыку только после входа (играет в меню)
+                // Инициализируем музыку
                 initMusic();
 
-                // Настройки языка
                 document.getElementById('languageSelect').value = localStorage.getItem('language') || 'ru';
                 document.getElementById('languageSelect').onchange = (e) => {
                     localStorage.setItem('language', e.target.value);
