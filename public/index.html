@@ -1,109 +1,338 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Brawl Box Simulator</title>
+    <title>Brawl Stars Box Simulator</title>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: radial-gradient(circle at 20% 30%, #0a0a2a, #050510);
-            color: white;
-            min-height: 100vh;
-            padding: 20px;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
         }
-        .container { max-width: 500px; margin: 0 auto; text-align: center; }
-        h1 {
-            font-size: 42px;
-            margin: 20px 0;
-            background: linear-gradient(135deg, #fff, #e94560);
+
+        body {
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: radial-gradient(ellipse at 20% 30%, #0f0c29, #1a1a3e, #0a0a1a);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Анимированные фоновые элементы */
+        .bg-effect {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-effect::before {
+            content: "★";
+            position: absolute;
+            color: rgba(233, 69, 96, 0.15);
+            font-size: 200px;
+            top: 10%;
+            left: -50px;
+            animation: float 12s infinite;
+        }
+
+        .bg-effect::after {
+            content: "◆";
+            position: absolute;
+            color: rgba(0, 255, 136, 0.08);
+            font-size: 300px;
+            bottom: 0;
+            right: -80px;
+            animation: float 15s infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-40px) rotate(10deg); }
+        }
+
+        /* Главный контейнер */
+        .game-container {
+            max-width: 550px;
+            width: 100%;
+            margin: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Заголовок */
+        .title {
+            text-align: center;
+            margin-bottom: 30px;
+            filter: drop-shadow(0 0 20px rgba(233,69,96,0.5));
+        }
+
+        .title h1 {
+            font-size: 52px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff, #e94560, #ff6b8b);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
-        .auth-box, .game-box {
-            background: rgba(15, 25, 45, 0.85);
+
+        .title p {
+            color: #a0a0c0;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        /* Окна входа и игры */
+        .glass-panel {
+            background: rgba(15, 25, 45, 0.75);
             backdrop-filter: blur(12px);
-            padding: 30px;
-            border-radius: 30px;
-            margin: 20px auto;
-            border: 1px solid rgba(233,69,96,0.5);
+            border-radius: 32px;
+            border: 1px solid rgba(233, 69, 96, 0.4);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 20px rgba(233,69,96,0.2);
+            overflow: hidden;
         }
-        input {
-            padding: 12px;
-            margin: 8px;
-            border-radius: 50px;
-            border: none;
-            width: 240px;
-            background: #0f172a;
-            color: white;
+
+        .panel-header {
+            background: linear-gradient(135deg, #1a1a3e, #0f0c29);
+            padding: 20px;
             text-align: center;
+            border-bottom: 1px solid #e94560;
         }
-        button {
+
+        .panel-header h2 {
+            font-size: 24px;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+
+        .panel-content {
+            padding: 30px 25px;
+        }
+
+        /* Поля ввода */
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 20px;
+            background: rgba(10, 20, 40, 0.9);
+            border: 1px solid #2a2a5a;
+            border-radius: 50px;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s;
+            outline: none;
+        }
+
+        .input-group input:focus {
+            border-color: #e94560;
+            box-shadow: 0 0 15px rgba(233,69,96,0.3);
+        }
+
+        .input-group input::placeholder {
+            color: #6a6a8a;
+        }
+
+        /* Кнопки */
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
             background: linear-gradient(135deg, #e94560, #b91c3c);
             color: white;
-            border: none;
-            padding: 12px 25px;
-            font-size: 16px;
-            font-weight: bold;
-            margin: 10px;
-            border-radius: 50px;
-            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(233,69,96,0.4);
         }
-        .open-btn {
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(233,69,96,0.5);
+        }
+
+        .btn-open {
             background: linear-gradient(135deg, #00ff88, #00aa55);
             color: #000;
-            font-size: 20px;
-            padding: 15px 40px;
+            font-size: 22px;
+            padding: 18px;
+            box-shadow: 0 0 20px rgba(0,255,136,0.4);
         }
+
+        .btn-open:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(0,255,136,0.6);
+        }
+
+        /* Блок ящика */
+        .box-area {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .box-icon {
+            font-size: 90px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-block;
+        }
+
+        .box-icon:active {
+            transform: scale(0.95);
+        }
+
         .reward {
             font-size: 26px;
+            text-align: center;
             margin: 15px 0;
             color: #f9a826;
-            animation: pop 0.3s;
+            font-weight: bold;
+            text-shadow: 0 0 10px #f9a826;
+            min-height: 60px;
         }
-        @keyframes pop { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+        /* Статистика */
         .stats {
-            background: rgba(10, 20, 40, 0.8);
+            background: rgba(0,0,0,0.4);
+            border-radius: 24px;
             padding: 20px;
-            border-radius: 25px;
             margin-top: 20px;
-            border: 1px solid #e94560;
         }
-        .stats span { color: #f9a826; font-weight: bold; font-size: 22px; }
-        .error { color: #ff6b6b; margin-top: 10px; }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 8px 12px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: #aaa;
+        }
+
+        .stat-value {
+            font-size: 22px;
+            font-weight: bold;
+            color: #f9a826;
+        }
+
+        /* Бейдж админа */
         .admin-badge {
-            background: #e94560;
             display: inline-block;
-            padding: 2px 10px;
+            background: linear-gradient(135deg, #e94560, #b91c3c);
+            padding: 4px 12px;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 11px;
+            font-weight: bold;
             margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        /* Анимации */
+        @keyframes pop {
+            0% { transform: scale(0.5); opacity: 0; }
+            80% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .pop-animation {
+            animation: pop 0.4s ease-out;
+        }
+
+        /* Сообщения */
+        .error-message {
+            color: #ff6b6b;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Адаптив */
+        @media (max-width: 480px) {
+            .title h1 { font-size: 36px; }
+            .panel-content { padding: 20px; }
+            .stat-value { font-size: 18px; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🎁 BRAWL BOX SIMULATOR</h1>
-        
-        <div id="authBox" class="auth-box">
-            <h2>⚡ ВОЙДИ В ИГРУ ⚡</h2>
-            <input type="text" id="nickname" placeholder="Твой ник"><br>
-            <div id="adminPasswordBox" style="display:none;">
-                <input type="password" id="adminPassword" placeholder="Пароль админа"><br>
-            </div>
-            <button onclick="login()">🔓 ВОЙТИ</button>
-            <div id="authMessage" class="error"></div>
+    <div class="bg-effect"></div>
+    
+    <div class="game-container">
+        <div class="title">
+            <h1>BRAWL BOX</h1>
+            <p>⚡ ОТКРОЙ ЯЩИК — ПОЛУЧИ НАГРАДУ ⚡</p>
         </div>
-        
-        <div id="gameBox" class="game-box" style="display:none">
-            <div style="font-size: 70px;">🎁</div>
-            <button id="openBtn" class="open-btn" onclick="openBox()">🔥 ОТКРЫТЬ ЯЩИК 🔥</button>
-            <div id="reward" class="reward"></div>
-            <div class="stats">
-                <p>💰 МОНЕТЫ: <span id="coins">0</span></p>
-                <p>🎲 ОТКРЫТО ЯЩИКОВ: <span id="boxes">0</span></p>
-                <p>🏆 ИГРОК: <span id="nicknameDisplay"></span> <span id="adminBadge" class="admin-badge" style="display:none;">👑 АДМИН</span></p>
+
+        <!-- Окно входа -->
+        <div id="authPanel" class="glass-panel">
+            <div class="panel-header">
+                <h2>🔐 ВХОД В ИГРУ</h2>
+            </div>
+            <div class="panel-content">
+                <div class="input-group">
+                    <input type="text" id="nickname" placeholder="ТВОЙ НИКНЕЙМ" autocomplete="off">
+                </div>
+                <div id="adminPasswordGroup" class="input-group hidden">
+                    <input type="password" id="adminPassword" placeholder="ПАРОЛЬ АДМИНИСТРАТОРА">
+                </div>
+                <button class="btn btn-primary" onclick="login()">🎮 ВОЙТИ</button>
+                <div id="authMessage" class="error-message"></div>
+            </div>
+        </div>
+
+        <!-- Игровое окно -->
+        <div id="gamePanel" class="glass-panel hidden">
+            <div class="panel-header">
+                <h2>🎁 ИГРОВОЙ АВТОМАТ 🎁</h2>
+            </div>
+            <div class="panel-content">
+                <div class="box-area">
+                    <div class="box-icon" onclick="openBox()">🎁</div>
+                    <div id="reward" class="reward"></div>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-label">💰 МОНЕТЫ</span>
+                        <span class="stat-value" id="coins">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">🎲 ОТКРЫТО ЯЩИКОВ</span>
+                        <span class="stat-value" id="boxes">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">🏆 ИГРОК</span>
+                        <span class="stat-value" id="nicknameDisplay">-</span>
+                        <span id="adminBadge" class="admin-badge hidden">👑 АДМИН</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -111,25 +340,25 @@
     <script>
         let currentPlayerId = null;
         let isAdminMode = false;
-        
-        // Проверяем, ввёл ли пользователь 'unity'
+
+        // Показываем поле для пароля при вводе 'unity'
         document.getElementById('nickname').addEventListener('input', function(e) {
-            const adminBox = document.getElementById('adminPasswordBox');
+            const adminGroup = document.getElementById('adminPasswordGroup');
             if (e.target.value === 'unity') {
-                adminBox.style.display = 'block';
+                adminGroup.classList.remove('hidden');
             } else {
-                adminBox.style.display = 'none';
+                adminGroup.classList.add('hidden');
                 document.getElementById('adminPassword').value = '';
             }
         });
-        
+
         async function login() {
             const nickname = document.getElementById('nickname').value.trim();
             if (!nickname) {
-                document.getElementById('authMessage').innerText = 'Введи ник!';
+                document.getElementById('authMessage').innerText = 'Введи никнейм!';
                 return;
             }
-            
+
             let password = '';
             if (nickname === 'unity') {
                 password = document.getElementById('adminPassword').value;
@@ -138,41 +367,54 @@
                     return;
                 }
             }
-            
+
             const res = await fetch('/api/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ nickname, password })
             });
             const data = await res.json();
-            
+
             if (data.success) {
                 currentPlayerId = data.player.id;
                 document.getElementById('nicknameDisplay').innerText = data.player.nickname;
                 document.getElementById('coins').innerText = data.player.coins;
                 document.getElementById('boxes').innerText = data.player.total_boxes;
-                
+
                 if (data.player.is_admin) {
-                    document.getElementById('adminBadge').style.display = 'inline-block';
+                    document.getElementById('adminBadge').classList.remove('hidden');
                     isAdminMode = true;
                 }
-                
-                document.getElementById('authBox').style.display = 'none';
-                document.getElementById('gameBox').style.display = 'block';
+
+                document.getElementById('authPanel').classList.add('hidden');
+                document.getElementById('gamePanel').classList.remove('hidden');
             } else {
                 document.getElementById('authMessage').innerText = data.message || 'Ошибка входа';
             }
         }
-        
+
         async function openBox() {
             if (!currentPlayerId) return;
+            
+            // Анимация нажатия на ящик
+            const boxIcon = document.querySelector('.box-icon');
+            boxIcon.style.transform = 'scale(0.9)';
+            setTimeout(() => { boxIcon.style.transform = 'scale(1)'; }, 100);
+            
             const res = await fetch('/api/open_box/' + currentPlayerId);
             const data = await res.json();
+            
             if (data.success) {
-                document.getElementById('reward').innerHTML = `✨ ${data.reward} ✨`;
+                const rewardDiv = document.getElementById('reward');
+                rewardDiv.innerHTML = `✨ ${data.reward} ✨`;
+                rewardDiv.classList.add('pop-animation');
                 document.getElementById('coins').innerText = data.coins;
                 document.getElementById('boxes').innerText = data.total_boxes;
-                setTimeout(() => document.getElementById('reward').innerHTML = '', 2000);
+                
+                setTimeout(() => {
+                    rewardDiv.innerHTML = '';
+                    rewardDiv.classList.remove('pop-animation');
+                }, 2000);
             }
         }
     </script>
