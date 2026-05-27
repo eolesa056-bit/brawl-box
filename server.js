@@ -5,27 +5,32 @@ const port = process.env.PORT || 3000;
 
 const db = new sqlite3.Database('database.db');
 
-// Создание таблиц (если нет)
+// ========== СОЗДАНИЕ ТАБЛИЦ ==========
 db.serialize(() => {
     db.run(`CREATE TABLE IF NOT EXISTS players (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         nickname TEXT UNIQUE,
-        password TEXT,
         tag TEXT UNIQUE,
         avatar TEXT DEFAULT '🎮',
+        nickname_color TEXT DEFAULT '#ffffff',
         coins INTEGER DEFAULT 100,
         total_boxes INTEGER DEFAULT 0,
         cups INTEGER DEFAULT 0,
+        record_cups INTEGER DEFAULT 0,
         next_free_nickname_change DATETIME,
         is_admin INTEGER DEFAULT 0
     )`);
+    
+    // Добавляем колонки, если их нет (для старых баз)
+    db.run(`ALTER TABLE players ADD COLUMN nickname_color TEXT DEFAULT '#ffffff'`, () => {});
+    db.run(`ALTER TABLE players ADD COLUMN record_cups INTEGER DEFAULT 0`, () => {});
     
     // Админ unity / ALT F4
     db.get(`SELECT * FROM players WHERE nickname = 'unity'`, (err, row) => {
         if (!row) {
             const tag = '#' + Math.random().toString(36).substr(2, 6).toUpperCase();
-            db.run(`INSERT INTO players (nickname, password, tag, is_admin) VALUES (?, ?, ?, ?)`, 
-                ['unity', 'ALT F4', tag, 1]);
+            db.run(`INSERT INTO players (nickname, tag, is_admin) VALUES (?, ?, ?)`, 
+                ['unity', tag, 1]);
         }
     });
 });
@@ -66,7 +71,7 @@ app.post('/api/login', (req, res) => {
 // Получить данные игрока
 app.get('/api/player/:id', (req, res) => {
     const id = req.params.id;
-    db.get(`SELECT id, nickname, tag, avatar, coins, total_boxes, cups, next_free_nickname_change FROM players WHERE id = ?`, [id], (err, player) => {
+    db.get(`SELECT id, nickname, tag, avatar, nickname_color, coins, total_boxes, cups, record_cups FROM players WHERE id = ?`, [id], (err, player) => {
         if (!player) return res.json({ error: 'not found' });
         res.json(player);
     });
@@ -81,12 +86,19 @@ app.get('/api/open_box/:playerId', (req, res) => {
     let coinsGain = 0;
     let cupsGain = 0;
     
-    if (rand < 50) { reward = '50 монет'; coinsGain = 50; cupsGain = 0; }
-    else if (rand < 75) { reward = '100 монет'; coinsGain = 100; cupsGain = 0; }
-    else if (rand < 90) { reward = 'Обычный ящик'; coinsGain = 0; cupsGain = 5; }
-    else { reward = 'РЕДКИЙ СКИН!'; coinsGain = 0; cupsGain = 20; }
+    if (rand < 50) { reward = '50 монет'; coinsGain = 50; }
+    else if (rand < 75) { reward = '100 монет'; coinsGain = 100; }
+    else if (rand < 90) { reward = 'Обычный ящик'; cupsGain = 5; }
+    else { reward = 'РЕДКИЙ СКИН!'; cupsGain = 20; }
     
     db.run(`UPDATE players SET coins = coins + ?, total_boxes = total_boxes + 1, cups = cups + ? WHERE id = ?`, [coinsGain, cupsGain, playerId]);
+    
+    // Обновляем рекорд, если нужно
+    db.get(`SELECT cups, record_cups FROM players WHERE id = ?`, [playerId], (err, player) => {
+        if (player && player.cups > player.record_cups) {
+            db.run(`UPDATE players SET record_cups = ? WHERE id = ?`, [player.cups, playerId]);
+        }
+    });
     
     db.get(`SELECT coins, total_boxes, cups FROM players WHERE id = ?`, [playerId], (err, player) => {
         res.json({ success: true, reward: reward, coins: player.coins, total_boxes: player.total_boxes, cups: player.cups });
@@ -100,21 +112,28 @@ app.post('/api/change_avatar', (req, res) => {
     res.json({ success: true });
 });
 
-// Смена никнейма (1 раз в 24 часа бесплатно)
+// Смена никнейма (с проверкой кулдауна 24 часа) ИЛИ только цвета (без кулдауна)
 app.post('/api/change_nickname', (req, res) => {
-    const { playerId, newNickname } = req.body;
+    const { playerId, newNickname, color } = req.body;
     
+    // Если передан ТОЛЬКО цвет (newNickname отсутствует или равен текущему нику)
+    if (!newNickname || newNickname.trim() === '') {
+        db.run(`UPDATE players SET nickname_color = ? WHERE id = ?`, [color, playerId]);
+        return res.json({ success: true, message: 'Цвет обновлён' });
+    }
+    
+    // Иначе — меняем и ник, и цвет (с кулдауном)
     db.get(`SELECT next_free_nickname_change FROM players WHERE id = ?`, [playerId], (err, player) => {
         const now = new Date();
-        if (player.next_free_nickname_change && new Date(player.next_free_nickname_change) > now) {
+        if (player && player.next_free_nickname_change && new Date(player.next_free_nickname_change) > now) {
             return res.json({ success: false, message: 'Сменить ник можно раз в 24 часа' });
         }
         
-        db.get(`SELECT id FROM players WHERE nickname = ?`, [newNickname], (err, existing) => {
+        db.get(`SELECT id FROM players WHERE nickname = ? AND id != ?`, [newNickname, playerId], (err, existing) => {
             if (existing) return res.json({ success: false, message: 'Никнейм уже занят' });
             
             const nextFree = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-            db.run(`UPDATE players SET nickname = ?, next_free_nickname_change = ? WHERE id = ?`, [newNickname, nextFree.toISOString(), playerId]);
+            db.run(`UPDATE players SET nickname = ?, nickname_color = ?, next_free_nickname_change = ? WHERE id = ?`, [newNickname, color, nextFree.toISOString(), playerId]);
             res.json({ success: true, next_free_change: nextFree.toISOString() });
         });
     });
