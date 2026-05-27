@@ -8,13 +8,10 @@ const server = http.createServer(app);
 const io = socketIo(server);
 
 const port = process.env.PORT || 3000;
-
-// База данных
 const db = new sqlite3.Database('database.db');
 
-// Создаём ВСЕ таблицы
+// Создаём таблицы
 db.serialize(() => {
-    // Таблица пользователей
     db.run(`CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         login TEXT UNIQUE,
@@ -27,7 +24,6 @@ db.serialize(() => {
         is_admin INTEGER DEFAULT 0
     )`);
     
-    // Таблица промокодов
     db.run(`CREATE TABLE IF NOT EXISTS promocodes (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         code TEXT UNIQUE,
@@ -36,7 +32,6 @@ db.serialize(() => {
         current_activations INTEGER DEFAULT 0
     )`);
     
-    // Таблица репортов
     db.run(`CREATE TABLE IF NOT EXISTS reports (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         from_player_id INTEGER,
@@ -46,7 +41,6 @@ db.serialize(() => {
         status TEXT DEFAULT 'pending'
     )`);
     
-    // Таблица ивентов
     db.run(`CREATE TABLE IF NOT EXISTS events (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT,
@@ -55,19 +49,11 @@ db.serialize(() => {
         is_active INTEGER DEFAULT 1
     )`);
     
-    // Создаём админа
+    // Админ по умолчанию
     db.get(`SELECT * FROM users WHERE login = 'unity'`, (err, row) => {
         if (!row) {
             db.run(`INSERT INTO users (login, password, nickname, is_admin) VALUES (?, ?, ?, ?)`, 
                 ['unity', 'ALT F4', 'Администратор', 1]);
-        }
-    });
-    
-    // Добавляем тестового игрока для отладки
-    db.get(`SELECT * FROM users WHERE login = 'test'`, (err, row) => {
-        if (!row) {
-            db.run(`INSERT INTO users (login, password, nickname, coins, total_boxes) VALUES (?, ?, ?, ?, ?)`, 
-                ['test', '123', 'Тестер', 500, 10]);
         }
     });
 });
@@ -75,15 +61,13 @@ db.serialize(() => {
 app.use(express.static('public'));
 app.use(express.json());
 
-// ========== АВТОРИЗАЦИЯ ==========
+// ========== API ==========
 app.post('/api/register', (req, res) => {
     const { login, password, nickname } = req.body;
-    db.run(`INSERT INTO users (login, password, nickname) VALUES (?, ?, ?)`, 
-        [login, password, nickname], 
-        function(err) {
-            if (err) return res.json({ success: false, message: 'Логин занят' });
-            res.json({ success: true });
-        });
+    db.run(`INSERT INTO users (login, password, nickname) VALUES (?, ?, ?)`, [login, password, nickname], function(err) {
+        if (err) return res.json({ success: false, message: 'Логин занят' });
+        res.json({ success: true });
+    });
 });
 
 app.post('/api/login', (req, res) => {
@@ -95,20 +79,14 @@ app.post('/api/login', (req, res) => {
 });
 
 app.get('/api/user/:id', (req, res) => {
-    const id = req.params.id;
-    db.get(`SELECT id, login, nickname, coins, total_boxes FROM users WHERE id = ?`, [id], (err, user) => {
+    db.get(`SELECT id, login, nickname, coins, total_boxes FROM users WHERE id = ?`, [req.params.id], (err, user) => {
         if (!user) return res.json({ error: 'not found' });
         res.json(user);
     });
 });
 
-// ========== АДМИН-API ==========
 app.get('/api/users', (req, res) => {
     db.all(`SELECT id, login, nickname, coins, total_boxes, is_banned, ban_reason FROM users`, (err, users) => {
-        if (err) {
-            console.error('Ошибка:', err);
-            return res.json([]);
-        }
         res.json(users || []);
     });
 });
@@ -116,25 +94,18 @@ app.get('/api/users', (req, res) => {
 app.post('/api/ban', (req, res) => {
     const { userId, reason } = req.body;
     db.run(`UPDATE users SET is_banned = 1, ban_reason = ? WHERE id = ?`, [reason, userId]);
-    const userSocket = userSockets.get(parseInt(userId));
-    if (userSocket) {
-        userSocket.emit('session_terminated', { reason: reason });
-        userSocket.disconnect(true);
-    }
+    const sock = userSockets.get(parseInt(userId));
+    if (sock) { sock.emit('session_terminated', { reason }); sock.disconnect(true); }
     res.json({ success: true });
 });
 
 app.post('/api/unban', (req, res) => {
-    const { userId } = req.body;
-    db.run(`UPDATE users SET is_banned = 0, ban_reason = NULL WHERE id = ?`, [userId]);
+    db.run(`UPDATE users SET is_banned = 0, ban_reason = NULL WHERE id = ?`, [req.body.userId]);
     res.json({ success: true });
 });
 
-// Промокоды
 app.get('/api/promocodes', (req, res) => {
-    db.all(`SELECT * FROM promocodes`, (err, promos) => {
-        res.json(promos || []);
-    });
+    db.all(`SELECT * FROM promocodes`, (err, rows) => res.json(rows || []));
 });
 
 app.post('/api/create_promo', (req, res) => {
@@ -143,32 +114,24 @@ app.post('/api/create_promo', (req, res) => {
     res.json({ success: true });
 });
 
-// Репорты
 app.get('/api/reports', (req, res) => {
     db.all(`SELECT r.*, u1.nickname as from_nick, u2.nickname as to_nick 
-            FROM reports r 
-            LEFT JOIN users u1 ON r.from_player_id = u1.id 
-            LEFT JOIN users u2 ON r.to_player_id = u2.id`, (err, reports) => {
-        res.json(reports || []);
-    });
+            FROM reports r LEFT JOIN users u1 ON r.from_player_id = u1.id LEFT JOIN users u2 ON r.to_player_id = u2.id`, (err, rows) => res.json(rows || []));
 });
 
 app.post('/api/resolve_report', (req, res) => {
     const { reportId, action } = req.body;
     if (action === 'ban') {
-        db.get(`SELECT to_player_id FROM reports WHERE id = ?`, [reportId], (err, report) => {
-            if (report) db.run(`UPDATE users SET is_banned = 1 WHERE id = ?`, [report.to_player_id]);
+        db.get(`SELECT to_player_id FROM reports WHERE id = ?`, [reportId], (err, rep) => {
+            if (rep) db.run(`UPDATE users SET is_banned = 1 WHERE id = ?`, [rep.to_player_id]);
         });
     }
     db.run(`UPDATE reports SET status = 'resolved' WHERE id = ?`, [reportId]);
     res.json({ success: true });
 });
 
-// Ивенты
 app.get('/api/events', (req, res) => {
-    db.all(`SELECT * FROM events WHERE is_active = 1`, (err, events) => {
-        res.json(events || []);
-    });
+    db.all(`SELECT * FROM events WHERE is_active = 1`, (err, rows) => res.json(rows || []));
 });
 
 app.post('/api/create_event', (req, res) => {
@@ -178,63 +141,43 @@ app.post('/api/create_event', (req, res) => {
 });
 
 app.post('/api/stop_event', (req, res) => {
-    const { eventId } = req.body;
-    db.run(`UPDATE events SET is_active = 0 WHERE id = ?`, [eventId]);
+    db.run(`UPDATE events SET is_active = 0 WHERE id = ?`, [req.body.eventId]);
     res.json({ success: true });
 });
 
-// ========== SOCKET.IO ==========
+// ========== SOCKETS ==========
 const userSockets = new Map();
-
 io.on('connection', (socket) => {
-    console.log('✅ Подключился:', socket.id);
-    
     socket.on('auth', (userId, callback) => {
-        const userIdNum = parseInt(userId);
-        db.get(`SELECT * FROM users WHERE id = ?`, [userIdNum], (err, user) => {
-            if (err || !user) {
-                callback({ success: false });
-            } else {
-                socket.userId = userIdNum;
-                socket.isAdmin = user.is_admin === 1;
-                userSockets.set(userIdNum, socket);
-                callback({ success: true, is_admin: socket.isAdmin });
-            }
+        const uid = parseInt(userId);
+        db.get(`SELECT * FROM users WHERE id = ?`, [uid], (err, user) => {
+            if (!user) return callback({ success: false });
+            socket.userId = uid;
+            userSockets.set(uid, socket);
+            callback({ success: true, is_admin: user.is_admin === 1 });
         });
     });
     
     socket.on('open_box', () => {
-        const userId = socket.userId;
-        if (!userId) return;
-        
-        db.get(`SELECT is_banned, ban_reason, coins FROM users WHERE id = ?`, [userId], (err, user) => {
-            if (err || !user) return;
-            if (user.is_banned) {
-                socket.emit('session_terminated', { reason: user.ban_reason || 'Нарушение правил' });
+        const uid = socket.userId;
+        if (!uid) return;
+        db.get(`SELECT is_banned, ban_reason FROM users WHERE id = ?`, [uid], (err, user) => {
+            if (user?.is_banned) {
+                socket.emit('session_terminated', { reason: user.ban_reason || 'Нарушение' });
                 socket.disconnect(true);
                 return;
             }
-            
-            const rand = Math.random() * 100;
-            let rewardName = '';
-            let coinsReward = 0;
-            
-            if (rand < 45) { rewardName = '50 монет'; coinsReward = 50; }
-            else if (rand < 70) { rewardName = '100 монет'; coinsReward = 100; }
-            else if (rand < 85) { rewardName = '📦 Обычный ящик'; }
-            else if (rand < 95) { rewardName = '✨ Редкий ящик ✨'; }
-            else { rewardName = '🔥 ЛЕГЕНДАРНЫЙ СКИН! 🔥'; }
-            
-            db.run(`UPDATE users SET coins = coins + ?, total_boxes = total_boxes + 1 WHERE id = ?`, [coinsReward, userId]);
-            socket.emit('box_opened', { name: rewardName, coins: coinsReward });
+            const r = Math.random() * 100;
+            let reward = '', coinsGain = 0;
+            if (r < 45) { reward = '50 монет'; coinsGain = 50; }
+            else if (r < 70) { reward = '100 монет'; coinsGain = 100; }
+            else if (r < 85) { reward = '📦 Обычный ящик'; }
+            else if (r < 95) { reward = '✨ Редкий ящик ✨'; }
+            else { reward = '🔥 ЛЕГЕНДАРНЫЙ СКИН! 🔥'; }
+            db.run(`UPDATE users SET coins = coins + ?, total_boxes = total_boxes + 1 WHERE id = ?`, [coinsGain, uid]);
+            socket.emit('box_opened', { name: reward });
         });
-    });
-    
-    socket.on('disconnect', () => {
-        if (socket.userId) userSockets.delete(socket.userId);
     });
 });
 
-server.listen(port, () => {
-    console.log(`🚀 Сервер запущен на порту ${port}`);
-});
+server.listen(port, () => console.log(`🚀 Сервер на порту ${port}`));
