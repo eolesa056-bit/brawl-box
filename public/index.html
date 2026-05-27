@@ -19,7 +19,7 @@
             padding: 20px;
         }
 
-        /* Плавающая аватарка */
+        /* Плавающая аватарка (мини) */
         .floating-avatar {
             position: fixed;
             top: 20px;
@@ -28,26 +28,20 @@
             cursor: pointer;
         }
 
-        .avatar-icon {
-            width: 60px;
-            height: 60px;
+        .mini-avatar {
+            width: 55px;
+            height: 55px;
             background: linear-gradient(135deg, #2a2a5a, #1a1a3e);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
+            font-size: 35px;
             border: 2px solid #e94560;
-            box-shadow: 0 0 15px rgba(233,69,96,0.3);
             transition: 0.2s;
         }
 
-        .avatar-icon:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 25px #e94560;
-        }
-
-        /* Модальные окна */
+        /* Модальное окно профиля */
         .modal {
             display: none;
             position: fixed;
@@ -55,61 +49,70 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.85);
             z-index: 200;
             justify-content: center;
             align-items: center;
         }
 
-        .modal-content {
+        .profile-container {
             background: linear-gradient(145deg, #0f172a, #020617);
             width: 90%;
-            max-width: 500px;
-            border-radius: 40px;
+            max-width: 700px;
+            border-radius: 50px;
             border: 1px solid #e94560;
-            box-shadow: 0 0 40px rgba(233,69,96,0.4);
-            padding: 25px 20px 30px;
+            padding: 30px;
             position: relative;
+            box-shadow: 0 0 40px rgba(233,69,96,0.3);
         }
 
-        .close-modal {
+        .close-profile {
             position: absolute;
-            top: 15px;
-            right: 20px;
+            top: 20px;
+            right: 25px;
             background: #e94560;
             border: none;
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            font-size: 20px;
+            font-size: 22px;
             cursor: pointer;
-            transition: 0.2s;
         }
 
-        /* Профиль (первое окно) */
-        .profile-top {
+        /* Верхняя часть: аватарка (кликабельна для смены) */
+        .profile-header {
             display: flex;
-            flex-direction: column;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
             align-items: center;
-            text-align: center;
-            margin-bottom: 20px;
         }
 
-        .profile-avatar-large {
-            width: 100px;
-            height: 100px;
+        .avatar-large {
+            width: 130px;
+            height: 130px;
             background: linear-gradient(135deg, #2a2a5a, #1a1a3e);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 70px;
-            border: 2px solid #e94560;
-            margin-bottom: 15px;
+            font-size: 85px;
+            border: 3px solid #e94560;
+            cursor: pointer;
+            transition: 0.2s;
         }
 
-        .nickname-text {
-            font-size: 28px;
+        .avatar-large:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px #e94560;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-nickname {
+            font-size: 36px;
             font-weight: bold;
             background: linear-gradient(135deg, #fff, #e94560);
             -webkit-background-clip: text;
@@ -117,52 +120,81 @@
             color: transparent;
         }
 
-        .player-tag {
-            font-size: 13px;
+        .profile-tag {
+            font-size: 14px;
             color: #aaa;
             margin: 5px 0;
         }
 
-        /* Кнопки */
-        .btn {
-            background: linear-gradient(135deg, #e94560, #b91c3c);
-            padding: 10px 20px;
-            border: none;
-            border-radius: 50px;
-            color: white;
-            cursor: pointer;
-            margin: 10px auto;
+        .profile-cups {
+            font-size: 24px;
+            color: #f9a826;
             font-weight: bold;
-            display: inline-block;
+            margin-top: 10px;
         }
 
-        .stat-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px;
+        /* Сетка статистики */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
             background: rgba(255,255,255,0.05);
-            border-radius: 20px;
-            margin-bottom: 10px;
+            border-radius: 30px;
+            padding: 20px;
+            text-align: center;
         }
 
-        /* Галерея аватарок */
+        .stat-card h3 {
+            font-size: 18px;
+            color: #aaa;
+            margin-bottom: 15px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #f9a826;
+        }
+
+        /* Окно выбора аватарки */
+        .avatar-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 300;
+            justify-content: center;
+            align-items: center;
+        }
+
         .avatar-selector {
             display: flex;
             gap: 20px;
             flex-wrap: wrap;
             justify-content: center;
-            margin: 20px 0;
+            max-width: 550px;
+            background: #0f172a;
+            padding: 30px;
+            border-radius: 50px;
+            border: 1px solid #e94560;
         }
 
         .avatar-option {
-            width: 70px;
-            height: 70px;
+            width: 80px;
+            height: 80px;
             background: #1a1a3e;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 45px;
+            font-size: 50px;
             cursor: pointer;
             border: 2px solid transparent;
             transition: 0.2s;
@@ -178,12 +210,6 @@
             display: none;
         }
 
-        .error-message {
-            color: #ff6b6b;
-            text-align: center;
-            margin-top: 10px;
-        }
-
         input {
             width: 100%;
             padding: 12px;
@@ -195,81 +221,86 @@
             margin: 10px 0;
         }
 
-        .button-group {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 15px;
+        .btn {
+            background: linear-gradient(135deg, #e94560, #b91c3c);
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            color: white;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <!-- Плавающая аватарка -->
-    <div class="floating-avatar" onclick="openProfileModal()">
-        <div class="avatar-icon" id="avatarIcon">🎮</div>
+    <!-- Мини-аватарка (показывает, кто зашёл) -->
+    <div class="floating-avatar" onclick="openProfile()">
+        <div class="mini-avatar" id="miniAvatar">🎮</div>
     </div>
 
-    <!-- ОКНО 1: ПРОФИЛЬ -->
+    <!-- ОСНОВНОЕ ОКНО ПРОФИЛЯ -->
     <div id="profileModal" class="modal">
-        <div class="modal-content">
-            <button class="close-modal" onclick="closeProfileModal()">✖</button>
+        <div class="profile-container">
+            <button class="close-profile" onclick="closeProfile()">✖</button>
             
-            <div class="profile-top">
-                <div class="profile-avatar-large" id="profileAvatar">🎮</div>
-                <div class="nickname-text" id="profileNickname">-</div>
-                <div class="player-tag" id="profileTag">#----</div>
+            <div class="profile-header">
+                <!-- Большая аватарка (клик по ней → выбор новой) -->
+                <div class="avatar-large" id="largeAvatar" onclick="openAvatarPicker()">🎮</div>
+                <div class="profile-info">
+                    <div class="profile-nickname" id="profileNick">-</div>
+                    <div class="profile-tag" id="profileTag">#----</div>
+                    <div class="profile-cups">🏆 <span id="profileCups">0</span> кубков</div>
+                </div>
             </div>
 
-            <div class="stat-item">
-                <span>🏆 КУБКИ</span>
-                <span id="profileCups">0</span>
-            </div>
-            <div class="stat-item">
-                <span>🎲 ОТКРЫТО ЯЩИКОВ</span>
-                <span id="profileBoxes">0</span>
-            </div>
-            <div class="stat-item">
-                <span>💰 МОНЕТЫ</span>
-                <span id="profileCoins">0</span>
-            </div>
-
-            <div class="button-group">
-                <button class="btn" onclick="openAvatarModal()">🎨 СМЕНИТЬ АВАТАРКУ</button>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>🎲 ОТКРЫТО ЯЩИКОВ</h3>
+                    <div class="stat-value" id="profileBoxes">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>💰 МОНЕТЫ</h3>
+                    <div class="stat-value" id="profileCoins">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>🏆 КУБКОВ ВСЕГО</h3>
+                    <div class="stat-value" id="profileTotalCups">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>⭐ ЛУЧШИЙ РЕКОРД</h3>
+                    <div class="stat-value" id="recordCups">0</div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- ОКНО 2: ВЫБОР АВАТАРКИ -->
-    <div id="avatarModal" class="modal">
-        <div class="modal-content">
-            <button class="close-modal" onclick="closeAvatarModal()">✖</button>
-            <h3 style="text-align:center; margin-bottom:20px;">🎨 ВЫБЕРИ АВАТАРКУ</h3>
-            <div class="avatar-selector" id="avatarSelector">
-                <div class="avatar-option" data-avatar="🎮">🎮</div>
-                <div class="avatar-option" data-avatar="⭐">⭐</div>
-                <div class="avatar-option" data-avatar="🔥">🔥</div>
-                <div class="avatar-option" data-avatar="🐺">🐺</div>
-                <div class="avatar-option" data-avatar="🤖">🤖</div>
-                <div class="avatar-option" data-avatar="👑">👑</div>
-                <div class="avatar-option" data-avatar="⚡">⚡</div>
-            </div>
+    <!-- ОКНО ВЫБОРА АВАТАРКИ (появляется при клике на большую аватарку) -->
+    <div id="avatarPickerModal" class="avatar-modal">
+        <div class="avatar-selector">
+            <div class="avatar-option" data-avatar="🎮">🎮</div>
+            <div class="avatar-option" data-avatar="⭐">⭐</div>
+            <div class="avatar-option" data-avatar="🔥">🔥</div>
+            <div class="avatar-option" data-avatar="🐺">🐺</div>
+            <div class="avatar-option" data-avatar="🤖">🤖</div>
+            <div class="avatar-option" data-avatar="👑">👑</div>
+            <div class="avatar-option" data-avatar="⚡">⚡</div>
+            <div class="avatar-option" data-avatar="😈">😈</div>
         </div>
     </div>
 
-    <!-- Вход -->
+    <!-- Окно входа (первое) -->
     <div id="authPanel" class="modal" style="display:flex; background:rgba(0,0,0,0.95);">
-        <div class="modal-content">
+        <div class="profile-container" style="max-width:400px;">
             <h2 style="text-align:center;">🔐 ВХОД</h2>
             <input type="text" id="nickname" placeholder="Никнейм">
             <div id="adminPasswordGroup" class="hidden">
                 <input type="password" id="adminPassword" placeholder="Пароль админа">
             </div>
             <button class="btn" style="width:100%" onclick="login()">ВОЙТИ</button>
-            <div id="authMessage" class="error-message"></div>
+            <div id="authMessage" style="color:#ff6b6b; text-align:center; margin-top:10px;"></div>
         </div>
     </div>
 
-    <!-- Главное меню (пустое) -->
+    <!-- Главное меню (пока пустое) -->
     <div id="gamePanel" class="hidden" style="max-width:600px; margin:100px auto 0; text-align:center;">
         <h1 style="font-size:42px; background:linear-gradient(135deg,#fff,#e94560); -webkit-background-clip:text; background-clip:text; color:transparent;">⚡ BRAWL BOX ⚡</h1>
         <div style="background:rgba(15,25,45,0.85); border-radius:32px; padding:40px; margin-top:20px;">
@@ -281,48 +312,51 @@
         let currentPlayerId = null;
 
         // Загрузка данных профиля
-        async function loadProfileData() {
+        async function refreshProfileData() {
             if (!currentPlayerId) return;
             const res = await fetch('/api/player/' + currentPlayerId);
             const data = await res.json();
             if (!data.error) {
-                document.getElementById('avatarIcon').innerText = data.avatar || '🎮';
-                document.getElementById('profileAvatar').innerText = data.avatar || '🎮';
-                document.getElementById('profileNickname').innerText = data.nickname;
+                const avatar = data.avatar || '🎮';
+                document.getElementById('miniAvatar').innerText = avatar;
+                document.getElementById('largeAvatar').innerText = avatar;
+                document.getElementById('profileNick').innerText = data.nickname;
                 document.getElementById('profileTag').innerText = data.tag || '#----';
                 document.getElementById('profileCups').innerText = data.cups || 0;
                 document.getElementById('profileBoxes').innerText = data.total_boxes || 0;
                 document.getElementById('profileCoins').innerText = data.coins || 0;
+                document.getElementById('profileTotalCups').innerText = data.cups || 0;
+                document.getElementById('recordCups').innerText = data.record_cups || data.cups || 0;
             }
         }
 
-        // Смена аватарки
+        // Смена аватарки (вызывается при клике в галерее)
         async function changeAvatar(avatar) {
             await fetch('/api/change_avatar', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ playerId: currentPlayerId, avatar: avatar })
             });
-            await loadProfileData();
-            closeAvatarModal();
+            await refreshProfileData();
+            closeAvatarPicker(); // закрываем окно выбора аватарок
         }
 
         // Открытие / закрытие окон
-        function openProfileModal() {
-            loadProfileData();
+        function openProfile() {
+            refreshProfileData();
             document.getElementById('profileModal').style.display = 'flex';
         }
 
-        function closeProfileModal() {
+        function closeProfile() {
             document.getElementById('profileModal').style.display = 'none';
         }
 
-        function openAvatarModal() {
-            document.getElementById('avatarModal').style.display = 'flex';
+        function openAvatarPicker() {
+            document.getElementById('avatarPickerModal').style.display = 'flex';
         }
 
-        function closeAvatarModal() {
-            document.getElementById('avatarModal').style.display = 'none';
+        function closeAvatarPicker() {
+            document.getElementById('avatarPickerModal').style.display = 'none';
         }
 
         // Вход
@@ -344,9 +378,9 @@
                 currentPlayerId = data.player.id;
                 document.getElementById('authPanel').style.display = 'none';
                 document.getElementById('gamePanel').classList.remove('hidden');
-                await loadProfileData();
-                
-                // Назначаем обработчики аватарок
+                await refreshProfileData();
+
+                // Назначить обработчики для аватарок в галерее
                 document.querySelectorAll('.avatar-option').forEach(opt => {
                     opt.onclick = () => changeAvatar(opt.getAttribute('data-avatar'));
                 });
@@ -361,12 +395,12 @@
             adminGroup.classList.toggle('hidden', e.target.value !== 'unity');
         });
 
-        // Закрытие окон по клику вне их
+        // Закрытие окон по клику на фон
         window.onclick = function(event) {
-            const profileModal = document.getElementById('profileModal');
-            const avatarModal = document.getElementById('avatarModal');
-            if (event.target === profileModal) closeProfileModal();
-            if (event.target === avatarModal) closeAvatarModal();
+            const profile = document.getElementById('profileModal');
+            const picker = document.getElementById('avatarPickerModal');
+            if (event.target === profile) closeProfile();
+            if (event.target === picker) closeAvatarPicker();
         };
     </script>
 </body>
