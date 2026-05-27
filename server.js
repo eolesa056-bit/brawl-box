@@ -18,12 +18,14 @@ db.serialize(() => {
         cups INTEGER DEFAULT 0,
         record_cups INTEGER DEFAULT 0,
         next_free_nickname_change DATETIME,
+        path_data TEXT DEFAULT '[]',
         is_admin INTEGER DEFAULT 0
     )`);
     
     // Добавляем колонки, если их нет (для старых баз)
     db.run(`ALTER TABLE players ADD COLUMN nickname_color TEXT DEFAULT '#ffffff'`, () => {});
     db.run(`ALTER TABLE players ADD COLUMN record_cups INTEGER DEFAULT 0`, () => {});
+    db.run(`ALTER TABLE players ADD COLUMN path_data TEXT DEFAULT '[]'`, () => {});
     
     // Админ unity / ALT F4
     db.get(`SELECT * FROM players WHERE nickname = 'unity'`, (err, row) => {
@@ -38,9 +40,7 @@ db.serialize(() => {
 app.use(express.static('public'));
 app.use(express.json());
 
-// ========== API ==========
-
-// Вход / регистрация
+// ========== API АВТОРИЗАЦИИ И ПРОФИЛЯ ==========
 app.post('/api/login', (req, res) => {
     const { nickname, password } = req.body;
     
@@ -68,16 +68,47 @@ app.post('/api/login', (req, res) => {
     });
 });
 
-// Получить данные игрока
 app.get('/api/player/:id', (req, res) => {
     const id = req.params.id;
-    db.get(`SELECT id, nickname, tag, avatar, nickname_color, coins, total_boxes, cups, record_cups FROM players WHERE id = ?`, [id], (err, player) => {
+    db.get(`SELECT id, nickname, tag, avatar, nickname_color, coins, total_boxes, cups, record_cups, path_data FROM players WHERE id = ?`, [id], (err, player) => {
         if (!player) return res.json({ error: 'not found' });
         res.json(player);
     });
 });
 
-// Открыть ящик
+app.post('/api/change_avatar', (req, res) => {
+    const { playerId, avatar } = req.body;
+    db.run(`UPDATE players SET avatar = ? WHERE id = ?`, [avatar, playerId]);
+    res.json({ success: true });
+});
+
+app.post('/api/change_nickname', (req, res) => {
+    const { playerId, newNickname, color } = req.body;
+    
+    // Если передан ТОЛЬКО цвет (newNickname отсутствует)
+    if (!newNickname || newNickname.trim() === '') {
+        db.run(`UPDATE players SET nickname_color = ? WHERE id = ?`, [color, playerId]);
+        return res.json({ success: true, message: 'Цвет обновлён' });
+    }
+    
+    // Иначе — меняем и ник, и цвет (с кулдауном 24 часа)
+    db.get(`SELECT next_free_nickname_change FROM players WHERE id = ?`, [playerId], (err, player) => {
+        const now = new Date();
+        if (player && player.next_free_nickname_change && new Date(player.next_free_nickname_change) > now) {
+            return res.json({ success: false, message: 'Сменить ник можно раз в 24 часа' });
+        }
+        
+        db.get(`SELECT id FROM players WHERE nickname = ? AND id != ?`, [newNickname, playerId], (err, existing) => {
+            if (existing) return res.json({ success: false, message: 'Никнейм уже занят' });
+            
+            const nextFree = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+            db.run(`UPDATE players SET nickname = ?, nickname_color = ?, next_free_nickname_change = ? WHERE id = ?`, [newNickname, color, nextFree.toISOString(), playerId]);
+            res.json({ success: true, next_free_change: nextFree.toISOString() });
+        });
+    });
+});
+
+// ========== ИГРОВАЯ МЕХАНИКА ==========
 app.get('/api/open_box/:playerId', (req, res) => {
     const playerId = req.params.playerId;
     
@@ -105,38 +136,28 @@ app.get('/api/open_box/:playerId', (req, res) => {
     });
 });
 
-// Смена аватарки
-app.post('/api/change_avatar', (req, res) => {
-    const { playerId, avatar } = req.body;
-    db.run(`UPDATE players SET avatar = ? WHERE id = ?`, [avatar, playerId]);
+// ========== ПУТЬ К СЛАВЕ (НАГРАДЫ) ==========
+app.post('/api/save_path', (req, res) => {
+    const { playerId, pathData } = req.body;
+    db.run(`UPDATE players SET path_data = ? WHERE id = ?`, [JSON.stringify(pathData), playerId]);
     res.json({ success: true });
 });
 
-// Смена никнейма (с проверкой кулдауна 24 часа) ИЛИ только цвета (без кулдауна)
-app.post('/api/change_nickname', (req, res) => {
-    const { playerId, newNickname, color } = req.body;
-    
-    // Если передан ТОЛЬКО цвет (newNickname отсутствует или равен текущему нику)
-    if (!newNickname || newNickname.trim() === '') {
-        db.run(`UPDATE players SET nickname_color = ? WHERE id = ?`, [color, playerId]);
-        return res.json({ success: true, message: 'Цвет обновлён' });
-    }
-    
-    // Иначе — меняем и ник, и цвет (с кулдауном)
-    db.get(`SELECT next_free_nickname_change FROM players WHERE id = ?`, [playerId], (err, player) => {
-        const now = new Date();
-        if (player && player.next_free_nickname_change && new Date(player.next_free_nickname_change) > now) {
-            return res.json({ success: false, message: 'Сменить ник можно раз в 24 часа' });
-        }
-        
-        db.get(`SELECT id FROM players WHERE nickname = ? AND id != ?`, [newNickname, playerId], (err, existing) => {
-            if (existing) return res.json({ success: false, message: 'Никнейм уже занят' });
-            
-            const nextFree = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-            db.run(`UPDATE players SET nickname = ?, nickname_color = ?, next_free_nickname_change = ? WHERE id = ?`, [newNickname, color, nextFree.toISOString(), playerId]);
-            res.json({ success: true, next_free_change: nextFree.toISOString() });
-        });
-    });
+app.post('/api/add_coins', (req, res) => {
+    const { playerId, coins } = req.body;
+    db.run(`UPDATE players SET coins = coins + ? WHERE id = ?`, [coins, playerId]);
+    res.json({ success: true });
+});
+
+app.post('/api/add_box', (req, res) => {
+    const { playerId } = req.body;
+    db.run(`UPDATE players SET total_boxes = total_boxes + 1 WHERE id = ?`, [playerId]);
+    res.json({ success: true });
+});
+
+app.post('/api/add_skin', (req, res) => {
+    // Здесь можно добавить логику выдачи скина в отдельную таблицу
+    res.json({ success: true });
 });
 
 app.listen(port, () => console.log(`🚀 Сервер на порту ${port}`));
