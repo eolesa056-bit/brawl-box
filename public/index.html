@@ -19,7 +19,6 @@
             padding: 20px;
         }
 
-        /* Верхняя панель */
         .top-bar {
             position: fixed;
             top: 20px;
@@ -89,7 +88,6 @@
             box-shadow: 0 0 20px #e94560;
         }
 
-        /* Гамбургер */
         .hamburger {
             font-size: 32px;
             cursor: pointer;
@@ -111,7 +109,6 @@
             transform: scale(1.05);
         }
 
-        /* Выпадающее меню */
         .menu-panel {
             display: none;
             position: fixed;
@@ -147,7 +144,6 @@
             transform: translateX(5px);
         }
 
-        /* Модальные окна */
         .modal {
             display: none;
             position: fixed;
@@ -161,7 +157,7 @@
             align-items: center;
         }
 
-        .profile-container, .glory-container {
+        .profile-container, .glory-container, .settings-container {
             background: linear-gradient(145deg, #0f172a, #020617);
             width: 90%;
             max-width: 600px;
@@ -208,6 +204,53 @@
         .scroll-buttons { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
         .scroll-btn { background: #e94560; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 20px; cursor: pointer; }
 
+        .settings-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 10px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 40px;
+        }
+        .settings-label {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .toggle-switch {
+            width: 60px;
+            height: 30px;
+            background: #e94560;
+            border-radius: 30px;
+            cursor: pointer;
+            position: relative;
+            transition: 0.2s;
+        }
+        .toggle-switch.on {
+            background: #00ff88;
+        }
+        .toggle-slider {
+            width: 26px;
+            height: 26px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: 0.2s;
+        }
+        .toggle-switch.on .toggle-slider {
+            left: 32px;
+        }
+        .lang-select {
+            background: #1e293b;
+            border: 1px solid #e94560;
+            padding: 8px 20px;
+            border-radius: 40px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
         .hidden { display: none; }
         input, .btn { width: 100%; padding: 12px; border-radius: 50px; background: #0f172a; border: none; color: white; text-align: center; margin: 10px 0; }
         .btn { background: linear-gradient(135deg, #e94560, #b91c3c); cursor: pointer; }
@@ -243,7 +286,6 @@
         <div class="hamburger" onclick="toggleMenu()">☰</div>
     </div>
 
-    <!-- Выпадающее меню -->
     <div id="menuPanel" class="menu-panel">
         <button onclick="openModal('settings')">⚙️ НАСТРОЙКИ</button>
         <button onclick="openModal('history')">📜 ИСТОРИЯ БОЕВ</button>
@@ -252,81 +294,79 @@
         <button onclick="openModal('link')">🔗 ПРИВЯЗКА АККАУНТА</button>
     </div>
 
-    <!-- Модальные окна для пунктов меню -->
-    <div id="settingsModal" class="modal"><div class="profile-container"><button class="close-modal" onclick="closeModal('settingsModal')">✖</button><h2>⚙️ НАСТРОЙКИ</h2><p style="margin:20px">Звук, графика, управление — скоро...</p></div></div>
+    <!-- ОКНО НАСТРОЕК (полноценное) -->
+    <div id="settingsModal" class="modal">
+        <div class="settings-container">
+            <button class="close-modal" onclick="closeModal('settingsModal')">✖</button>
+            <h2 style="text-align:center; margin-bottom:30px;">⚙️ НАСТРОЙКИ</h2>
+            <div class="settings-row">
+                <span class="settings-label">🌐 ЯЗЫК</span>
+                <select id="languageSelect" class="lang-select">
+                    <option value="ru">Русский</option>
+                    <option value="en">English</option>
+                </select>
+            </div>
+            <div class="settings-row">
+                <span class="settings-label">🎵 МУЗЫКА</span>
+                <div id="musicToggle" class="toggle-switch on">
+                    <div class="toggle-slider"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="historyModal" class="modal"><div class="profile-container"><button class="close-modal" onclick="closeModal('historyModal')">✖</button><h2>📜 ИСТОРИЯ БОЕВ</h2><p style="margin:20px">Здесь будут твои последние бои</p></div></div>
     <div id="leadersModal" class="modal"><div class="profile-container"><button class="close-modal" onclick="closeModal('leadersModal')">✖</button><h2>🏆 СПИСКИ ЛИДЕРОВ</h2><p style="margin:20px">Топ игроки по кубкам, победам и т.д.</p></div></div>
     <div id="inboxModal" class="modal"><div class="profile-container"><button class="close-modal" onclick="closeModal('inboxModal')">✖</button><h2>📥 ВХОДЯЩИЕ</h2><p style="margin:20px">Сообщения, подарки, приглашения</p></div></div>
     <div id="linkModal" class="modal"><div class="profile-container"><button class="close-modal" onclick="closeModal('linkModal')">✖</button><h2>🔗 ПРИВЯЗКА АККАУНТА</h2><p style="margin:20px">Привяжи Google, Supercell ID или почту</p></div></div>
 
-    <!-- ОКНО ПРОФИЛЯ -->
-    <div id="profileModal" class="modal">
-        <div class="profile-container">
-            <button class="close-modal" onclick="closeProfileModal()">✖</button>
-            <div class="profile-header">
-                <div class="avatar-section">
-                    <div class="avatar-large" id="largeAvatar" onclick="openAvatarPicker()">🎮</div>
-                    <div class="player-tag-static" id="profileTag">#----</div>
-                </div>
-                <div class="info-section">
-                    <div class="nickname-wrapper">
-                        <div class="profile-nickname" id="profileNick">-</div>
-                        <div class="edit-icon" onclick="openNicknameEditor()">✏️</div>
-                        <div class="color-icon" onclick="openColorPicker()">🎨</div>
-                    </div>
-                    <div class="profile-cups">🏆 <span id="profileCups">0</span> кубков</div>
-                </div>
-            </div>
-            <div class="stats-grid">
-                <div class="stat-card"><h3>🎲 ОТКРЫТО ЯЩИКОВ</h3><div class="stat-value" id="profileBoxes">0</div></div>
-                <div class="stat-card"><h3>💰 МОНЕТЫ</h3><div class="stat-value" id="profileCoins">0</div></div>
-                <div class="stat-card"><h3>🏆 КУБКОВ ВСЕГО</h3><div class="stat-value" id="profileTotalCups">0</div></div>
-                <div class="stat-card"><h3>⭐ ЛУЧШИЙ РЕКОРД</h3><div class="stat-value" id="recordCups">0</div></div>
-            </div>
-        </div>
-    </div>
+    <div id="profileModal" class="modal"><div class="profile-container"><button class="close-modal" onclick="closeProfileModal()">✖</button><div class="profile-header"><div class="avatar-section"><div class="avatar-large" id="largeAvatar" onclick="openAvatarPicker()">🎮</div><div class="player-tag-static" id="profileTag">#----</div></div><div class="info-section"><div class="nickname-wrapper"><div class="profile-nickname" id="profileNick">-</div><div class="edit-icon" onclick="openNicknameEditor()">✏️</div><div class="color-icon" onclick="openColorPicker()">🎨</div></div><div class="profile-cups">🏆 <span id="profileCups">0</span> кубков</div></div></div><div class="stats-grid"><div class="stat-card"><h3>🎲 ОТКРЫТО ЯЩИКОВ</h3><div class="stat-value" id="profileBoxes">0</div></div><div class="stat-card"><h3>💰 МОНЕТЫ</h3><div class="stat-value" id="profileCoins">0</div></div><div class="stat-card"><h3>🏆 КУБКОВ ВСЕГО</h3><div class="stat-value" id="profileTotalCups">0</div></div><div class="stat-card"><h3>⭐ ЛУЧШИЙ РЕКОРД</h3><div class="stat-value" id="recordCups">0</div></div></div></div></div>
 
-    <!-- ОКНО ПУТИ К СЛАВЕ -->
-    <div id="pathModal" class="modal">
-        <div class="glory-container">
-            <button class="close-modal" onclick="closePathModal()">✖</button>
-            <div class="glory-header"><h1>🏆 ПУТЬ К СЛАВЕ 🏆</h1><p>Собирай кубки, чтобы получать награды!</p></div>
-            <div class="progress-info"><div><div style="font-size:14px; color:#aaa;">ТВОИ КУБКИ</div><div class="current-cups" id="currentCupsDisplay">0</div></div><div class="next-milestone"><div style="font-size:14px; color:#aaa;">ДО СЛЕДУЮЩЕЙ НАГРАДЫ</div><div class="milestone-cups" id="nextMilestone">0</div></div></div>
-            <div class="progress-bar-container"><div class="progress-bar" id="progressBar"></div></div>
-            <div class="track-container"><div class="track-scroll" id="trackScroll"></div><div class="scroll-buttons"><button class="scroll-btn" onclick="scrollTrack(-150)">◀</button><button class="scroll-btn" onclick="scrollTrack(150)">▶</button></div></div>
-        </div>
-    </div>
+    <div id="pathModal" class="modal"><div class="glory-container"><button class="close-modal" onclick="closePathModal()">✖</button><div class="glory-header"><h1>🏆 ПУТЬ К СЛАВЕ 🏆</h1><p>Собирай кубки, чтобы получать награды!</p></div><div class="progress-info"><div><div style="font-size:14px; color:#aaa;">ТВОИ КУБКИ</div><div class="current-cups" id="currentCupsDisplay">0</div></div><div class="next-milestone"><div style="font-size:14px; color:#aaa;">ДО СЛЕДУЮЩЕЙ НАГРАДЫ</div><div class="milestone-cups" id="nextMilestone">0</div></div></div><div class="progress-bar-container"><div class="progress-bar" id="progressBar"></div></div><div class="track-container"><div class="track-scroll" id="trackScroll"></div><div class="scroll-buttons"><button class="scroll-btn" onclick="scrollTrack(-150)">◀</button><button class="scroll-btn" onclick="scrollTrack(150)">▶</button></div></div></div></div>
 
-    <!-- Окна выбора аватарки, ника, цвета -->
     <div id="avatarPickerModal" class="modal"><div class="avatar-selector"><div id="avatarSelector" style="display:flex; gap:20px; flex-wrap:wrap; justify-content:center;"></div></div></div>
     <div id="nicknameEditorModal" class="modal"><div class="nickname-container"><h3>✏️ СМЕНИТЬ НИКНЕЙМ</h3><input type="text" id="newNicknameInput" placeholder="Новый никнейм"><button class="btn" onclick="changeNickname()">СОХРАНИТЬ</button><button class="btn" onclick="closeNicknameEditor()" style="background:#2a2a5a;">ОТМЕНА</button></div></div>
     <div id="colorPickerModal" class="modal"><div class="color-container"><h3>🎨 ВЫБЕРИ ЦВЕТ НИКНЕЙМА</h3><div class="color-options" id="colorOptions"></div></div></div>
 
-    <!-- ВХОД -->
-    <div id="authPanel" class="modal" style="display:flex; background:rgba(0,0,0,0.95);">
-        <div class="profile-container" style="max-width:400px;">
-            <h2>🔐 ВХОД</h2>
-            <input type="text" id="nickname" placeholder="Никнейм">
-            <div id="adminPasswordGroup" class="hidden"><input type="password" id="adminPassword" placeholder="Пароль админа"></div>
-            <button class="btn" onclick="login()">ВОЙТИ</button>
-            <div id="authMessage" style="color:#ff6b6b; margin-top:10px;"></div>
-        </div>
-    </div>
+    <div id="authPanel" class="modal" style="display:flex; background:rgba(0,0,0,0.95);"><div class="profile-container" style="max-width:400px;"><h2>🔐 ВХОД</h2><input type="text" id="nickname" placeholder="Никнейм"><div id="adminPasswordGroup" class="hidden"><input type="password" id="adminPassword" placeholder="Пароль админа"></div><button class="btn" onclick="login()">ВОЙТИ</button><div id="authMessage" style="color:#ff6b6b; margin-top:10px;"></div></div></div>
 
-    <!-- ГЛАВНОЕ МЕНЮ -->
-    <div id="gamePanel" class="hidden">
-        <div class="main-menu">
-            <h1>⚡ BRAWL BOX ⚡</h1>
-            <div class="game-placeholder"><p style="color:#aaa; font-size:18px;">Здесь скоро появится игровой автомат</p></div>
-        </div>
-    </div>
+    <div id="gamePanel" class="hidden"><div class="main-menu"><h1>⚡ BRAWL BOX ⚡</h1><div class="game-placeholder"><p style="color:#aaa; font-size:18px;">Здесь скоро появится игровой автомат</p></div></div></div>
 
     <script>
         let currentPlayerId = null;
         let isAdmin = false;
+        let musicEnabled = true;
+        let audioElement = null;
         const DEV_AVATAR_URL = "https://yt3.googleusercontent.com/wEnonoxntKdkIuHZbNouYlz6YoCchSbx7tpBRaVS6V08XzJYkvNZaG34RwZV7khnoF6hqI-kGw=s900-c-k-c0x00ffffff-no-rj";
         
-        // Данные пути к славе
+        // Простая музыкальная дорожка (зацикленный генератор звука, можно заменить на mp3)
+        function initMusic() {
+            if (!audioElement) {
+                audioElement = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3');
+                audioElement.loop = true;
+                audioElement.volume = 0.3;
+            }
+            if (musicEnabled) {
+                audioElement.play().catch(e => console.log('Автовоспроизведение заблокировано, нажмите на страницу'));
+            } else {
+                audioElement.pause();
+            }
+        }
+
+        function toggleMusic() {
+            musicEnabled = !musicEnabled;
+            const toggle = document.getElementById('musicToggle');
+            if (musicEnabled) {
+                toggle.classList.add('on');
+                if (audioElement) audioElement.play().catch(e => console.log('Нужно взаимодействие'));
+                else initMusic();
+            } else {
+                toggle.classList.remove('on');
+                if (audioElement) audioElement.pause();
+            }
+            localStorage.setItem('musicEnabled', musicEnabled);
+        }
+
         const pathData = [
             { cups: 250, reward: "50💰", label: "50 Монет" }, { cups: 500, reward: "🎁", label: "Обычный ящик" }, { cups: 1000, reward: "100💰", label: "100 Монет" },
             { cups: 1500, reward: "🎁", label: "Обычный ящик" }, { cups: 2000, reward: "🎁✨", label: "Редкий ящик" }, { cups: 2500, reward: "250💰", label: "250 Монет" },
@@ -352,9 +392,7 @@
                 const nickname = data.nickname;
                 const nicknameColor = data.nickname_color || '#ffffff';
                 currentCups = data.cups || 0;
-                if (data.path_data) {
-                    try { const saved = JSON.parse(data.path_data); if (saved.claimed) claimedStatus = saved.claimed; } catch(e) {}
-                }
+                if (data.path_data) { try { const saved = JSON.parse(data.path_data); if (saved.claimed) claimedStatus = saved.claimed; } catch(e) {} }
                 document.getElementById('miniNickname').innerText = nickname.length > 10 ? nickname.slice(0, 9) + '…' : nickname;
                 document.getElementById('miniNickname').style.color = nicknameColor;
                 if (avatar.startsWith('http')) {
@@ -379,17 +417,11 @@
         function updateGloryUI() {
             document.getElementById('currentCupsDisplay').innerText = currentCups;
             let nextCups = 0;
-            for (let tier of pathData) {
-                if (tier.cups > currentCups) { nextCups = tier.cups; break; }
-            }
+            for (let tier of pathData) { if (tier.cups > currentCups) { nextCups = tier.cups; break; } }
             document.getElementById('nextMilestone').innerText = nextCups > 0 ? `${nextCups} 🏆` : 'МАКСИМУМ!';
             let lastCups = 0, nextCupsBar = pathData[0]?.cups || 0;
             for (let i = pathData.length-1; i >= 0; i--) {
-                if (pathData[i].cups <= currentCups) {
-                    lastCups = pathData[i].cups;
-                    nextCupsBar = pathData[i+1]?.cups || pathData[i].cups;
-                    break;
-                }
+                if (pathData[i].cups <= currentCups) { lastCups = pathData[i].cups; nextCupsBar = pathData[i+1]?.cups || pathData[i].cups; break; }
             }
             let progressPercent = nextCupsBar > lastCups ? ((currentCups - lastCups) / (nextCupsBar - lastCups)) * 100 : 100;
             progressPercent = Math.min(100, Math.max(0, progressPercent));
@@ -399,15 +431,12 @@
             container.innerHTML = '';
             pathData.forEach((tier, idx) => {
                 const isAvailable = currentCups >= tier.cups && !claimedStatus[idx];
-                const isClaimed = claimedStatus[idx];
                 const div = document.createElement('div');
-                div.className = `reward-tier ${isAvailable ? 'available' : (isClaimed ? 'claimed' : '')}`;
-                div.innerHTML = `<div class="tier-cups">${tier.cups}🏆</div><div class="tier-reward">${tier.reward}</div><div class="tier-label">${tier.label}</div>${isAvailable ? '<button class="claim-tier-btn" data-idx="'+idx+'">ЗАБРАТЬ</button>' : (isClaimed ? '<div style="font-size:20px; margin-top:8px;">✅</div>' : '<div style="font-size:20px; margin-top:8px;">🔒</div>')}`;
+                div.className = `reward-tier ${isAvailable ? 'available' : (claimedStatus[idx] ? 'claimed' : '')}`;
+                div.innerHTML = `<div class="tier-cups">${tier.cups}🏆</div><div class="tier-reward">${tier.reward}</div><div class="tier-label">${tier.label}</div>${isAvailable ? '<button class="claim-tier-btn" data-idx="'+idx+'">ЗАБРАТЬ</button>' : (claimedStatus[idx] ? '<div style="font-size:20px; margin-top:8px;">✅</div>' : '<div style="font-size:20px; margin-top:8px;">🔒</div>')}`;
                 container.appendChild(div);
             });
-            document.querySelectorAll('.claim-tier-btn').forEach(btn => {
-                btn.onclick = (e) => { e.stopPropagation(); const idx = parseInt(btn.getAttribute('data-idx')); claimReward(idx); };
-            });
+            document.querySelectorAll('.claim-tier-btn').forEach(btn => { btn.onclick = (e) => { e.stopPropagation(); const idx = parseInt(btn.getAttribute('data-idx')); claimReward(idx); }; });
         }
 
         async function claimReward(idx) {
@@ -435,8 +464,7 @@
             if (!newNick) return alert("Введи никнейм");
             const res = await fetch('/api/change_nickname', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ playerId: currentPlayerId, newNickname: newNick, color: null }) });
             const data = await res.json();
-            if (data.success) { await refreshProfileData(); closeNicknameEditor(); }
-            else alert(data.message || "Ошибка");
+            if (data.success) { await refreshProfileData(); closeNicknameEditor(); } else alert(data.message || "Ошибка");
         }
 
         async function changeColorOnly(color) {
@@ -448,24 +476,11 @@
         function closeProfileModal() { document.getElementById('profileModal').style.display = 'none'; }
         function openPathModal() { refreshProfileData(); document.getElementById('pathModal').style.display = 'flex'; }
         function closePathModal() { document.getElementById('pathModal').style.display = 'none'; }
-        function openAvatarPicker() { 
-            document.getElementById('avatarPickerModal').style.display = 'flex';
-            const container = document.getElementById('avatarSelector');
-            const avatars = ['🎮','⭐','🔥','🐺','🤖','👑','⚡','😈'];
-            if (isAdmin) avatars.push('👑 DEV');
-            container.innerHTML = avatars.map(a => `<div class="avatar-option" data-avatar="${a}">${a}</div>`).join('');
-            document.querySelectorAll('.avatar-option').forEach(opt => opt.onclick = () => changeAvatar(opt.getAttribute('data-avatar'), opt.getAttribute('data-avatar') === '👑 DEV'));
-        }
+        function openAvatarPicker() { document.getElementById('avatarPickerModal').style.display = 'flex'; const container = document.getElementById('avatarSelector'); const avatars = ['🎮','⭐','🔥','🐺','🤖','👑','⚡','😈']; if (isAdmin) avatars.push('👑 DEV'); container.innerHTML = avatars.map(a => `<div class="avatar-option" data-avatar="${a}">${a}</div>`).join(''); document.querySelectorAll('.avatar-option').forEach(opt => opt.onclick = () => changeAvatar(opt.getAttribute('data-avatar'), opt.getAttribute('data-avatar') === '👑 DEV')); }
         function closeAvatarPicker() { document.getElementById('avatarPickerModal').style.display = 'none'; }
         function openNicknameEditor() { document.getElementById('nicknameEditorModal').style.display = 'flex'; }
         function closeNicknameEditor() { document.getElementById('nicknameEditorModal').style.display = 'none'; }
-        function openColorPicker() { 
-            document.getElementById('colorPickerModal').style.display = 'flex';
-            const container = document.getElementById('colorOptions');
-            const colors = ['#ffffff','#f9a826','#ff69b4','#00bfff','#c084fc','#ff0000','#00ff88'];
-            container.innerHTML = colors.map(c => `<div class="color-circle" style="background:${c};" data-color="${c}"></div>`).join('');
-            document.querySelectorAll('.color-circle').forEach(circle => circle.onclick = async () => { await changeColorOnly(circle.getAttribute('data-color')); closeColorPicker(); openProfileModal(); });
-        }
+        function openColorPicker() { document.getElementById('colorPickerModal').style.display = 'flex'; const container = document.getElementById('colorOptions'); const colors = ['#ffffff','#f9a826','#ff69b4','#00bfff','#c084fc','#ff0000','#00ff88']; container.innerHTML = colors.map(c => `<div class="color-circle" style="background:${c};" data-color="${c}"></div>`).join(''); document.querySelectorAll('.color-circle').forEach(circle => circle.onclick = async () => { await changeColorOnly(circle.getAttribute('data-color')); closeColorPicker(); openProfileModal(); }); }
         function closeColorPicker() { document.getElementById('colorPickerModal').style.display = 'none'; }
 
         async function login() {
@@ -481,6 +496,14 @@
                 document.getElementById('authPanel').style.display = 'none';
                 document.getElementById('gamePanel').classList.remove('hidden');
                 await refreshProfileData();
+                const savedMusic = localStorage.getItem('musicEnabled');
+                if (savedMusic !== null) musicEnabled = savedMusic === 'true';
+                const toggle = document.getElementById('musicToggle');
+                if (musicEnabled) toggle.classList.add('on'); else toggle.classList.remove('on');
+                toggle.onclick = () => toggleMusic();
+                initMusic();
+                document.getElementById('languageSelect').value = localStorage.getItem('language') || 'ru';
+                document.getElementById('languageSelect').onchange = (e) => { localStorage.setItem('language', e.target.value); alert('Язык изменён, перезагрузите страницу для применения'); };
             } else document.getElementById('authMessage').innerText = data.message;
         }
 
