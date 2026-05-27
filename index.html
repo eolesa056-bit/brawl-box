@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Brawl Box Simulator</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: #1a1a2e;
+            color: white;
+            padding: 20px;
+        }
+        button {
+            background: #e94560;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            margin: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #ff6b8b;
+        }
+        #box {
+            background: #16213e;
+            padding: 20px;
+            border-radius: 20px;
+            margin: 20px auto;
+            max-width: 400px;
+        }
+        .reward {
+            font-size: 24px;
+            margin: 10px 0;
+            color: #f9a826;
+        }
+        #stats {
+            background: #0f3460;
+            padding: 15px;
+            border-radius: 15px;
+            max-width: 300px;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎁 Brawl Box Simulator</h1>
+    
+    <div id="game">
+        <div id="box">
+            <h2>📦 Ящик</h2>
+            <button id="openBtn" disabled>🔓 ОТКРЫТЬ ЯЩИК</button>
+            <div id="reward" class="reward"></div>
+        </div>
+        
+        <div id="stats">
+            <h3>📊 Статистика</h3>
+            <p>💰 Монет: <span id="coins">0</span></p>
+            <p>🎁 Открыто ящиков: <span id="boxes">0</span></p>
+            <p>🏷️ Тег: <span id="tag">-</span></p>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        let playerId = null;
+        
+        socket.on('connect', () => {
+            const nickname = prompt("Введи свой ник:", "Игрок");
+            if (nickname) {
+                socket.emit('register', nickname, (response) => {
+                    if (response.success) {
+                        playerId = response.secret_id;
+                        document.getElementById('tag').innerText = response.visible_tag;
+                        document.getElementById('openBtn').disabled = false;
+                        updateStats();
+                    } else {
+                        alert("Ошибка: " + response.message);
+                    }
+                });
+            }
+        });
+        
+        function updateStats() {
+            if (!playerId) return;
+            fetch('/api/player/' + playerId)
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.error) {
+                        document.getElementById('coins').innerText = data.coins;
+                        document.getElementById('boxes').innerText = data.total_boxes;
+                    }
+                });
+        }
+        
+        document.getElementById('openBtn').onclick = () => {
+            if (playerId) socket.emit('open_box');
+            else alert("Подожди, идёт подключение...");
+        };
+        
+        socket.on('box_opened', (reward) => {
+            document.getElementById('reward').innerHTML = `🎉 Выпало: ${reward.name}! 🎉`;
+            updateStats();
+        });
+        
+        socket.on('session_terminated', () => {
+            alert("СЕССИЯ ЗАВЕРШЕНА. ПЕРЕЗАГРУЗИТЕ ИГРУ");
+            window.location.reload();
+        });
+        
+        setInterval(updateStats, 5000);
+    </script>
+</body>
+</html>
