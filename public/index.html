@@ -19,18 +19,17 @@
             padding: 20px;
         }
 
-        /* Верхняя панель: аватарка (слева) и путь к славе (справа) */
+        /* Верхняя панель: аватарка (слева) и путь к славе (справа от неё) */
         .top-bar {
             position: fixed;
             top: 20px;
             left: 20px;
             right: 20px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            gap: 20px;
             z-index: 100;
             flex-wrap: wrap;
-            gap: 15px;
         }
 
         .floating-avatar {
@@ -66,26 +65,26 @@
             text-align: center;
         }
 
-        /* Кнопка ПУТЬ К СЛАВЕ (справа) */
+        /* Кнопка ПУТЬ К СЛАВЕ (справа от аватарки) */
         .glory-button {
             background: linear-gradient(135deg, #e94560, #b91c3c);
-            padding: 12px 24px;
+            padding: 10px 20px;
             border-radius: 50px;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             cursor: pointer;
             border: none;
             color: white;
-            box-shadow: 0 0 15px rgba(233,69,96,0.5);
+            box-shadow: 0 0 10px rgba(233,69,96,0.5);
             transition: 0.2s;
         }
 
         .glory-button:hover {
             transform: scale(1.02);
-            box-shadow: 0 0 25px #e94560;
+            box-shadow: 0 0 20px #e94560;
         }
 
-        /* Модальное окно профиля (оставим, но оно теперь не содержит путь) */
+        /* Модальное окно профиля */
         .modal {
             display: none;
             position: fixed;
@@ -211,7 +210,7 @@
             color: #f9a826;
         }
 
-        /* ========== ОКНО ПУТИ К СЛАВЕ (красивое, с фоном) ========== */
+        /* ========== ОКНО ПУТИ К СЛАВЕ (с наградами) ========== */
         .path-modal {
             display: none;
             position: fixed;
@@ -234,7 +233,6 @@
             padding: 35px;
             position: relative;
             box-shadow: 0 0 50px rgba(233,69,96,0.4);
-            backdrop-filter: blur(5px);
         }
 
         .path-title {
@@ -283,26 +281,26 @@
         }
 
         .step-cups {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             color: #f9a826;
         }
 
         .step-reward {
-            font-size: 24px;
+            font-size: 22px;
             margin: 8px 0;
         }
 
         .step-status {
-            font-size: 18px;
+            font-size: 14px;
         }
 
         .claim-btn {
             background: #e94560;
             border: none;
-            padding: 5px 12px;
+            padding: 4px 10px;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 11px;
             cursor: pointer;
             margin-top: 8px;
         }
@@ -420,7 +418,7 @@
     </style>
 </head>
 <body>
-    <!-- Верхняя панель: аватарка (слева) и кнопка Путь к славе (справа) -->
+    <!-- Верхняя панель: аватарка и КНОПКА ПУТЬ К СЛАВЕ СПРАВА -->
     <div class="top-bar">
         <div class="floating-avatar" onclick="openProfileModal()">
             <div class="mini-avatar" id="miniAvatar">🎮</div>
@@ -456,7 +454,7 @@
         </div>
     </div>
 
-    <!-- ОКНО ПУТИ К СЛАВЕ (красивое, с фоном) -->
+    <!-- ОКНО ПУТИ К СЛАВЕ (с наградами) -->
     <div id="pathModal" class="path-modal">
         <div class="path-container">
             <button class="close-modal" onclick="closePathModal()">✖</button>
@@ -471,7 +469,7 @@
         </div>
     </div>
 
-    <!-- ОКНА ВЫБОРА (аватарка, ник, цвет) -->
+    <!-- ОКНА ВЫБОРА -->
     <div id="avatarPickerModal" class="avatar-modal">
         <div class="avatar-selector" id="avatarSelector">
             <div class="avatar-option" data-avatar="🎮">🎮</div>
