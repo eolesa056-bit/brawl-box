@@ -57,7 +57,7 @@
             text-align: center;
         }
 
-        /* ОСНОВНОЙ ПРОФИЛЬ (расширен, добавлен путь к славе) */
+        /* Модальное окно профиля (только профиль, без пути) */
         .modal {
             display: none;
             position: fixed;
@@ -74,14 +74,14 @@
         .profile-container {
             background: linear-gradient(145deg, #0f172a, #020617);
             width: 90%;
-            max-width: 1000px;
+            max-width: 600px;
             border-radius: 60px;
             border: 1px solid #e94560;
             padding: 35px;
             position: relative;
         }
 
-        .close-profile {
+        .close-modal {
             position: absolute;
             top: 20px;
             right: 25px;
@@ -94,33 +94,12 @@
             cursor: pointer;
         }
 
-        /* ДВЕ КОЛОНКИ: Слева — профиль, справа — путь к славе */
-        .profile-two-columns {
-            display: flex;
-            gap: 30px;
-            flex-wrap: wrap;
-        }
-
-        .left-profile {
-            flex: 1;
-            min-width: 280px;
-        }
-
-        .right-path {
-            flex: 1.5;
-            min-width: 280px;
-        }
-
         .profile-header {
             display: flex;
             gap: 30px;
             flex-wrap: wrap;
             margin-bottom: 30px;
             align-items: center;
-        }
-
-        .avatar-section {
-            text-align: center;
         }
 
         .avatar-large {
@@ -204,11 +183,34 @@
             color: #f9a826;
         }
 
-        /* ========== ПУТЬ К СЛАВЕ ========== */
+        /* ========== ОТДЕЛЬНОЕ ОКНО ПУТИ К СЛАВЕ ========== */
+        .path-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .path-container {
+            background: linear-gradient(145deg, #0f172a, #020617);
+            width: 90%;
+            max-width: 800px;
+            border-radius: 60px;
+            border: 1px solid #e94560;
+            padding: 35px;
+            position: relative;
+        }
+
         .path-title {
             text-align: center;
-            margin-bottom: 15px;
-            font-size: 22px;
+            margin-bottom: 25px;
+            font-size: 28px;
             color: #e94560;
         }
 
@@ -216,7 +218,6 @@
             background: rgba(0,0,0,0.5);
             border-radius: 40px;
             padding: 20px;
-            position: relative;
         }
 
         .path-scroll {
@@ -233,14 +234,12 @@
         }
 
         .path-step {
-            flex: 0 0 120px;
+            flex: 0 0 130px;
             background: linear-gradient(145deg, #1e293b, #0f172a);
             border-radius: 30px;
             padding: 15px;
             text-align: center;
             border: 1px solid #2a2a5a;
-            transition: 0.2s;
-            position: relative;
         }
 
         .path-step.completed {
@@ -264,15 +263,15 @@
         }
 
         .step-status {
-            font-size: 20px;
+            font-size: 18px;
         }
 
         .claim-btn {
             background: #e94560;
             border: none;
-            padding: 5px 10px;
+            padding: 5px 12px;
             border-radius: 20px;
-            font-size: 11px;
+            font-size: 12px;
             cursor: pointer;
             margin-top: 8px;
         }
@@ -281,20 +280,20 @@
             display: flex;
             justify-content: center;
             gap: 15px;
-            margin-top: 15px;
+            margin-top: 20px;
         }
 
         .scroll-btn {
             background: #e94560;
             border: none;
-            width: 40px;
-            height: 40px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
-            font-size: 20px;
+            font-size: 22px;
             cursor: pointer;
         }
 
-        /* Остальные окна (без изменений) */
+        /* Остальные окна */
         .avatar-modal, .nickname-modal, .color-modal {
             display: none;
             position: fixed;
@@ -365,62 +364,73 @@
 
         .hidden { display: none; }
         input, .btn { width: 100%; }
+
+        .main-menu-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .main-menu-buttons button {
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid #e94560;
+            padding: 12px 30px;
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
     <!-- ПЛАВАЮЩАЯ АВАТАРКА -->
-    <div class="floating-avatar" onclick="openProfile()">
+    <div class="floating-avatar" onclick="openProfileModal()">
         <div class="mini-avatar" id="miniAvatar">🎮</div>
         <div class="nickname-overlay" id="miniNickname">-</div>
     </div>
 
-    <!-- ОСНОВНОЙ ПРОФИЛЬ + ПУТЬ К СЛАВЕ -->
+    <!-- ОКНО ПРОФИЛЯ -->
     <div id="profileModal" class="modal">
         <div class="profile-container">
-            <button class="close-profile" onclick="closeProfile()">✖</button>
-            <div class="profile-two-columns">
-                <!-- ЛЕВАЯ КОЛОНКА: ПРОФИЛЬ -->
-                <div class="left-profile">
-                    <div class="profile-header">
-                        <div class="avatar-section">
-                            <div class="avatar-large" id="largeAvatar" onclick="openAvatarPicker()">🎮</div>
-                            <div class="player-tag-static" id="profileTag">#----</div>
-                        </div>
-                        <div class="info-section">
-                            <div class="nickname-wrapper">
-                                <div class="profile-nickname" id="profileNick">-</div>
-                                <div class="edit-icon" onclick="openNicknameEditor()">✏️</div>
-                                <div class="color-icon" onclick="openColorPicker()">🎨</div>
-                            </div>
-                            <div class="profile-cups">🏆 <span id="profileCups">0</span> кубков</div>
-                        </div>
-                    </div>
-                    <div class="stats-grid">
-                        <div class="stat-card"><h3>🎲 ОТКРЫТО ЯЩИКОВ</h3><div class="stat-value" id="profileBoxes">0</div></div>
-                        <div class="stat-card"><h3>💰 МОНЕТЫ</h3><div class="stat-value" id="profileCoins">0</div></div>
-                        <div class="stat-card"><h3>🏆 КУБКОВ ВСЕГО</h3><div class="stat-value" id="profileTotalCups">0</div></div>
-                        <div class="stat-card"><h3>⭐ ЛУЧШИЙ РЕКОРД</h3><div class="stat-value" id="recordCups">0</div></div>
-                    </div>
+            <button class="close-modal" onclick="closeProfileModal()">✖</button>
+            <div class="profile-header">
+                <div class="avatar-section">
+                    <div class="avatar-large" id="largeAvatar" onclick="openAvatarPicker()">🎮</div>
+                    <div class="player-tag-static" id="profileTag">#----</div>
                 </div>
-
-                <!-- ПРАВАЯ КОЛОНКА: ПУТЬ К СЛАВЕ -->
-                <div class="right-path">
-                    <div class="path-title">🏆 ПУТЬ К СЛАВЕ 🏆</div>
-                    <div class="path-track">
-                        <div class="path-scroll" id="pathScroll">
-                            <!-- Ступени будут добавлены через JS -->
-                        </div>
-                        <div class="scroll-buttons">
-                            <button class="scroll-btn" onclick="scrollPath(-150)">◀</button>
-                            <button class="scroll-btn" onclick="scrollPath(150)">▶</button>
-                        </div>
+                <div class="info-section">
+                    <div class="nickname-wrapper">
+                        <div class="profile-nickname" id="profileNick">-</div>
+                        <div class="edit-icon" onclick="openNicknameEditor()">✏️</div>
+                        <div class="color-icon" onclick="openColorPicker()">🎨</div>
                     </div>
+                    <div class="profile-cups">🏆 <span id="profileCups">0</span> кубков</div>
+                </div>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card"><h3>🎲 ОТКРЫТО ЯЩИКОВ</h3><div class="stat-value" id="profileBoxes">0</div></div>
+                <div class="stat-card"><h3>💰 МОНЕТЫ</h3><div class="stat-value" id="profileCoins">0</div></div>
+                <div class="stat-card"><h3>🏆 КУБКОВ ВСЕГО</h3><div class="stat-value" id="profileTotalCups">0</div></div>
+                <div class="stat-card"><h3>⭐ ЛУЧШИЙ РЕКОРД</h3><div class="stat-value" id="recordCups">0</div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ОКНО ПУТИ К СЛАВЕ -->
+    <div id="pathModal" class="path-modal">
+        <div class="path-container">
+            <button class="close-modal" onclick="closePathModal()">✖</button>
+            <div class="path-title">🏆 ПУТЬ К СЛАВЕ 🏆</div>
+            <div class="path-track">
+                <div class="path-scroll" id="pathScroll"></div>
+                <div class="scroll-buttons">
+                    <button class="scroll-btn" onclick="scrollPath(-150)">◀</button>
+                    <button class="scroll-btn" onclick="scrollPath(150)">▶</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- ОКНА ВЫБОРА (аватарки, ника, цвета) -->
+    <!-- ОКНА ВЫБОРА -->
     <div id="avatarPickerModal" class="avatar-modal">
         <div class="avatar-selector" id="avatarSelector">
             <div class="avatar-option" data-avatar="🎮">🎮</div>
@@ -475,6 +485,10 @@
     <!-- ГЛАВНОЕ МЕНЮ -->
     <div id="gamePanel" class="hidden" style="max-width:700px; margin:120px auto 0; text-align:center;">
         <h1 style="font-size:48px; background:linear-gradient(135deg,#fff,#e94560); -webkit-background-clip:text; background-clip:text; color:transparent;">⚡ BRAWL BOX ⚡</h1>
+        <div class="main-menu-buttons">
+            <button onclick="openPathModal()">🏆 ПУТЬ К СЛАВЕ</button>
+            <button onclick="openProfileModal()">👤 ПРОФИЛЬ</button>
+        </div>
         <div style="background:rgba(15,25,45,0.85); border-radius:40px; padding:50px; margin-top:25px;">
             <p style="color:#aaa; font-size:18px;">Здесь скоро появится игровой автомат</p>
         </div>
@@ -529,7 +543,6 @@
                 document.getElementById('profileBoxes').innerText = data.total_boxes || 0;
                 document.getElementById('profileCoins').innerText = data.coins || 0;
 
-                // Загружаем путь к славе из базы (claimed status)
                 const savedPath = data.path_data ? JSON.parse(data.path_data) : null;
                 if (savedPath) pathData = savedPath;
                 renderPath(currentCups);
@@ -565,7 +578,6 @@
             const step = pathData[idx];
             if (currentCups < step.cups || step.claimed) return;
             step.claimed = true;
-            // Начисляем награду (монеты, ящики и т.д.)
             let rewardText = step.reward;
             let coinsGain = 0;
             if (rewardText.includes('💰')) {
@@ -575,19 +587,17 @@
                 await fetch('/api/add_box', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ playerId: currentPlayerId }) });
             } else if (rewardText.includes('скин')) {
                 await fetch('/api/add_skin', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ playerId: currentPlayerId }) });
-            } else if (rewardText.includes('ТРОФЕЙ')) {
-                // особая награда — например, титул
             }
             await fetch('/api/save_path', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ playerId: currentPlayerId, pathData: pathData }) });
             await refreshProfileData();
+            renderPath(currentCups);
         }
 
         function scrollPath(delta) {
             const container = document.getElementById('pathScroll');
-            container.scrollBy({ left: delta, behavior: 'smooth' });
+            if (container) container.scrollBy({ left: delta, behavior: 'smooth' });
         }
 
-        // Остальные функции (смена аватарки, ника, цвета, вход) без изменений
         async function changeAvatar(avatarValue, isUrl = false) {
             await fetch('/api/change_avatar', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ playerId: currentPlayerId, avatar: isUrl ? DEV_AVATAR_URL : avatarValue }) });
             await refreshProfileData();
@@ -608,8 +618,10 @@
             await refreshProfileData();
         }
 
-        function openProfile() { refreshProfileData(); document.getElementById('profileModal').style.display = 'flex'; }
-        function closeProfile() { document.getElementById('profileModal').style.display = 'none'; }
+        function openProfileModal() { refreshProfileData(); document.getElementById('profileModal').style.display = 'flex'; }
+        function closeProfileModal() { document.getElementById('profileModal').style.display = 'none'; }
+        function openPathModal() { refreshProfileData(); document.getElementById('pathModal').style.display = 'flex'; }
+        function closePathModal() { document.getElementById('pathModal').style.display = 'none'; }
         function openAvatarPicker() { document.getElementById('avatarPickerModal').style.display = 'flex'; }
         function closeAvatarPicker() { document.getElementById('avatarPickerModal').style.display = 'none'; }
         function openNicknameEditor() { document.getElementById('nicknameEditorModal').style.display = 'flex'; }
@@ -648,7 +660,7 @@
                     circle.onclick = async () => {
                         await changeColorOnly(color);
                         closeColorPicker();
-                        openProfile();
+                        openProfileModal();
                     };
                 });
             } else document.getElementById('authMessage').innerText = data.message;
@@ -656,7 +668,8 @@
 
         document.getElementById('nickname').addEventListener('input', e => document.getElementById('adminPasswordGroup').classList.toggle('hidden', e.target.value !== 'unity'));
         window.onclick = event => {
-            if (event.target === document.getElementById('profileModal')) closeProfile();
+            if (event.target === document.getElementById('profileModal')) closeProfileModal();
+            if (event.target === document.getElementById('pathModal')) closePathModal();
             if (event.target === document.getElementById('avatarPickerModal')) closeAvatarPicker();
             if (event.target === document.getElementById('nicknameEditorModal')) closeNicknameEditor();
             if (event.target === document.getElementById('colorPickerModal')) closeColorPicker();
