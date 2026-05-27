@@ -249,7 +249,6 @@
             cursor: pointer;
             border: 3px solid #fff;
             transition: 0.2s;
-            box-shadow: 0 0 5px rgba(0,0,0,0.5);
         }
 
         .color-circle.selected {
@@ -329,7 +328,7 @@
         </div>
     </div>
 
-    <!-- ВЫБОР ЦВЕТА (с выделением текущего) -->
+    <!-- ВЫБОР ЦВЕТА (моментальная смена) -->
     <div id="colorPickerModal" class="color-modal">
         <div class="color-container">
             <h3>🎨 ВЫБЕРИ ЦВЕТ НИКНЕЙМА</h3>
@@ -452,12 +451,9 @@
                     }
                 });
 
-                // Настройка выбора цвета с выделением
-                const currentColor = document.getElementById('profileNick').style.color;
+                // Моментальная смена цвета при клике
                 document.querySelectorAll('.color-circle').forEach(circle => {
                     const color = circle.getAttribute('data-color');
-                    if (color === currentColor) circle.classList.add('selected');
-                    else circle.classList.remove('selected');
                     circle.onclick = async () => {
                         await changeColorOnly(color);
                         closeColorPicker();
