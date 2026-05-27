@@ -4,94 +4,98 @@
     <title>Brawl Box Simulator</title>
     <meta charset="UTF-8">
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background: #1a1a2e;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: radial-gradient(circle at 20% 30%, #0a0a2a, #050510);
             color: white;
+            min-height: 100vh;
             padding: 20px;
         }
+        .container { max-width: 500px; margin: 0 auto; text-align: center; }
+        h1 {
+            font-size: 42px;
+            margin: 20px 0;
+            background: linear-gradient(135deg, #fff, #e94560);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .auth-box, .game-box {
+            background: rgba(15, 25, 45, 0.85);
+            backdrop-filter: blur(12px);
+            padding: 30px;
+            border-radius: 30px;
+            margin: 20px auto;
+            border: 1px solid rgba(233,69,96,0.5);
+        }
+        input {
+            padding: 12px;
+            margin: 8px;
+            border-radius: 50px;
+            border: none;
+            width: 240px;
+            background: #0f172a;
+            color: white;
+            text-align: center;
+        }
         button {
-            background: #e94560;
+            background: linear-gradient(135deg, #e94560, #b91c3c);
             color: white;
             border: none;
             padding: 12px 25px;
             font-size: 16px;
+            font-weight: bold;
             margin: 10px;
-            border-radius: 10px;
+            border-radius: 50px;
             cursor: pointer;
         }
-        input {
-            padding: 10px;
-            margin: 5px;
-            border-radius: 8px;
-            border: none;
-            width: 200px;
-        }
-        .auth-box, .game-box {
-            background: #16213e;
-            padding: 20px;
-            border-radius: 20px;
-            max-width: 400px;
-            margin: 20px auto;
+        .open-btn {
+            background: linear-gradient(135deg, #00ff88, #00aa55);
+            color: #000;
+            font-size: 20px;
+            padding: 15px 40px;
         }
         .reward {
-            font-size: 24px;
-            margin: 10px 0;
+            font-size: 26px;
+            margin: 15px 0;
             color: #f9a826;
+            animation: pop 0.3s;
         }
+        @keyframes pop { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         .stats {
-            background: #0f3460;
-            padding: 15px;
-            border-radius: 15px;
+            background: rgba(10, 20, 40, 0.8);
+            padding: 20px;
+            border-radius: 25px;
             margin-top: 20px;
+            border: 1px solid #e94560;
         }
-        .admin-panel {
-            background: #0f3460;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-        .user-item {
-            background: #1a1a2e;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .status-banned { color: #e94560; }
-        .status-active { color: #00ff88; }
+        .stats span { color: #f9a826; font-weight: bold; font-size: 22px; }
     </style>
 </head>
 <body>
-    <h1>🎁 Brawl Box Simulator</h1>
-    
-    <div id="authBox" class="auth-box">
-        <h2>🔐 Вход</h2>
-        <input type="text" id="login" placeholder="Логин"><br>
-        <input type="password" id="password" placeholder="Пароль"><br>
-        <input type="text" id="nickname" placeholder="Ник (регистрация)"><br>
-        <button onclick="register()">📝 Регистрация</button>
-        <button onclick="login()">🔓 Вход</button>
-        <div id="authMessage"></div>
-    </div>
-    
-    <div id="gameBox" class="game-box" style="display:none">
-        <div id="adminPanel" class="admin-panel" style="display:none">
-            <h3>👑 Админ-панель</h3>
-            <button onclick="toggleAdminTable()">📋 Управление игроками</button>
-            <div id="adminTable" style="display:none; margin-top:15px;"></div>
+    <div class="container">
+        <h1>🎁 BRAWL BOX SIMULATOR</h1>
+        
+        <div id="authBox" class="auth-box">
+            <h2>⚡ ВОЙДИ В ИГРУ ⚡</h2>
+            <input type="text" id="login" placeholder="Логин"><br>
+            <input type="password" id="password" placeholder="Пароль"><br>
+            <input type="text" id="nickname" placeholder="Ник (для регистрации)"><br>
+            <button onclick="register()">📝 РЕГИСТРАЦИЯ</button>
+            <button onclick="login()">🔓 ВХОД</button>
+            <div id="authMessage" style="color: #f97316; margin-top: 10px;"></div>
         </div>
         
-        <h2>📦 Ящик</h2>
-        <button id="openBtn">🔓 ОТКРЫТЬ ЯЩИК</button>
-        <div id="reward" class="reward"></div>
-        <div class="stats">
-            <p>💰 Монет: <span id="coins">0</span></p>
-            <p>🎁 Открыто ящиков: <span id="boxes">0</span></p>
-            <p>👤 Игрок: <span id="nicknameDisplay"></span></p>
+        <div id="gameBox" class="game-box" style="display:none">
+            <div style="font-size: 70px;">🎁</div>
+            <button id="openBtn" class="open-btn">🔥 ОТКРЫТЬ ЯЩИК 🔥</button>
+            <div id="reward" class="reward"></div>
+            <div class="stats">
+                <p>💰 МОНЕТЫ: <span id="coins">0</span></p>
+                <p>🎲 ОТКРЫТО ЯЩИКОВ: <span id="boxes">0</span></p>
+                <p>🏆 ИГРОК: <span id="nicknameDisplay"></span></p>
+            </div>
         </div>
     </div>
 
@@ -99,20 +103,19 @@
     <script>
         const socket = io();
         let currentUserId = null;
-        let isAdmin = false;
         
         async function register() {
-            const login = document.getElementById('login').value;
+            const login = document.getElementById('login').value.trim();
             const password = document.getElementById('password').value;
-            const nickname = document.getElementById('nickname').value;
-            if (!login || !password || !nickname) return alert('Заполни все поля');
+            const nickname = document.getElementById('nickname').value.trim();
+            if (!login || !password || !nickname) return alert('Заполни все поля!');
             const res = await fetch('/api/register', {
                 method: 'POST',
-                headers: {'Content-Type':'application/json'},
-                body: JSON.stringify({login, password, nickname})
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ login, password, nickname })
             });
             const data = await res.json();
-            if (data.success) alert('Регистрация успешна! Теперь войди.');
+            if (data.success) alert('✅ Регистрация успешна! Теперь войди.');
             else document.getElementById('authMessage').innerText = data.message;
         }
         
@@ -121,19 +124,15 @@
             const password = document.getElementById('password').value;
             const res = await fetch('/api/login', {
                 method: 'POST',
-                headers: {'Content-Type':'application/json'},
-                body: JSON.stringify({login, password})
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ login, password })
             });
             const data = await res.json();
             if (data.success) {
                 currentUserId = data.user.id;
-                isAdmin = data.user.is_admin === 1;
                 document.getElementById('nicknameDisplay').innerText = data.user.nickname;
                 document.getElementById('authBox').style.display = 'none';
                 document.getElementById('gameBox').style.display = 'block';
-                if (isAdmin) {
-                    document.getElementById('adminPanel').style.display = 'block';
-                }
                 socket.emit('auth', currentUserId);
                 updateStats();
             } else {
@@ -151,66 +150,17 @@
             }
         }
         
-        async function toggleAdminTable() {
-            const container = document.getElementById('adminTable');
-            if (container.style.display === 'none') {
-                await loadAdminTable();
-                container.style.display = 'block';
-            } else {
-                container.style.display = 'none';
-            }
-        }
-        
-        async function loadAdminTable() {
-            const res = await fetch('/api/users');
-            const users = await res.json();
-            let html = '<div style="max-height:300px; overflow-y:auto;">';
-            for (const u of users) {
-                html += `<div class="user-item">
-                    <div><strong>${u.nickname}</strong> (${u.login})<br>💰 ${u.coins} 🎁 ${u.total_boxes}<br><span class="${u.is_banned ? 'status-banned' : 'status-active'}">${u.is_banned ? '⛔ Забанен' : '✅ Активен'}</span></div>
-                    <div>${u.is_banned ? `<button onclick="unbanUser(${u.id})">Разбанить</button>` : (u.login !== 'unity' ? `<button onclick="banUser(${u.id}, '${u.nickname}')">Забанить</button>` : '👑')}</div>
-                </div>`;
-            }
-            html += '</div>';
-            document.getElementById('adminTable').innerHTML = html;
-        }
-        
-        async function banUser(userId, nickname) {
-            const reason = prompt(`Причина бана для ${nickname}:`, 'Нарушение');
-            if (!reason) return;
-            await fetch('/api/ban', {
-                method: 'POST',
-                headers: {'Content-Type':'application/json'},
-                body: JSON.stringify({userId, reason})
-            });
-            loadAdminTable();
-        }
-        
-        async function unbanUser(userId) {
-            await fetch('/api/unban', {
-                method: 'POST',
-                headers: {'Content-Type':'application/json'},
-                body: JSON.stringify({userId})
-            });
-            loadAdminTable();
-        }
-        
         document.getElementById('openBtn').onclick = () => {
             if (currentUserId) socket.emit('open_box');
         };
         
         socket.on('box_opened', (reward) => {
-            document.getElementById('reward').innerHTML = `🎉 Выпало: ${reward.name}! 🎉`;
+            document.getElementById('reward').innerHTML = `✨ ${reward.name} ✨`;
             updateStats();
             setTimeout(() => document.getElementById('reward').innerHTML = '', 2000);
         });
         
-        socket.on('session_terminated', (data) => {
-            alert(`⛔ СЕССИЯ ЗАВЕРШЕНА! ПЕРЕЗАГРУЗИТЕ ИГРУ ⛔\n\nПричина: ${data?.reason || 'Нарушение'}`);
-            window.location.reload();
-        });
-        
-        setInterval(updateStats, 5000);
+        setInterval(updateStats, 3000);
     </script>
 </body>
 </html>
