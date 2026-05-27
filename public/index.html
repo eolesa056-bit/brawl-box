@@ -71,6 +71,15 @@
             border: 1px solid #e94560;
         }
         .stats span { color: #f9a826; font-weight: bold; font-size: 22px; }
+        .error { color: #ff6b6b; margin-top: 10px; }
+        .admin-badge {
+            background: #e94560;
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
@@ -79,12 +88,12 @@
         
         <div id="authBox" class="auth-box">
             <h2>⚡ ВОЙДИ В ИГРУ ⚡</h2>
-            <input type="text" id="login" placeholder="Логин"><br>
-            <input type="password" id="password" placeholder="Пароль"><br>
-            <input type="text" id="nickname" placeholder="Ник (для регистрации)"><br>
-            <button onclick="register()">📝 РЕГИСТРАЦИЯ</button>
-            <button onclick="login()">🔓 ВХОД</button>
-            <div id="authMessage" style="color: #f97316; margin-top: 10px;"></div>
+            <input type="text" id="nickname" placeholder="Твой ник"><br>
+            <div id="adminPasswordBox" style="display:none;">
+                <input type="password" id="adminPassword" placeholder="Пароль админа"><br>
+            </div>
+            <button onclick="login()">🔓 ВОЙТИ</button>
+            <div id="authMessage" class="error"></div>
         </div>
         
         <div id="gameBox" class="game-box" style="display:none">
@@ -94,53 +103,70 @@
             <div class="stats">
                 <p>💰 МОНЕТЫ: <span id="coins">0</span></p>
                 <p>🎲 ОТКРЫТО ЯЩИКОВ: <span id="boxes">0</span></p>
-                <p>🏆 ИГРОК: <span id="nicknameDisplay"></span></p>
+                <p>🏆 ИГРОК: <span id="nicknameDisplay"></span> <span id="adminBadge" class="admin-badge" style="display:none;">👑 АДМИН</span></p>
             </div>
         </div>
     </div>
 
     <script>
-        let currentUserId = null;
+        let currentPlayerId = null;
+        let isAdminMode = false;
         
-        async function register() {
-            const login = document.getElementById('login').value.trim();
-            const password = document.getElementById('password').value;
-            const nickname = document.getElementById('nickname').value.trim();
-            if (!login || !password || !nickname) return alert('Заполни все поля!');
-            const res = await fetch('/api/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ login, password, nickname })
-            });
-            const data = await res.json();
-            if (data.success) alert('✅ Регистрация успешна! Теперь войди.');
-            else document.getElementById('authMessage').innerText = data.message;
-        }
+        // Проверяем, ввёл ли пользователь 'unity'
+        document.getElementById('nickname').addEventListener('input', function(e) {
+            const adminBox = document.getElementById('adminPasswordBox');
+            if (e.target.value === 'unity') {
+                adminBox.style.display = 'block';
+            } else {
+                adminBox.style.display = 'none';
+                document.getElementById('adminPassword').value = '';
+            }
+        });
         
         async function login() {
-            const login = document.getElementById('login').value;
-            const password = document.getElementById('password').value;
+            const nickname = document.getElementById('nickname').value.trim();
+            if (!nickname) {
+                document.getElementById('authMessage').innerText = 'Введи ник!';
+                return;
+            }
+            
+            let password = '';
+            if (nickname === 'unity') {
+                password = document.getElementById('adminPassword').value;
+                if (!password) {
+                    document.getElementById('authMessage').innerText = 'Введи пароль администратора!';
+                    return;
+                }
+            }
+            
             const res = await fetch('/api/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ login, password })
+                body: JSON.stringify({ nickname, password })
             });
             const data = await res.json();
+            
             if (data.success) {
-                currentUserId = data.user.id;
-                document.getElementById('nicknameDisplay').innerText = data.user.nickname;
-                document.getElementById('coins').innerText = data.user.coins;
-                document.getElementById('boxes').innerText = data.user.total_boxes;
+                currentPlayerId = data.player.id;
+                document.getElementById('nicknameDisplay').innerText = data.player.nickname;
+                document.getElementById('coins').innerText = data.player.coins;
+                document.getElementById('boxes').innerText = data.player.total_boxes;
+                
+                if (data.player.is_admin) {
+                    document.getElementById('adminBadge').style.display = 'inline-block';
+                    isAdminMode = true;
+                }
+                
                 document.getElementById('authBox').style.display = 'none';
                 document.getElementById('gameBox').style.display = 'block';
             } else {
-                document.getElementById('authMessage').innerText = data.message;
+                document.getElementById('authMessage').innerText = data.message || 'Ошибка входа';
             }
         }
         
         async function openBox() {
-            if (!currentUserId) return;
-            const res = await fetch('/api/open_box/' + currentUserId);
+            if (!currentPlayerId) return;
+            const res = await fetch('/api/open_box/' + currentPlayerId);
             const data = await res.json();
             if (data.success) {
                 document.getElementById('reward').innerHTML = `✨ ${data.reward} ✨`;
