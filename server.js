@@ -9,23 +9,24 @@ const io = socketIo(server);
 
 const port = process.env.PORT || 3000;
 
-// Простая защита паролем (только для админки)
-const adminPassword = 'admin123';  // Смени на свой пароль!
+// Настройки для админ-панели
+const adminLogin = 'unity';
+const adminPassword = 'ALT F4';
 
-// Проверка пароля для админки
+// Защита админ-панели
 app.use('/admin.html', (req, res, next) => {
     const authHeader = req.headers.authorization;
     if (!authHeader) {
         res.setHeader('WWW-Authenticate', 'Basic realm="Admin Panel"');
-        return res.status(401).send('Требуется пароль');
+        return res.status(401).send('Требуется авторизация');
     }
     
     const base64 = authHeader.split(' ')[1];
     const [login, password] = Buffer.from(base64, 'base64').toString().split(':');
     
-    if (password !== adminPassword) {
+    if (login !== adminLogin || password !== adminPassword) {
         res.setHeader('WWW-Authenticate', 'Basic realm="Admin Panel"');
-        return res.status(401).send('Неверный пароль');
+        return res.status(401).send('Неверный логин или пароль');
     }
     next();
 });
