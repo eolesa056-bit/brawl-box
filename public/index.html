@@ -57,7 +57,7 @@
             text-align: center;
         }
 
-        /* Модальное окно профиля (без изменений) */
+        /* ОСНОВНОЙ ПРОФИЛЬ (расширен, добавлен путь к славе) */
         .modal {
             display: none;
             position: fixed;
@@ -74,7 +74,7 @@
         .profile-container {
             background: linear-gradient(145deg, #0f172a, #020617);
             width: 90%;
-            max-width: 800px;
+            max-width: 1000px;
             border-radius: 60px;
             border: 1px solid #e94560;
             padding: 35px;
@@ -94,11 +94,28 @@
             cursor: pointer;
         }
 
+        /* ДВЕ КОЛОНКИ: Слева — профиль, справа — путь к славе */
+        .profile-two-columns {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .left-profile {
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .right-path {
+            flex: 1.5;
+            min-width: 280px;
+        }
+
         .profile-header {
             display: flex;
-            gap: 40px;
+            gap: 30px;
             flex-wrap: wrap;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             align-items: center;
         }
 
@@ -107,33 +124,27 @@
         }
 
         .avatar-large {
-            width: 140px;
-            height: 140px;
+            width: 120px;
+            height: 120px;
             background: linear-gradient(135deg, #2a2a5a, #1a1a3e);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 85px;
+            font-size: 75px;
             border: 3px solid #e94560;
             cursor: pointer;
             overflow: hidden;
         }
 
-        .avatar-large img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
         .player-tag-static {
-            font-size: 13px;
+            font-size: 12px;
             color: #aaa;
             background: rgba(0,0,0,0.5);
-            padding: 5px 12px;
+            padding: 4px 10px;
             border-radius: 30px;
             display: inline-block;
-            margin-top: 12px;
+            margin-top: 10px;
         }
 
         .info-section {
@@ -143,31 +154,26 @@
         .nickname-wrapper {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             flex-wrap: wrap;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .profile-nickname {
-            font-size: 42px;
+            font-size: 34px;
             font-weight: bold;
         }
 
         .edit-icon, .color-icon {
-            font-size: 20px;
+            font-size: 18px;
             cursor: pointer;
             background: rgba(0,0,0,0.5);
-            padding: 5px 12px;
+            padding: 4px 10px;
             border-radius: 30px;
-            transition: 0.2s;
-        }
-
-        .edit-icon:hover, .color-icon:hover {
-            background: #e94560;
         }
 
         .profile-cups {
-            font-size: 26px;
+            font-size: 22px;
             color: #f9a826;
             font-weight: bold;
         }
@@ -175,29 +181,120 @@
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            margin-top: 30px;
+            gap: 15px;
+            margin-top: 20px;
         }
 
         .stat-card {
             background: rgba(255,255,255,0.05);
-            border-radius: 30px;
-            padding: 20px;
+            border-radius: 25px;
+            padding: 15px;
             text-align: center;
         }
 
         .stat-card h3 {
-            font-size: 18px;
+            font-size: 14px;
             color: #aaa;
-            margin-bottom: 15px;
+            margin-bottom: 8px;
         }
 
         .stat-value {
-            font-size: 34px;
+            font-size: 26px;
             font-weight: bold;
             color: #f9a826;
         }
 
+        /* ========== ПУТЬ К СЛАВЕ ========== */
+        .path-title {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 22px;
+            color: #e94560;
+        }
+
+        .path-track {
+            background: rgba(0,0,0,0.5);
+            border-radius: 40px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .path-scroll {
+            display: flex;
+            overflow-x: auto;
+            gap: 20px;
+            padding: 10px 5px;
+            scroll-behavior: smooth;
+            cursor: grab;
+        }
+
+        .path-scroll:active {
+            cursor: grabbing;
+        }
+
+        .path-step {
+            flex: 0 0 120px;
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border-radius: 30px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #2a2a5a;
+            transition: 0.2s;
+            position: relative;
+        }
+
+        .path-step.completed {
+            border-color: #f9a826;
+            background: linear-gradient(145deg, #2a2a5a, #1e293b);
+        }
+
+        .path-step.locked {
+            opacity: 0.6;
+        }
+
+        .step-cups {
+            font-size: 18px;
+            font-weight: bold;
+            color: #f9a826;
+        }
+
+        .step-reward {
+            font-size: 24px;
+            margin: 8px 0;
+        }
+
+        .step-status {
+            font-size: 20px;
+        }
+
+        .claim-btn {
+            background: #e94560;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        .scroll-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .scroll-btn {
+            background: #e94560;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        /* Остальные окна (без изменений) */
         .avatar-modal, .nickname-modal, .color-modal {
             display: none;
             position: fixed;
@@ -239,18 +336,6 @@
             font-size: 55px;
             cursor: pointer;
             border: 2px solid transparent;
-            overflow: hidden;
-        }
-
-        .avatar-option img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .avatar-option:hover {
-            border-color: #e94560;
-            transform: scale(1.05);
         }
 
         .color-options {
@@ -267,7 +352,6 @@
             border-radius: 50%;
             cursor: pointer;
             border: 3px solid #fff;
-            transition: 0.2s;
         }
 
         .btn {
@@ -277,7 +361,6 @@
             border-radius: 50px;
             color: white;
             cursor: pointer;
-            margin: 10px 5px;
         }
 
         .hidden { display: none; }
@@ -285,40 +368,59 @@
     </style>
 </head>
 <body>
-    <!-- ПЛАВАЮЩАЯ АВАТАРКА С ЦВЕТНЫМ НИКНЕЙМОМ -->
+    <!-- ПЛАВАЮЩАЯ АВАТАРКА -->
     <div class="floating-avatar" onclick="openProfile()">
         <div class="mini-avatar" id="miniAvatar">🎮</div>
         <div class="nickname-overlay" id="miniNickname">-</div>
     </div>
 
-    <!-- ПРОФИЛЬ (без изменений) -->
+    <!-- ОСНОВНОЙ ПРОФИЛЬ + ПУТЬ К СЛАВЕ -->
     <div id="profileModal" class="modal">
         <div class="profile-container">
             <button class="close-profile" onclick="closeProfile()">✖</button>
-            <div class="profile-header">
-                <div class="avatar-section">
-                    <div class="avatar-large" id="largeAvatar" onclick="openAvatarPicker()">🎮</div>
-                    <div class="player-tag-static" id="profileTag">#----</div>
-                </div>
-                <div class="info-section">
-                    <div class="nickname-wrapper">
-                        <div class="profile-nickname" id="profileNick">-</div>
-                        <div class="edit-icon" onclick="openNicknameEditor()">✏️</div>
-                        <div class="color-icon" onclick="openColorPicker()">🎨</div>
+            <div class="profile-two-columns">
+                <!-- ЛЕВАЯ КОЛОНКА: ПРОФИЛЬ -->
+                <div class="left-profile">
+                    <div class="profile-header">
+                        <div class="avatar-section">
+                            <div class="avatar-large" id="largeAvatar" onclick="openAvatarPicker()">🎮</div>
+                            <div class="player-tag-static" id="profileTag">#----</div>
+                        </div>
+                        <div class="info-section">
+                            <div class="nickname-wrapper">
+                                <div class="profile-nickname" id="profileNick">-</div>
+                                <div class="edit-icon" onclick="openNicknameEditor()">✏️</div>
+                                <div class="color-icon" onclick="openColorPicker()">🎨</div>
+                            </div>
+                            <div class="profile-cups">🏆 <span id="profileCups">0</span> кубков</div>
+                        </div>
                     </div>
-                    <div class="profile-cups">🏆 <span id="profileCups">0</span> кубков</div>
+                    <div class="stats-grid">
+                        <div class="stat-card"><h3>🎲 ОТКРЫТО ЯЩИКОВ</h3><div class="stat-value" id="profileBoxes">0</div></div>
+                        <div class="stat-card"><h3>💰 МОНЕТЫ</h3><div class="stat-value" id="profileCoins">0</div></div>
+                        <div class="stat-card"><h3>🏆 КУБКОВ ВСЕГО</h3><div class="stat-value" id="profileTotalCups">0</div></div>
+                        <div class="stat-card"><h3>⭐ ЛУЧШИЙ РЕКОРД</h3><div class="stat-value" id="recordCups">0</div></div>
+                    </div>
                 </div>
-            </div>
-            <div class="stats-grid">
-                <div class="stat-card"><h3>🎲 ОТКРЫТО ЯЩИКОВ</h3><div class="stat-value" id="profileBoxes">0</div></div>
-                <div class="stat-card"><h3>💰 МОНЕТЫ</h3><div class="stat-value" id="profileCoins">0</div></div>
-                <div class="stat-card"><h3>🏆 КУБКОВ ВСЕГО</h3><div class="stat-value" id="profileTotalCups">0</div></div>
-                <div class="stat-card"><h3>⭐ ЛУЧШИЙ РЕКОРД</h3><div class="stat-value" id="recordCups">0</div></div>
+
+                <!-- ПРАВАЯ КОЛОНКА: ПУТЬ К СЛАВЕ -->
+                <div class="right-path">
+                    <div class="path-title">🏆 ПУТЬ К СЛАВЕ 🏆</div>
+                    <div class="path-track">
+                        <div class="path-scroll" id="pathScroll">
+                            <!-- Ступени будут добавлены через JS -->
+                        </div>
+                        <div class="scroll-buttons">
+                            <button class="scroll-btn" onclick="scrollPath(-150)">◀</button>
+                            <button class="scroll-btn" onclick="scrollPath(150)">▶</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- ОКНА ВЫБОРА (аватарки, ника, цвета) — без изменений -->
+    <!-- ОКНА ВЫБОРА (аватарки, ника, цвета) -->
     <div id="avatarPickerModal" class="avatar-modal">
         <div class="avatar-selector" id="avatarSelector">
             <div class="avatar-option" data-avatar="🎮">🎮</div>
@@ -381,6 +483,23 @@
     <script>
         let currentPlayerId = null;
         let isAdmin = false;
+        let pathData = [
+            { cups: 100, reward: "50💰", claimed: false },
+            { cups: 250, reward: "100💰", claimed: false },
+            { cups: 500, reward: "🎁 Обычный ящик", claimed: false },
+            { cups: 1000, reward: "200💰", claimed: false },
+            { cups: 2000, reward: "🎁 Редкий ящик", claimed: false },
+            { cups: 3500, reward: "500💰", claimed: false },
+            { cups: 5000, reward: "🔥 Легендарный скин", claimed: false },
+            { cups: 7500, reward: "1000💰", claimed: false },
+            { cups: 10000, reward: "👑 Эксклюзивный боец", claimed: false },
+            { cups: 15000, reward: "2000💰", claimed: false },
+            { cups: 20000, reward: "⭐ Мега-ящик", claimed: false },
+            { cups: 30000, reward: "5000💰", claimed: false },
+            { cups: 50000, reward: "💎 Алмазный скин", claimed: false },
+            { cups: 75000, reward: "10000💰", claimed: false },
+            { cups: 100000, reward: "🏆 ЗОЛОТОЙ ТРОФЕЙ 🏆", claimed: false }
+        ];
         const DEV_AVATAR_URL = "https://yt3.googleusercontent.com/wEnonoxntKdkIuHZbNouYlz6YoCchSbx7tpBRaVS6V08XzJYkvNZaG34RwZV7khnoF6hqI-kGw=s900-c-k-c0x00ffffff-no-rj";
 
         async function refreshProfileData() {
@@ -391,7 +510,7 @@
                 const avatar = data.avatar || '🎮';
                 const nickname = data.nickname;
                 const nicknameColor = data.nickname_color || '#ffffff';
-                // Обновляем мини-аватарку и её никнейм с цветом
+                const currentCups = data.cups || 0;
                 document.getElementById('miniNickname').innerText = nickname.length > 10 ? nickname.slice(0, 9) + '…' : nickname;
                 document.getElementById('miniNickname').style.color = nicknameColor;
                 if (avatar.startsWith('http')) {
@@ -404,14 +523,71 @@
                 document.getElementById('profileNick').innerText = nickname;
                 document.getElementById('profileNick').style.color = nicknameColor;
                 document.getElementById('profileTag').innerText = data.tag || '#----';
-                document.getElementById('profileCups').innerText = data.cups || 0;
+                document.getElementById('profileCups').innerText = currentCups;
+                document.getElementById('profileTotalCups').innerText = currentCups;
+                document.getElementById('recordCups').innerText = data.record_cups || currentCups;
                 document.getElementById('profileBoxes').innerText = data.total_boxes || 0;
                 document.getElementById('profileCoins').innerText = data.coins || 0;
-                document.getElementById('profileTotalCups').innerText = data.cups || 0;
-                document.getElementById('recordCups').innerText = data.record_cups || data.cups || 0;
+
+                // Загружаем путь к славе из базы (claimed status)
+                const savedPath = data.path_data ? JSON.parse(data.path_data) : null;
+                if (savedPath) pathData = savedPath;
+                renderPath(currentCups);
             }
         }
 
+        function renderPath(currentCups) {
+            const container = document.getElementById('pathScroll');
+            if (!container) return;
+            container.innerHTML = '';
+            pathData.forEach((step, idx) => {
+                const isCompleted = currentCups >= step.cups;
+                const isClaimed = step.claimed;
+                const div = document.createElement('div');
+                div.className = `path-step ${isCompleted ? 'completed' : 'locked'}`;
+                div.innerHTML = `
+                    <div class="step-cups">${step.cups}🏆</div>
+                    <div class="step-reward">${step.reward}</div>
+                    <div class="step-status">${isClaimed ? '✓ ПОЛУЧЕНО' : (isCompleted ? '<button class="claim-btn" data-idx="'+idx+'">ЗАБРАТЬ</button>' : '🔒')}</div>
+                `;
+                container.appendChild(div);
+            });
+            document.querySelectorAll('.claim-btn').forEach(btn => {
+                btn.onclick = (e) => {
+                    e.stopPropagation();
+                    const idx = parseInt(btn.getAttribute('data-idx'));
+                    claimReward(idx, currentCups);
+                };
+            });
+        }
+
+        async function claimReward(idx, currentCups) {
+            const step = pathData[idx];
+            if (currentCups < step.cups || step.claimed) return;
+            step.claimed = true;
+            // Начисляем награду (монеты, ящики и т.д.)
+            let rewardText = step.reward;
+            let coinsGain = 0;
+            if (rewardText.includes('💰')) {
+                coinsGain = parseInt(rewardText) || 50;
+                await fetch('/api/add_coins', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ playerId: currentPlayerId, coins: coinsGain }) });
+            } else if (rewardText.includes('ящик')) {
+                await fetch('/api/add_box', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ playerId: currentPlayerId }) });
+            } else if (rewardText.includes('скин')) {
+                await fetch('/api/add_skin', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ playerId: currentPlayerId }) });
+            } else if (rewardText.includes('ТРОФЕЙ')) {
+                // особая награда — например, титул
+            }
+            await fetch('/api/save_path', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ playerId: currentPlayerId, pathData: pathData }) });
+            await refreshProfileData();
+        }
+
+        function scrollPath(delta) {
+            const container = document.getElementById('pathScroll');
+            container.scrollBy({ left: delta, behavior: 'smooth' });
+        }
+
+        // Остальные функции (смена аватарки, ника, цвета, вход) без изменений
         async function changeAvatar(avatarValue, isUrl = false) {
             await fetch('/api/change_avatar', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ playerId: currentPlayerId, avatar: isUrl ? DEV_AVATAR_URL : avatarValue }) });
             await refreshProfileData();
@@ -457,7 +633,6 @@
                 document.getElementById('authPanel').style.display = 'none';
                 document.getElementById('gamePanel').classList.remove('hidden');
                 await refreshProfileData();
-
                 document.querySelectorAll('.avatar-option').forEach(opt => {
                     const val = opt.getAttribute('data-avatar');
                     if (val === 'url') {
@@ -468,7 +643,6 @@
                         opt.onclick = () => changeAvatar(val, false);
                     }
                 });
-
                 document.querySelectorAll('.color-circle').forEach(circle => {
                     const color = circle.getAttribute('data-color');
                     circle.onclick = async () => {
