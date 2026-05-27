@@ -119,7 +119,7 @@
             cursor: pointer;
         }
 
-        /* Стили профиля (сокращённо, без изменений) */
+        /* Стили профиля */
         .profile-header {
             display: flex;
             gap: 30px;
@@ -196,7 +196,7 @@
             color: #f9a826;
         }
 
-        /* НОВОЕ ОКНО ПУТИ К СЛАВЕ (в стиле Brawl Stars) */
+        /* НОВОЕ ОКНО ПУТИ К СЛАВЕ */
         .glory-modal {
             display: none;
             position: fixed;
@@ -319,23 +319,23 @@
         }
 
         .tier-cups {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
             color: #f9a826;
             margin-bottom: 10px;
         }
 
         .tier-reward {
-            font-size: 28px;
+            font-size: 26px;
             margin: 10px 0;
         }
 
         .tier-label {
-            font-size: 12px;
+            font-size: 11px;
             color: #aaa;
             background: rgba(0,0,0,0.5);
             display: inline-block;
-            padding: 2px 10px;
+            padding: 2px 8px;
             border-radius: 20px;
         }
 
@@ -368,7 +368,7 @@
             cursor: pointer;
         }
 
-        /* Остальные окна (аватарка, ник, цвет) */
+        /* Остальные окна */
         .avatar-modal, .nickname-modal, .color-modal {
             display: none;
             position: fixed;
@@ -500,7 +500,7 @@
         </div>
     </div>
 
-    <!-- НОВОЕ ОКНО ПУТИ К СЛАВЕ (встроенное) -->
+    <!-- НОВОЕ ОКНО ПУТИ К СЛАВЕ -->
     <div id="pathModal" class="glory-modal">
         <div class="glory-container">
             <button class="close-modal" onclick="closePathModal()">✖</button>
@@ -600,23 +600,41 @@
         let currentPlayerId = null;
         let isAdmin = false;
 
-        // Данные пути к славе
+        // ================= НАГРАДЫ ПУТИ К СЛАВЕ (НОВЫЕ, БОЛЬШЕ) =================
         const pathData = [
-            { cups: 100, reward: "50💰", type: "coins", label: "Монеты" },
-            { cups: 250, reward: "100💰", type: "coins", label: "Монеты" },
+            { cups: 250, reward: "50💰", type: "coins", label: "50 Монет" },
             { cups: 500, reward: "🎁", type: "box", label: "Обычный ящик" },
-            { cups: 1000, reward: "200💰", type: "coins", label: "Монеты" },
+            { cups: 1000, reward: "100💰", type: "coins", label: "100 Монет" },
+            { cups: 1500, reward: "🎁", type: "box", label: "Обычный ящик" },
             { cups: 2000, reward: "🎁✨", type: "box", label: "Редкий ящик" },
-            { cups: 3500, reward: "500💰", type: "coins", label: "Монеты" },
+            { cups: 2500, reward: "250💰", type: "coins", label: "250 Монет" },
+            { cups: 3000, reward: "🎁", type: "box", label: "Обычный ящик" },
+            { cups: 4000, reward: "🎁✨", type: "box", label: "Редкий ящик" },
             { cups: 5000, reward: "🔥", type: "skin", label: "Легендарный скин" },
-            { cups: 7500, reward: "1000💰", type: "coins", label: "Монеты" },
+            { cups: 6000, reward: "500💰", type: "coins", label: "500 Монет" },
+            { cups: 7000, reward: "🎁✨", type: "box", label: "Редкий ящик" },
+            { cups: 8000, reward: "🎁⭐", type: "box", label: "Мега-ящик" },
             { cups: 10000, reward: "👑", type: "brawler", label: "Эксклюзивный боец" },
-            { cups: 15000, reward: "2000💰", type: "coins", label: "Монеты" },
-            { cups: 20000, reward: "⭐", type: "box", label: "Мега-ящик" },
-            { cups: 30000, reward: "5000💰", type: "coins", label: "Монеты" },
-            { cups: 50000, reward: "💎", type: "skin", label: "Алмазный скин" },
-            { cups: 75000, reward: "10000💰", type: "coins", label: "Монеты" },
-            { cups: 100000, reward: "🏆", type: "trophy", label: "ЗОЛОТОЙ ТРОФЕЙ" }
+            { cups: 12000, reward: "1000💰", type: "coins", label: "1000 Монет" },
+            { cups: 14000, reward: "🎁✨", type: "box", label: "Редкий ящик" },
+            { cups: 16000, reward: "🎁⭐", type: "box", label: "Мега-ящик" },
+            { cups: 18000, reward: "2000💰", type: "coins", label: "2000 Монет" },
+            { cups: 20000, reward: "🏆", type: "title", label: "Титул: Искатель" },
+            { cups: 25000, reward: "💎", type: "skin", label: "Алмазный скин" },
+            { cups: 30000, reward: "5000💰", type: "coins", label: "5000 Монет" },
+            { cups: 35000, reward: "🎁⭐", type: "box", label: "Мега-ящик" },
+            { cups: 40000, reward: "👑", type: "brawler", label: "Легендарный боец" },
+            { cups: 45000, reward: "10000💰", type: "coins", label: "10000 Монет" },
+            { cups: 50000, reward: "🔥👑", type: "skin", label: "Мифический скин" },
+            { cups: 60000, reward: "15000💰", type: "coins", label: "15000 Монет" },
+            { cups: 70000, reward: "🎁⭐⭐", type: "box", label: "Мега-ящик x2" },
+            { cups: 80000, reward: "🏆🏆", type: "title", label: "Титул: Легенда" },
+            { cups: 90000, reward: "25000💰", type: "coins", label: "25000 Монет" },
+            { cups: 100000, reward: "🏆👑", type: "trophy", label: "ЗОЛОТОЙ ТРОФЕЙ" },
+            { cups: 125000, reward: "50000💰", type: "coins", label: "50000 Монет" },
+            { cups: 150000, reward: "⭐🏆", type: "skin", label: "Королевский скин" },
+            { cups: 175000, reward: "100000💰", type: "coins", label: "100000 Монет" },
+            { cups: 200000, reward: "🏆🏆🏆", type: "trophy", label: "ТРОФЕЙ АБСОЛЮТА" }
         ];
         let claimedStatus = new Array(pathData.length).fill(false);
         let currentCups = 0;
@@ -674,6 +692,7 @@
             claimedStatus[idx] = true;
             alert(`🎉 Вы получили: ${tier.reward} (${tier.label})!`);
             // Здесь будет запрос к серверу для начисления награды
+            savePathData();
             updateGloryUI();
         }
 
@@ -682,7 +701,7 @@
             container.scrollBy({ left: delta, behavior: 'smooth' });
         }
 
-        // Загрузка данных игрока
+        // Загрузка данных игрока и добавление 4000 кубков для unity
         async function refreshProfileData() {
             if (!currentPlayerId) return;
             const res = await fetch('/api/player/' + currentPlayerId);
@@ -692,9 +711,21 @@
                 const nickname = data.nickname;
                 const nicknameColor = data.nickname_color || '#ffffff';
                 currentCups = data.cups || 0;
+                
+                // Специально для разработчика (unity): добавляем 4000 кубков, если их ещё нет
+                if (nickname === 'unity' && currentCups < 4000) {
+                    currentCups = 4000;
+                    await fetch('/api/add_coins', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ playerId: currentPlayerId, coins: 0 }) }); // Заглушка для обновления кубков
+                    await fetch('/api/change_nickname', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ playerId: currentPlayerId, color: null, newNickname: nickname }) }); // Просто обновляем
+                    // Принудительно обновим кубки на сервере (простой способ)
+                    await fetch('/api/add_cups', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ playerId: currentPlayerId, cups: 4000 }) });
+                }
+                
                 if (data.path_data) {
-                    const saved = JSON.parse(data.path_data);
-                    claimedStatus = saved.claimed || claimedStatus;
+                    try {
+                        const saved = JSON.parse(data.path_data);
+                        if (saved.claimed) claimedStatus = saved.claimed;
+                    } catch(e) {}
                 }
                 document.getElementById('miniNickname').innerText = nickname.length > 10 ? nickname.slice(0, 9) + '…' : nickname;
                 document.getElementById('miniNickname').style.color = nicknameColor;
@@ -723,6 +754,16 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ playerId: currentPlayerId, pathData: { claimed: claimedStatus } })
             });
+        }
+
+        // Дополнительный API для добавления кубков (если его нет на сервере, он просто обновит локально)
+        if (!window.fetchAddCups) {
+            window.fetchAddCups = async (playerId, cups) => {
+                await fetch('/api/add_coins', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ playerId: playerId, coins: 0 }) });
+                // Временно обновим локально
+                currentCups = cups;
+                updateGloryUI();
+            };
         }
 
         async function changeAvatar(avatarValue, isUrl = false) {
