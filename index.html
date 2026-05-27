@@ -589,15 +589,14 @@
         let audioElement = null;
         const DEV_AVATAR_URL = "https://yt3.googleusercontent.com/wEnonoxntKdkIuHZbNouYlz6YoCchSbx7tpBRaVS6V08XzJYkvNZaG34RwZV7khnoF6hqI-kGw=s900-c-k-c0x00ffffff-no-rj";
 
-        // Музыка из твоего файла music.mp3
+        // ЧИСТАЯ МУЗЫКА ТОЛЬКО ИЗ ТВОЕГО ФАЙЛА (никаких стуков)
         function initMusic() {
             if (audioElement) return;
             audioElement = new Audio('/music.mp3');
             audioElement.loop = true;
             audioElement.volume = 0.3;
-            // Попробуем запустить сразу после входа, но браузер может заблокировать
             if (musicEnabled) {
-                audioElement.play().catch(e => console.log('Для запуска музыки нажмите на страницу'));
+                audioElement.play().catch(e => console.log('Нажми на страницу, чтобы включить музыку'));
             }
         }
 
@@ -757,7 +756,6 @@
                 else toggle.classList.remove('on');
                 toggle.onclick = () => toggleMusic();
 
-                // Запускаем музыку
                 initMusic();
 
                 document.getElementById('languageSelect').value = localStorage.getItem('language') || 'ru';
