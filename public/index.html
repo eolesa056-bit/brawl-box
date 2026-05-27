@@ -1,34 +1,224 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Brawl Stars Box Simulator - Путь к славе</title>
+    <title>Brawl Stars Box Simulator</title>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            user-select: none;
         }
 
         body {
             font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: radial-gradient(ellipse at 20% 30%, #0f0c29, #1a1a3e, #0a0a1a);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             padding: 20px;
         }
 
-        /* Контейнер пути к славе */
+        /* Верхняя левая панель: аватарка и кнопка */
+        .top-left-bar {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .floating-avatar {
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .mini-avatar {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, #2a2a5a, #1a1a3e);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 35px;
+            border: 2px solid #e94560;
+        }
+
+        .nickname-overlay {
+            font-size: 11px;
+            font-weight: bold;
+            background: rgba(0,0,0,0.7);
+            padding: 3px 8px;
+            border-radius: 30px;
+            max-width: 85px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        .glory-button {
+            background: linear-gradient(135deg, #e94560, #b91c3c);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            color: white;
+            box-shadow: 0 0 10px rgba(233,69,96,0.5);
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+
+        .glory-button:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px #e94560;
+        }
+
+        /* Окна */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .profile-container {
+            background: linear-gradient(145deg, #0f172a, #020617);
+            width: 90%;
+            max-width: 600px;
+            border-radius: 60px;
+            border: 1px solid #e94560;
+            padding: 35px;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            background: #e94560;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        /* Стили профиля (сокращённо, без изменений) */
+        .profile-header {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+            align-items: center;
+        }
+        .avatar-large {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #2a2a5a, #1a1a3e);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 75px;
+            border: 3px solid #e94560;
+            cursor: pointer;
+            overflow: hidden;
+        }
+        .player-tag-static {
+            font-size: 12px;
+            color: #aaa;
+            background: rgba(0,0,0,0.5);
+            padding: 4px 10px;
+            border-radius: 30px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        .info-section { flex: 1; }
+        .nickname-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+        .profile-nickname {
+            font-size: 34px;
+            font-weight: bold;
+        }
+        .edit-icon, .color-icon {
+            font-size: 18px;
+            cursor: pointer;
+            background: rgba(0,0,0,0.5);
+            padding: 4px 10px;
+            border-radius: 30px;
+        }
+        .profile-cups {
+            font-size: 22px;
+            color: #f9a826;
+            font-weight: bold;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 25px;
+            padding: 15px;
+            text-align: center;
+        }
+        .stat-card h3 {
+            font-size: 14px;
+            color: #aaa;
+            margin-bottom: 8px;
+        }
+        .stat-value {
+            font-size: 26px;
+            font-weight: bold;
+            color: #f9a826;
+        }
+
+        /* НОВОЕ ОКНО ПУТИ К СЛАВЕ (в стиле Brawl Stars) */
+        .glory-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+        }
+
         .glory-container {
             background: linear-gradient(145deg, #0a0f1f, #030614);
-            width: 100%;
+            width: 90%;
             max-width: 1000px;
             border-radius: 50px;
             border: 2px solid #e94560;
             padding: 30px;
             box-shadow: 0 0 50px rgba(233,69,96,0.4);
+            position: relative;
         }
 
         .glory-header {
@@ -50,12 +240,55 @@
             margin-top: 5px;
         }
 
-        /* Трек прогресса */
+        .progress-info {
+            background: rgba(0,0,0,0.5);
+            border-radius: 30px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .current-cups {
+            font-size: 28px;
+            font-weight: bold;
+            color: #f9a826;
+        }
+
+        .next-milestone {
+            text-align: right;
+        }
+
+        .milestone-cups {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e94560;
+        }
+
+        .progress-bar-container {
+            background: #1e293b;
+            border-radius: 20px;
+            height: 12px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #f9a826, #e94560);
+            width: 0%;
+            height: 100%;
+            border-radius: 20px;
+            transition: width 0.5s;
+        }
+
         .track-container {
             background: rgba(0,0,0,0.5);
             border-radius: 40px;
             padding: 20px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .track-scroll {
@@ -66,7 +299,6 @@
             scroll-behavior: smooth;
         }
 
-        /* Ступень награды */
         .reward-tier {
             flex: 0 0 140px;
             background: linear-gradient(145deg, #1e293b, #0f172a);
@@ -75,7 +307,6 @@
             text-align: center;
             border: 1px solid #2a2a5a;
             transition: 0.2s;
-            position: relative;
         }
 
         .reward-tier.available {
@@ -85,11 +316,6 @@
 
         .reward-tier.claimed {
             opacity: 0.6;
-            border-color: #2a2a5a;
-        }
-
-        .reward-tier.locked {
-            opacity: 0.5;
         }
 
         .tier-cups {
@@ -125,53 +351,6 @@
             color: white;
         }
 
-        /* Информация о прогрессе */
-        .progress-info {
-            background: rgba(0,0,0,0.5);
-            border-radius: 30px;
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .current-cups {
-            font-size: 28px;
-            font-weight: bold;
-            color: #f9a826;
-        }
-
-        .next-milestone {
-            text-align: right;
-        }
-
-        .milestone-cups {
-            font-size: 24px;
-            font-weight: bold;
-            color: #e94560;
-        }
-
-        /* Полоса прогресса */
-        .progress-bar-container {
-            background: #1e293b;
-            border-radius: 20px;
-            height: 12px;
-            overflow: hidden;
-            margin: 20px 0;
-        }
-
-        .progress-bar {
-            background: linear-gradient(90deg, #f9a826, #e94560);
-            width: 0%;
-            height: 100%;
-            border-radius: 20px;
-            transition: width 0.5s;
-        }
-
-        /* Кнопка прокрутки */
         .scroll-buttons {
             display: flex;
             justify-content: center;
@@ -189,50 +368,239 @@
             cursor: pointer;
         }
 
-        /* Адаптив */
-        @media (max-width: 700px) {
-            .glory-container { padding: 20px; }
-            .reward-tier { flex: 0 0 120px; }
-            .tier-reward { font-size: 24px; }
+        /* Остальные окна (аватарка, ник, цвет) */
+        .avatar-modal, .nickname-modal, .color-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 300;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .avatar-selector, .nickname-container, .color-container {
+            background: #0f172a;
+            padding: 35px;
+            border-radius: 60px;
+            border: 1px solid #e94560;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .avatar-selector {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .avatar-option {
+            width: 85px;
+            height: 85px;
+            background: #1a1a3e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 55px;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .color-options {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .color-circle {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid #fff;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #e94560, #b91c3c);
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .hidden { display: none; }
+        input, .btn { width: 100%; }
+
+        .main-menu {
+            max-width: 700px;
+            margin: 120px auto 0;
+            text-align: center;
+        }
+
+        .main-menu h1 {
+            font-size: 48px;
+            background: linear-gradient(135deg, #fff, #e94560);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 30px;
+        }
+
+        .game-placeholder {
+            background: rgba(15,25,45,0.85);
+            border-radius: 40px;
+            padding: 50px;
+            margin-top: 25px;
         }
     </style>
 </head>
 <body>
-    <div class="glory-container">
-        <div class="glory-header">
-            <h1>🏆 ПУТЬ К СЛАВЕ 🏆</h1>
-            <p>Собирай кубки, чтобы получать награды!</p>
+    <!-- Верхняя панель -->
+    <div class="top-left-bar">
+        <div class="floating-avatar" onclick="openProfileModal()">
+            <div class="mini-avatar" id="miniAvatar">🎮</div>
+            <div class="nickname-overlay" id="miniNickname">-</div>
         </div>
+        <button class="glory-button" onclick="openPathModal()">🏆 ПУТЬ К СЛАВЕ</button>
+    </div>
 
-        <!-- Информация о прогрессе -->
-        <div class="progress-info">
-            <div>
-                <div style="font-size: 14px; color: #aaa;">ТВОИ КУБКИ</div>
-                <div class="current-cups" id="currentCupsDisplay">0</div>
+    <!-- ОКНО ПРОФИЛЯ -->
+    <div id="profileModal" class="modal">
+        <div class="profile-container">
+            <button class="close-modal" onclick="closeProfileModal()">✖</button>
+            <div class="profile-header">
+                <div class="avatar-section">
+                    <div class="avatar-large" id="largeAvatar" onclick="openAvatarPicker()">🎮</div>
+                    <div class="player-tag-static" id="profileTag">#----</div>
+                </div>
+                <div class="info-section">
+                    <div class="nickname-wrapper">
+                        <div class="profile-nickname" id="profileNick">-</div>
+                        <div class="edit-icon" onclick="openNicknameEditor()">✏️</div>
+                        <div class="color-icon" onclick="openColorPicker()">🎨</div>
+                    </div>
+                    <div class="profile-cups">🏆 <span id="profileCups">0</span> кубков</div>
+                </div>
             </div>
-            <div class="next-milestone">
-                <div style="font-size: 14px; color: #aaa;">ДО СЛЕДУЮЩЕЙ НАГРАДЫ</div>
-                <div class="milestone-cups" id="nextMilestone">0</div>
+            <div class="stats-grid">
+                <div class="stat-card"><h3>🎲 ОТКРЫТО ЯЩИКОВ</h3><div class="stat-value" id="profileBoxes">0</div></div>
+                <div class="stat-card"><h3>💰 МОНЕТЫ</h3><div class="stat-value" id="profileCoins">0</div></div>
+                <div class="stat-card"><h3>🏆 КУБКОВ ВСЕГО</h3><div class="stat-value" id="profileTotalCups">0</div></div>
+                <div class="stat-card"><h3>⭐ ЛУЧШИЙ РЕКОРД</h3><div class="stat-value" id="recordCups">0</div></div>
             </div>
         </div>
+    </div>
 
-        <!-- Полоса прогресса -->
-        <div class="progress-bar-container">
-            <div class="progress-bar" id="progressBar"></div>
+    <!-- НОВОЕ ОКНО ПУТИ К СЛАВЕ (встроенное) -->
+    <div id="pathModal" class="glory-modal">
+        <div class="glory-container">
+            <button class="close-modal" onclick="closePathModal()">✖</button>
+            <div class="glory-header">
+                <h1>🏆 ПУТЬ К СЛАВЕ 🏆</h1>
+                <p>Собирай кубки, чтобы получать награды!</p>
+            </div>
+
+            <div class="progress-info">
+                <div>
+                    <div style="font-size: 14px; color: #aaa;">ТВОИ КУБКИ</div>
+                    <div class="current-cups" id="currentCupsDisplay">0</div>
+                </div>
+                <div class="next-milestone">
+                    <div style="font-size: 14px; color: #aaa;">ДО СЛЕДУЮЩЕЙ НАГРАДЫ</div>
+                    <div class="milestone-cups" id="nextMilestone">0</div>
+                </div>
+            </div>
+
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+
+            <div class="track-container">
+                <div class="track-scroll" id="trackScroll"></div>
+                <div class="scroll-buttons">
+                    <button class="scroll-btn" onclick="scrollTrack(-150)">◀</button>
+                    <button class="scroll-btn" onclick="scrollTrack(150)">▶</button>
+                </div>
+            </div>
         </div>
+    </div>
 
-        <!-- Трек с наградами -->
-        <div class="track-container">
-            <div class="track-scroll" id="trackScroll"></div>
-            <div class="scroll-buttons">
-                <button class="scroll-btn" onclick="scrollTrack(-150)">◀</button>
-                <button class="scroll-btn" onclick="scrollTrack(150)">▶</button>
+    <!-- ОКНА ВЫБОРА (аватарка, ник, цвет) -->
+    <div id="avatarPickerModal" class="avatar-modal">
+        <div class="avatar-selector" id="avatarSelector">
+            <div class="avatar-option" data-avatar="🎮">🎮</div>
+            <div class="avatar-option" data-avatar="⭐">⭐</div>
+            <div class="avatar-option" data-avatar="🔥">🔥</div>
+            <div class="avatar-option" data-avatar="🐺">🐺</div>
+            <div class="avatar-option" data-avatar="🤖">🤖</div>
+            <div class="avatar-option" data-avatar="👑">👑</div>
+            <div class="avatar-option" data-avatar="⚡">⚡</div>
+            <div class="avatar-option" data-avatar="😈">😈</div>
+            <div class="avatar-option" id="devAvatar" style="display:none;" data-avatar="url">👑 DEV</div>
+        </div>
+    </div>
+
+    <div id="nicknameEditorModal" class="nickname-modal">
+        <div class="nickname-container">
+            <h3>✏️ СМЕНИТЬ НИКНЕЙМ</h3>
+            <input type="text" id="newNicknameInput" placeholder="Новый никнейм">
+            <button class="btn" onclick="changeNickname()">СОХРАНИТЬ</button>
+            <button class="btn" onclick="closeNicknameEditor()" style="background:#2a2a5a;">ОТМЕНА</button>
+        </div>
+    </div>
+
+    <div id="colorPickerModal" class="color-modal">
+        <div class="color-container">
+            <h3>🎨 ВЫБЕРИ ЦВЕТ НИКНЕЙМА</h3>
+            <div class="color-options" id="colorOptions">
+                <div class="color-circle" style="background:#ffffff;" data-color="#ffffff"></div>
+                <div class="color-circle" style="background:#f9a826;" data-color="#f9a826"></div>
+                <div class="color-circle" style="background:#ff69b4;" data-color="#ff69b4"></div>
+                <div class="color-circle" style="background:#00bfff;" data-color="#00bfff"></div>
+                <div class="color-circle" style="background:#c084fc;" data-color="#c084fc"></div>
+                <div class="color-circle" style="background:#ff0000;" data-color="#ff0000"></div>
+                <div class="color-circle" style="background:#00ff88;" data-color="#00ff88"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ВХОД -->
+    <div id="authPanel" class="modal" style="display:flex; background:rgba(0,0,0,0.95);">
+        <div class="profile-container" style="max-width:400px;">
+            <h2>🔐 ВХОД</h2>
+            <input type="text" id="nickname" placeholder="Никнейм">
+            <div id="adminPasswordGroup" class="hidden">
+                <input type="password" id="adminPassword" placeholder="Пароль админа">
+            </div>
+            <button class="btn" onclick="login()">ВОЙТИ</button>
+            <div id="authMessage" style="color:#ff6b6b; margin-top:10px;"></div>
+        </div>
+    </div>
+
+    <!-- ГЛАВНОЕ МЕНЮ -->
+    <div id="gamePanel" class="hidden">
+        <div class="main-menu">
+            <h1>⚡ BRAWL BOX ⚡</h1>
+            <div class="game-placeholder">
+                <p style="color:#aaa; font-size:18px;">Здесь скоро появится игровой автомат</p>
             </div>
         </div>
     </div>
 
     <script>
-        // Данные пути к славе (кубки, награда, тип)
+        let currentPlayerId = null;
+        let isAdmin = false;
+
+        // Данные пути к славе
         const pathData = [
             { cups: 100, reward: "50💰", type: "coins", label: "Монеты" },
             { cups: 250, reward: "100💰", type: "coins", label: "Монеты" },
@@ -250,34 +618,11 @@
             { cups: 75000, reward: "10000💰", type: "coins", label: "Монеты" },
             { cups: 100000, reward: "🏆", type: "trophy", label: "ЗОЛОТОЙ ТРОФЕЙ" }
         ];
-
-        let currentCups = 0;
         let claimedStatus = new Array(pathData.length).fill(false);
+        let currentCups = 0;
 
-        // Загрузка данных из localStorage (или с сервера)
-        function loadProgress() {
-            const saved = localStorage.getItem('gloryPath');
-            if (saved) {
-                const data = JSON.parse(saved);
-                currentCups = data.cups || 0;
-                claimedStatus = data.claimed || claimedStatus;
-            }
-            updateUI();
-        }
-
-        // Сохранение прогресса
-        function saveProgress() {
-            localStorage.setItem('gloryPath', JSON.stringify({
-                cups: currentCups,
-                claimed: claimedStatus
-            }));
-        }
-
-        // Обновить весь интерфейс
-        function updateUI() {
+        function updateGloryUI() {
             document.getElementById('currentCupsDisplay').innerText = currentCups;
-            
-            // Найти следующую недоступную награду
             let nextCups = 0;
             for (let tier of pathData) {
                 if (tier.cups > currentCups) {
@@ -286,10 +631,8 @@
                 }
             }
             document.getElementById('nextMilestone').innerText = nextCups > 0 ? `${nextCups} 🏆` : 'МАКСИМУМ!';
-            
-            // Полоса прогресса (между последней доступной и следующей)
-            let lastCups = 0;
-            let nextCupsBar = pathData[0]?.cups || 0;
+
+            let lastCups = 0, nextCupsBar = pathData[0]?.cups || 0;
             for (let i = pathData.length-1; i >= 0; i--) {
                 if (pathData[i].cups <= currentCups) {
                     lastCups = pathData[i].cups;
@@ -301,18 +644,13 @@
             progressPercent = Math.min(100, Math.max(0, progressPercent));
             document.getElementById('progressBar').style.width = `${progressPercent}%`;
             
-            // Отрисовать награды
-            renderTiers();
-        }
-        
-        function renderTiers() {
             const container = document.getElementById('trackScroll');
             container.innerHTML = '';
             pathData.forEach((tier, idx) => {
                 const isAvailable = currentCups >= tier.cups && !claimedStatus[idx];
                 const isClaimed = claimedStatus[idx];
                 const div = document.createElement('div');
-                div.className = `reward-tier ${isAvailable ? 'available' : (isClaimed ? 'claimed' : 'locked')}`;
+                div.className = `reward-tier ${isAvailable ? 'available' : (isClaimed ? 'claimed' : '')}`;
                 div.innerHTML = `
                     <div class="tier-cups">${tier.cups}🏆</div>
                     <div class="tier-reward">${tier.reward}</div>
@@ -329,44 +667,141 @@
                 };
             });
         }
-        
+
         function claimReward(idx) {
             const tier = pathData[idx];
             if (currentCups < tier.cups || claimedStatus[idx]) return;
             claimedStatus[idx] = true;
-            // Здесь можно отправить запрос на сервер для начисления награды
             alert(`🎉 Вы получили: ${tier.reward} (${tier.label})!`);
-            saveProgress();
-            updateUI();
+            // Здесь будет запрос к серверу для начисления награды
+            updateGloryUI();
         }
-        
+
         function scrollTrack(delta) {
             const container = document.getElementById('trackScroll');
             container.scrollBy({ left: delta, behavior: 'smooth' });
         }
-        
-        // Имитация добавления кубков (для теста)
-        function addCups(amount) {
-            currentCups += amount;
-            saveProgress();
-            updateUI();
+
+        // Загрузка данных игрока
+        async function refreshProfileData() {
+            if (!currentPlayerId) return;
+            const res = await fetch('/api/player/' + currentPlayerId);
+            const data = await res.json();
+            if (!data.error) {
+                const avatar = data.avatar || '🎮';
+                const nickname = data.nickname;
+                const nicknameColor = data.nickname_color || '#ffffff';
+                currentCups = data.cups || 0;
+                if (data.path_data) {
+                    const saved = JSON.parse(data.path_data);
+                    claimedStatus = saved.claimed || claimedStatus;
+                }
+                document.getElementById('miniNickname').innerText = nickname.length > 10 ? nickname.slice(0, 9) + '…' : nickname;
+                document.getElementById('miniNickname').style.color = nicknameColor;
+                if (avatar.startsWith('http')) {
+                    document.getElementById('miniAvatar').innerHTML = `<img src="${avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+                    document.getElementById('largeAvatar').innerHTML = `<img src="${avatar}" style="width:100%;height:100%;object-fit:cover;">`;
+                } else {
+                    document.getElementById('miniAvatar').innerText = avatar;
+                    document.getElementById('largeAvatar').innerHTML = avatar;
+                }
+                document.getElementById('profileNick').innerText = nickname;
+                document.getElementById('profileNick').style.color = nicknameColor;
+                document.getElementById('profileTag').innerText = data.tag || '#----';
+                document.getElementById('profileCups').innerText = currentCups;
+                document.getElementById('profileTotalCups').innerText = currentCups;
+                document.getElementById('recordCups').innerText = data.record_cups || currentCups;
+                document.getElementById('profileBoxes').innerText = data.total_boxes || 0;
+                document.getElementById('profileCoins').innerText = data.coins || 0;
+                updateGloryUI();
+            }
         }
-        
-        loadProgress();
-        
-        // Для теста — можно добавить кнопку +100 кубков (в реальной игре убрать)
-        const testBtn = document.createElement('button');
-        testBtn.innerText = '+100 КУБКОВ (ТЕСТ)';
-        testBtn.style.position = 'fixed';
-        testBtn.style.bottom = '20px';
-        testBtn.style.right = '20px';
-        testBtn.style.background = '#e94560';
-        testBtn.style.border = 'none';
-        testBtn.style.padding = '8px 15px';
-        testBtn.style.borderRadius = '30px';
-        testBtn.style.cursor = 'pointer';
-        testBtn.onclick = () => addCups(100);
-        document.body.appendChild(testBtn);
+
+        async function savePathData() {
+            await fetch('/api/save_path', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ playerId: currentPlayerId, pathData: { claimed: claimedStatus } })
+            });
+        }
+
+        async function changeAvatar(avatarValue, isUrl = false) {
+            const DEV_AVATAR_URL = "https://yt3.googleusercontent.com/wEnonoxntKdkIuHZbNouYlz6YoCchSbx7tpBRaVS6V08XzJYkvNZaG34RwZV7khnoF6hqI-kGw=s900-c-k-c0x00ffffff-no-rj";
+            await fetch('/api/change_avatar', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ playerId: currentPlayerId, avatar: isUrl ? DEV_AVATAR_URL : avatarValue }) });
+            await refreshProfileData();
+            closeAvatarPicker();
+        }
+
+        async function changeNickname() {
+            const newNick = document.getElementById('newNicknameInput').value.trim();
+            if (!newNick) return alert("Введи никнейм");
+            const res = await fetch('/api/change_nickname', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ playerId: currentPlayerId, newNickname: newNick, color: null }) });
+            const data = await res.json();
+            if (data.success) { await refreshProfileData(); closeNicknameEditor(); }
+            else alert(data.message || "Ошибка");
+        }
+
+        async function changeColorOnly(color) {
+            await fetch('/api/change_nickname', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ playerId: currentPlayerId, color: color }) });
+            await refreshProfileData();
+        }
+
+        function openProfileModal() { refreshProfileData(); document.getElementById('profileModal').style.display = 'flex'; }
+        function closeProfileModal() { document.getElementById('profileModal').style.display = 'none'; }
+        function openPathModal() { refreshProfileData(); document.getElementById('pathModal').style.display = 'flex'; }
+        function closePathModal() { document.getElementById('pathModal').style.display = 'none'; }
+        function openAvatarPicker() { document.getElementById('avatarPickerModal').style.display = 'flex'; }
+        function closeAvatarPicker() { document.getElementById('avatarPickerModal').style.display = 'none'; }
+        function openNicknameEditor() { document.getElementById('nicknameEditorModal').style.display = 'flex'; }
+        function closeNicknameEditor() { document.getElementById('nicknameEditorModal').style.display = 'none'; }
+        function openColorPicker() { document.getElementById('colorPickerModal').style.display = 'flex'; }
+        function closeColorPicker() { document.getElementById('colorPickerModal').style.display = 'none'; }
+
+        async function login() {
+            const nickname = document.getElementById('nickname').value.trim();
+            if (!nickname) return;
+            let password = '';
+            if (nickname === 'unity') {
+                password = document.getElementById('adminPassword').value;
+                if (!password) return alert('Введи пароль админа');
+            }
+            const res = await fetch('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nickname, password }) });
+            const data = await res.json();
+            if (data.success) {
+                currentPlayerId = data.player.id;
+                isAdmin = data.player.is_admin === true;
+                document.getElementById('authPanel').style.display = 'none';
+                document.getElementById('gamePanel').classList.remove('hidden');
+                await refreshProfileData();
+                document.querySelectorAll('.avatar-option').forEach(opt => {
+                    const val = opt.getAttribute('data-avatar');
+                    if (val === 'url') {
+                        if (isAdmin) opt.style.display = 'flex';
+                        else opt.style.display = 'none';
+                        opt.onclick = () => changeAvatar('', true);
+                    } else {
+                        opt.onclick = () => changeAvatar(val, false);
+                    }
+                });
+                document.querySelectorAll('.color-circle').forEach(circle => {
+                    const color = circle.getAttribute('data-color');
+                    circle.onclick = async () => {
+                        await changeColorOnly(color);
+                        closeColorPicker();
+                        openProfileModal();
+                    };
+                });
+            } else document.getElementById('authMessage').innerText = data.message;
+        }
+
+        document.getElementById('nickname').addEventListener('input', e => document.getElementById('adminPasswordGroup').classList.toggle('hidden', e.target.value !== 'unity'));
+        window.onclick = event => {
+            if (event.target === document.getElementById('profileModal')) closeProfileModal();
+            if (event.target === document.getElementById('pathModal')) closePathModal();
+            if (event.target === document.getElementById('avatarPickerModal')) closeAvatarPicker();
+            if (event.target === document.getElementById('nicknameEditorModal')) closeNicknameEditor();
+            if (event.target === document.getElementById('colorPickerModal')) closeColorPicker();
+        };
     </script>
 </body>
 </html>
