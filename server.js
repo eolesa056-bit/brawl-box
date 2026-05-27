@@ -1,13 +1,8 @@
 const express = require('express');
-const http = require('http');
-const socketIo = require('socket.io');
 const sqlite3 = require('sqlite3').verbose();
-
 const app = express();
-const server = http.createServer(app);
-const io = socketIo(server);
-
 const port = process.env.PORT || 3000;
+
 const db = new sqlite3.Database('database.db');
 
 // Таблица игроков
@@ -22,7 +17,7 @@ db.serialize(() => {
         is_admin INTEGER DEFAULT 0
     )`);
     
-    // Админ по умолчанию
+    // Админ
     db.get(`SELECT * FROM users WHERE login = 'unity'`, (err, row) => {
         if (!row) {
             db.run(`INSERT INTO users (login, password, nickname, is_admin) VALUES (?, ?, ?, ?)`, 
@@ -48,44 +43,28 @@ app.post('/api/login', (req, res) => {
     const { login, password } = req.body;
     db.get(`SELECT * FROM users WHERE login = ? AND password = ?`, [login, password], (err, user) => {
         if (!user) return res.json({ success: false, message: 'Неверный логин или пароль' });
-        res.json({ success: true, user: { id: user.id, nickname: user.nickname, is_admin: user.is_admin } });
+        res.json({ success: true, user: { id: user.id, nickname: user.nickname, coins: user.coins, total_boxes: user.total_boxes, is_admin: user.is_admin } });
     });
 });
 
-// Получить данные игрока
-app.get('/api/user/:id', (req, res) => {
-    db.get(`SELECT id, nickname, coins, total_boxes FROM users WHERE id = ?`, [req.params.id], (err, user) => {
-        if (!user) return res.json({ error: 'not found' });
-        res.json(user);
-    });
-});
-
-// Сокеты
-io.on('connection', (socket) => {
-    socket.on('auth', (userId, callback) => {
-        db.get(`SELECT * FROM users WHERE id = ?`, [userId], (err, user) => {
-            if (!user) return callback({ success: false });
-            socket.userId = userId;
-            callback({ success: true });
-        });
-    });
+// Открыть ящик (простой GET-запрос)
+app.get('/api/open_box/:userId', (req, res) => {
+    const userId = req.params.userId;
     
-    socket.on('open_box', () => {
-        const uid = socket.userId;
-        if (!uid) return;
-        
-        const rand = Math.random() * 100;
-        let reward = '';
-        let coinsGain = 0;
-        
-        if (rand < 50) { reward = '50 монет'; coinsGain = 50; }
-        else if (rand < 75) { reward = '100 монет'; coinsGain = 100; }
-        else if (rand < 90) { reward = 'Обычный ящик'; }
-        else { reward = 'РЕДКИЙ СКИН!'; }
-        
-        db.run(`UPDATE users SET coins = coins + ?, total_boxes = total_boxes + 1 WHERE id = ?`, [coinsGain, uid]);
-        socket.emit('box_opened', { name: reward });
+    const rand = Math.random() * 100;
+    let reward = '';
+    let coinsGain = 0;
+    
+    if (rand < 50) { reward = '50 монет'; coinsGain = 50; }
+    else if (rand < 75) { reward = '100 монет'; coinsGain = 100; }
+    else if (rand < 90) { reward = 'Обычный ящик'; }
+    else { reward = 'РЕДКИЙ СКИН!'; }
+    
+    db.run(`UPDATE users SET coins = coins + ?, total_boxes = total_boxes + 1 WHERE id = ?`, [coinsGain, userId]);
+    
+    db.get(`SELECT coins, total_boxes FROM users WHERE id = ?`, [userId], (err, user) => {
+        res.json({ success: true, reward: reward, coins: user.coins, total_boxes: user.total_boxes });
     });
 });
 
-server.listen(port, () => console.log(`🚀 Сервер на порту ${port}`));
+app.listen(port, () => console.log(`🚀 Сервер на порту ${port}`));
