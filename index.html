@@ -512,7 +512,21 @@
         <button onclick="openModal('link')">🔗 ПРИВЯЗКА АККАУНТА</button>
     </div>
 
-    <div id="settingsModal" class="modal"><div class="settings-container"><button class="close-modal" onclick="closeModal('settingsModal')">✖</button><h2 style="text-align:center; margin-bottom:30px;">⚙️ НАСТРОЙКИ</h2><div class="settings-row"><span class="settings-label">🌐 ЯЗЫК</span><select id="languageSelect" class="lang-select"><option value="ru">Русский</option><option value="en">English</option></select></div><div class="settings-row"><span class="settings-label">🎵 МУЗЫКА В МЕНЮ</span><div id="musicToggle" class="toggle-switch on"><div class="toggle-slider"></div></div></div></div></div>
+    <div id="settingsModal" class="modal">
+        <div class="settings-container">
+            <button class="close-modal" onclick="closeModal('settingsModal')">✖</button>
+            <h2 style="text-align:center; margin-bottom:30px;">⚙️ НАСТРОЙКИ</h2>
+            <div class="settings-row">
+                <span class="settings-label">🌐 ЯЗЫК</span>
+                <select id="languageSelect" class="lang-select">
+                    <option value="ru">Русский</option>
+                    <option value="en">English</option>
+                </select>
+            </div>
+            <!-- Ползунок музыки УБРАН -->
+        </div>
+    </div>
+
     <div id="historyModal" class="modal"><div class="profile-container"><button class="close-modal" onclick="closeModal('historyModal')">✖</button><h2>📜 ИСТОРИЯ БОЕВ</h2><p style="margin:20px">Здесь будут твои последние бои</p></div></div>
     <div id="leadersModal" class="modal"><div class="profile-container"><button class="close-modal" onclick="closeModal('leadersModal')">✖</button><h2>🏆 СПИСКИ ЛИДЕРОВ</h2><p style="margin:20px">Топ игроки по кубкам, победам и т.д.</p></div></div>
     <div id="inboxModal" class="modal"><div class="profile-container"><button class="close-modal" onclick="closeModal('inboxModal')">✖</button><h2>📥 ВХОДЯЩИЕ</h2><p style="margin:20px">Сообщения, подарки, приглашения</p></div></div>
@@ -533,33 +547,52 @@
     <script>
         let currentPlayerId = null;
         let isAdmin = false;
-        let musicEnabled = true;
-        let audioElement = null;
+        let currentLanguage = 'ru';
         const DEV_AVATAR_URL = "https://yt3.googleusercontent.com/wEnonoxntKdkIuHZbNouYlz6YoCchSbx7tpBRaVS6V08XzJYkvNZaG34RwZV7khnoF6hqI-kGw=s900-c-k-c0x00ffffff-no-rj";
 
-        function initMusic() {
-            if (audioElement) return;
-            audioElement = new Audio('/music.mp3');
-            audioElement.loop = true;
-            audioElement.volume = 0.5;
-            if (musicEnabled) {
-                audioElement.play().catch(e => console.log("Нажми на страницу, чтобы включить музыку"));
+        // Переводы (добавим основные элементы)
+        const translations = {
+            ru: {
+                settings: "⚙️ НАСТРОЙКИ",
+                history: "📜 ИСТОРИЯ БОЕВ",
+                leaders: "🏆 СПИСКИ ЛИДЕРОВ",
+                inbox: "📥 ВХОДЯЩИЕ",
+                link: "🔗 ПРИВЯЗКА АККАУНТА",
+                language: "🌐 ЯЗЫК",
+                empty: "Здесь скоро появится игровой автомат",
+                close: "ЗАКРЫТЬ"
+            },
+            en: {
+                settings: "⚙️ SETTINGS",
+                history: "📜 BATTLE HISTORY",
+                leaders: "🏆 LEADERBOARDS",
+                inbox: "📥 INBOX",
+                link: "🔗 ACCOUNT LINK",
+                language: "🌐 LANGUAGE",
+                empty: "Game machine will appear soon",
+                close: "CLOSE"
             }
+        };
+
+        function applyLanguage() {
+            const lang = currentLanguage;
+            const t = translations[lang];
+            document.querySelector('#menuPanel button:nth-child(1)').innerHTML = t.settings;
+            document.querySelector('#menuPanel button:nth-child(2)').innerHTML = t.history;
+            document.querySelector('#menuPanel button:nth-child(3)').innerHTML = t.leaders;
+            document.querySelector('#menuPanel button:nth-child(4)').innerHTML = t.inbox;
+            document.querySelector('#menuPanel button:nth-child(5)').innerHTML = t.link;
+            document.querySelector('#settingsModal h2').innerHTML = t.settings;
+            document.querySelector('.settings-row .settings-label').innerHTML = t.language;
+            document.querySelector('.game-placeholder p').innerHTML = t.empty;
+            document.querySelectorAll('.close-modal').forEach(btn => btn.title = t.close);
         }
 
-        function toggleMusic() {
-            musicEnabled = !musicEnabled;
-            const toggle = document.getElementById('musicToggle');
-            if (musicEnabled) {
-                toggle.classList.add('on');
-                if (audioElement) audioElement.play().catch(e => console.log("Нужно взаимодействие"));
-                else initMusic();
-            } else {
-                toggle.classList.remove('on');
-                if (audioElement) audioElement.pause();
-            }
-            localStorage.setItem('musicEnabled', musicEnabled);
-        }
+        document.getElementById('languageSelect').addEventListener('change', (e) => {
+            currentLanguage = e.target.value;
+            localStorage.setItem('language', currentLanguage);
+            applyLanguage();
+        });
 
         const pathData = [
             { cups: 250, reward: "50💰", label: "50 Монет" }, { cups: 500, reward: "🎁", label: "Обычный ящик" }, { cups: 1000, reward: "100💰", label: "100 Монет" },
@@ -675,14 +708,9 @@
                 document.getElementById('authPanel').style.display = 'none';
                 document.getElementById('gamePanel').classList.remove('hidden');
                 await refreshProfileData();
-                const savedMusic = localStorage.getItem('musicEnabled');
-                if (savedMusic !== null) musicEnabled = savedMusic === 'true';
-                const toggle = document.getElementById('musicToggle');
-                if (musicEnabled) toggle.classList.add('on'); else toggle.classList.remove('on');
-                toggle.onclick = () => toggleMusic();
-                initMusic();
-                document.getElementById('languageSelect').value = localStorage.getItem('language') || 'ru';
-                document.getElementById('languageSelect').onchange = (e) => { localStorage.setItem('language', e.target.value); alert('Язык изменён, перезагрузите страницу для применения'); };
+                currentLanguage = localStorage.getItem('language') || 'ru';
+                document.getElementById('languageSelect').value = currentLanguage;
+                applyLanguage();
             } else document.getElementById('authMessage').innerText = data.message;
         }
 
