@@ -63,7 +63,9 @@
             margin: 20px 0;
             font-weight: bold;
             color: #f9a826;
+            animation: fade 0.5s;
         }
+        @keyframes fade { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
         .stats {
             background: rgba(10, 20, 40, 0.8);
             padding: 20px;
@@ -138,12 +140,12 @@
         }
         .status-banned { background: #dc2626; padding: 4px 12px; border-radius: 20px; }
         .status-active { background: #10b981; color: black; padding: 4px 12px; border-radius: 20px; }
+        input, select { background: #0f172a; color: white; border: 1px solid #e94560; border-radius: 40px; padding: 10px; }
     </style>
 </head>
 <body>
     <div class="game-container">
         <h1>🎁 BRAWL BOX SIMULATOR</h1>
-        
         <div id="authBox" class="auth-box">
             <h2>⚡ ВОЙДИ В ИГРУ ⚡</h2>
             <input type="text" id="login" placeholder="Логин"><br>
@@ -153,7 +155,6 @@
             <button onclick="login()">🔓 ВХОД</button>
             <div id="authMessage" style="color: #f97316; margin-top: 15px;"></div>
         </div>
-        
         <div id="gameBox" class="game-box" style="display:none">
             <div style="font-size: 80px;">🎁</div>
             <button id="openBtn" class="open-btn" onclick="openBox()">🔥 ОТКРЫТЬ ЯЩИК 🔥</button>
@@ -169,15 +170,15 @@
 
     <div id="adminOverlay" class="admin-overlay">
         <div class="admin-window">
-            <div class="admin-header"><h2>🔧 АДМИН-ПАНЕЛЬ</h2><button onclick="closeAdminWindow()">✖</button></div>
+            <div class="admin-header"><h2>🔧 АДМИН-ПАНЕЛЬ</h2><button onclick="closeAdminWindow()">✖ ЗАКРЫТЬ</button></div>
             <button class="burger-btn" onclick="toggleMenu()">☰ МЕНЮ</button>
             <div id="menuItems" class="menu-items">
-                <button onclick="showSection('users')">👥 УПРАВЛЕНИЕ ИГРОКАМИ</button>
+                <button onclick="showSection('users')">👥 ИГРОКИ</button>
                 <button onclick="showSection('promocodes')">🎁 ПРОМОКОДЫ</button>
                 <button onclick="showSection('reports')">📋 РЕПОРТЫ</button>
                 <button onclick="showSection('events')">🎉 ИВЕНТЫ</button>
             </div>
-            <div id="adminContent" class="admin-content">Выберите раздел в меню</div>
+            <div id="adminContent" class="admin-content">📌 Выберите раздел в меню</div>
         </div>
     </div>
 
@@ -187,6 +188,7 @@
         let currentUserId = null;
         let isAdmin = false;
 
+        // Регистрация
         async function register() {
             const login = document.getElementById('login').value.trim();
             const password = document.getElementById('password').value;
@@ -202,6 +204,7 @@
             else document.getElementById('authMessage').innerText = data.message;
         }
 
+        // Вход
         async function login() {
             const login = document.getElementById('login').value;
             const password = document.getElementById('password').value;
@@ -246,18 +249,19 @@
         });
 
         socket.on('session_terminated', (data) => {
-            const reason = data && data.reason ? data.reason : 'Нарушение правил';
+            const reason = data?.reason || 'Нарушение правил';
             alert(`⛔ СЕССИЯ ЗАВЕРШЕНА! ПЕРЕЗАГРУЗИТЕ ИГРУ ⛔\n\nПричина бана: ${reason}`);
             window.location.reload();
         });
 
         setInterval(updateStats, 3000);
 
+        // Админка
         function openAdminWindow() { document.getElementById('adminOverlay').style.display = 'flex'; }
         function closeAdminWindow() { document.getElementById('adminOverlay').style.display = 'none'; }
         function toggleMenu() {
-            const menu = document.getElementById('menuItems');
-            menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+            const m = document.getElementById('menuItems');
+            m.style.display = m.style.display === 'flex' ? 'none' : 'flex';
         }
 
         async function showSection(section) {
@@ -266,53 +270,58 @@
                 const res = await fetch('/api/users');
                 const users = await res.json();
                 if (!users.length) { content.innerHTML = '<p>Нет игроков</p>'; return; }
-                let html = '<h3>👥 Игроки</h3>';
+                let html = '<h3>👥 УПРАВЛЕНИЕ ИГРОКАМИ</h3>';
                 for (const u of users) {
                     html += `<div class="user-item">
-                        <div><strong>${u.nickname}</strong> (${u.login})<br>💰 ${u.coins} 🎲 ${u.total_boxes}<br><span class="${u.is_banned ? 'status-banned' : 'status-active'}">${u.is_banned ? '⛔ Забанен' : '✅ Активен'}</span></div>
-                        <div>${u.is_banned ? `<button onclick="unbanUser(${u.id})">✅ Разбанить</button>` : (u.login !== 'unity' ? `<button onclick="banUser(${u.id}, '${u.nickname}')">🔨 Забанить</button>` : '👑 Админ')}</div>
+                        <div><strong>${u.nickname}</strong> (${u.login})<br>💰 ${u.coins} | 🎲 ${u.total_boxes}<br><span class="${u.is_banned ? 'status-banned' : 'status-active'}">${u.is_banned ? '⛔ ЗАБАНЕН' : '✅ АКТИВЕН'}</span></div>
+                        <div>${u.is_banned ? `<button onclick="unbanUser(${u.id})">✅ РАЗБАНИТЬ</button>` : (u.login !== 'unity' ? `<button onclick="banUser(${u.id}, '${u.nickname}')">🔨 ЗАБАНИТЬ</button>` : '👑 АДМИН')}</div>
                     </div>`;
                 }
                 content.innerHTML = html;
             }
             else if (section === 'promocodes') {
-                content.innerHTML = `<h3>🎁 Промокоды</h3><div id="promoList"></div>
-                    <input type="text" id="promoCode" placeholder="Код"><br>
-                    <input type="text" id="promoReward" placeholder="Награда"><br>
-                    <input type="number" id="promoMax" placeholder="Лимит"><br>
-                    <button onclick="createPromo()">Создать</button>`;
                 const res = await fetch('/api/promocodes');
                 const promos = await res.json();
-                const listDiv = document.getElementById('promoList');
-                if (listDiv) listDiv.innerHTML = promos.map(p => `<div class="promo-item"><strong>${p.code}</strong> — ${p.reward}<br>${p.current_activations}/${p.max_activations}</div>`).join('');
+                let html = '<h3>🎁 ПРОМОКОДЫ</h3><div id="promoList">';
+                if (promos.length) promos.forEach(p => html += `<div class="promo-item"><strong>${p.code}</strong> — ${p.reward}<br>Активаций: ${p.current_activations}/${p.max_activations}</div>`);
+                else html += '<p>Нет промокодов</p>';
+                html += `</div><h4>➕ СОЗДАТЬ</h4>
+                    <input type="text" id="promoCode" placeholder="Код"><br>
+                    <input type="text" id="promoReward" placeholder="Награда (100 монет)"><br>
+                    <input type="number" id="promoMax" placeholder="Лимит"><br>
+                    <button onclick="createPromo()">СОЗДАТЬ</button>`;
+                content.innerHTML = html;
             }
             else if (section === 'reports') {
                 const res = await fetch('/api/reports');
                 const reports = await res.json();
                 if (!reports.length) { content.innerHTML = '<p>Нет жалоб</p>'; return; }
-                let html = '<h3>📋 Жалобы</h3>';
+                let html = '<h3>📋 ЖАЛОБЫ ИГРОКОВ</h3>';
                 for (const r of reports) {
                     html += `<div class="report-item">
                         <div><strong>От:</strong> ${r.from_nick}<br><strong>На:</strong> ${r.to_nick}<br><strong>Причина:</strong> ${r.reason}</div>
-                        <div><button onclick="resolveReport(${r.id}, 'ban')">🔨 Забанить</button> <button onclick="resolveReport(${r.id}, 'reject')">❌ Отклонить</button></div>
+                        <div><button onclick="resolveReport(${r.id}, 'ban')">🔨 ЗАБАНИТЬ</button> <button onclick="resolveReport(${r.id}, 'reject')">❌ ОТКЛОНИТЬ</button></div>
                     </div>`;
                 }
                 content.innerHTML = html;
             }
             else if (section === 'events') {
-                content.innerHTML = `<h3>🎉 Ивенты</h3><div id="eventsList"></div>
+                const res = await fetch('/api/events');
+                const events = await res.json();
+                let html = '<h3>🎉 ИВЕНТЫ</h3><div id="eventsList">';
+                if (events.length) events.forEach(e => html += `<div class="promo-item"><strong>${e.name}</strong> (${e.event_type})<br><button onclick="stopEvent(${e.id})">⏹ ОСТАНОВИТЬ</button></div>`);
+                else html += '<p>Нет активных ивентов</p>';
+                html += `</div><h4>➕ НОВЫЙ ИВЕНТ</h4>
                     <input type="text" id="eventName" placeholder="Название"><br>
                     <select id="eventType"><option value="double_cups">x2 Кубки</option><option value="free_box">Бесплатный ящик</option></select><br>
                     <input type="datetime-local" id="eventEnd"><br>
-                    <button onclick="createEvent()">Создать</button>`;
-                const res = await fetch('/api/events');
-                const events = await res.json();
-                const listDiv = document.getElementById('eventsList');
-                if (listDiv) listDiv.innerHTML = events.map(e => `<div class="promo-item"><strong>${e.name}</strong> (${e.event_type})<br><button onclick="stopEvent(${e.id})">Остановить</button></div>`).join('');
+                    <button onclick="createEvent()">СОЗДАТЬ</button>`;
+                content.innerHTML = html;
             }
             toggleMenu();
         }
 
+        // Действия
         window.banUser = async (userId, nickname) => {
             const reason = prompt(`Причина бана для ${nickname}:`, 'Нарушение');
             if (!reason) return;
