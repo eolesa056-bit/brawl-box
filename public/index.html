@@ -89,7 +89,7 @@
         
         <div id="gameBox" class="game-box" style="display:none">
             <div style="font-size: 70px;">🎁</div>
-            <button id="openBtn" class="open-btn">🔥 ОТКРЫТЬ ЯЩИК 🔥</button>
+            <button id="openBtn" class="open-btn" onclick="openBox()">🔥 ОТКРЫТЬ ЯЩИК 🔥</button>
             <div id="reward" class="reward"></div>
             <div class="stats">
                 <p>💰 МОНЕТЫ: <span id="coins">0</span></p>
@@ -99,9 +99,7 @@
         </div>
     </div>
 
-    <script src="/socket.io/socket.io.js"></script>
     <script>
-        const socket = io();
         let currentUserId = null;
         
         async function register() {
@@ -131,38 +129,26 @@
             if (data.success) {
                 currentUserId = data.user.id;
                 document.getElementById('nicknameDisplay').innerText = data.user.nickname;
+                document.getElementById('coins').innerText = data.user.coins;
+                document.getElementById('boxes').innerText = data.user.total_boxes;
                 document.getElementById('authBox').style.display = 'none';
                 document.getElementById('gameBox').style.display = 'block';
-                socket.emit('auth', currentUserId);
-                updateStats();
             } else {
                 document.getElementById('authMessage').innerText = data.message;
             }
         }
         
-        async function updateStats() {
+        async function openBox() {
             if (!currentUserId) return;
-            const res = await fetch('/api/user/' + currentUserId);
+            const res = await fetch('/api/open_box/' + currentUserId);
             const data = await res.json();
-            if (!data.error) {
+            if (data.success) {
+                document.getElementById('reward').innerHTML = `✨ ${data.reward} ✨`;
                 document.getElementById('coins').innerText = data.coins;
                 document.getElementById('boxes').innerText = data.total_boxes;
+                setTimeout(() => document.getElementById('reward').innerHTML = '', 2000);
             }
         }
-        
-        document.getElementById('openBtn').onclick = () => {
-            if (currentUserId) {
-                socket.emit('open_box');
-            }
-        };
-        
-        socket.on('box_opened', (reward) => {
-            document.getElementById('reward').innerHTML = `✨ ${reward.name} ✨`;
-            updateStats();
-            setTimeout(() => document.getElementById('reward').innerHTML = '', 2000);
-        });
-        
-        setInterval(updateStats, 3000);
     </script>
 </body>
 </html>
