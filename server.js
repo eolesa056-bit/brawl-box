@@ -9,113 +9,113 @@ const io = socketIo(server);
 
 const port = process.env.PORT || 3000;
 
-// Настройки для админ-панели
-const adminLogin = 'unity';
-const adminPassword = 'ALT F4';
-
-// Защита админ-панели
-app.use('/admin.html', (req, res, next) => {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-        res.setHeader('WWW-Authenticate', 'Basic realm="Admin Panel"');
-        return res.status(401).send('Требуется авторизация');
-    }
-    
-    const base64 = authHeader.split(' ')[1];
-    const [login, password] = Buffer.from(base64, 'base64').toString().split(':');
-    
-    if (login !== adminLogin || password !== adminPassword) {
-        res.setHeader('WWW-Authenticate', 'Basic realm="Admin Panel"');
-        return res.status(401).send('Неверный логин или пароль');
-    }
-    next();
-});
-
 // База данных
 const db = new sqlite3.Database('database.db');
 
 // Создаём таблицы
 db.serialize(() => {
-    db.run(`CREATE TABLE IF NOT EXISTS players (
-        secret_id TEXT PRIMARY KEY,
-        visible_tag TEXT UNIQUE,
+    db.run(`CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        login TEXT UNIQUE,
+        password TEXT,
         nickname TEXT,
         coins INTEGER DEFAULT 100,
         total_boxes INTEGER DEFAULT 0,
         is_banned INTEGER DEFAULT 0,
-        ban_reason TEXT,
-        ban_expires_at DATETIME
+        is_admin INTEGER DEFAULT 0
     )`);
+    
+    // Создаём админа, если его нет
+    db.get(`SELECT * FROM users WHERE login = 'unity'`, (err, row) => {
+        if (!row) {
+            db.run(`INSERT INTO users (login, password, nickname, is_admin) VALUES (?, ?, ?, ?)`, 
+                ['unity', 'ALT F4', 'Администратор', 1]);
+        }
+    });
 });
 
-// Папка с игрой
 app.use(express.static('public'));
 app.use(express.json());
 
-// API: получить всех игроков
-app.get('/api/players', (req, res) => {
-    db.all(`SELECT secret_id, visible_tag, nickname, coins, total_boxes, is_banned FROM players`, (err, players) => {
-        if (err) return res.json([]);
-        res.json(players);
+// Регистрация
+app.post('/api/register', (req, res) => {
+    const { login, password, nickname } = req.body;
+    db.run(`INSERT INTO users (login, password, nickname) VALUES (?, ?, ?)`, 
+        [login, password, nickname], 
+        function(err) {
+            if (err) return res.json({ success: false, message: 'Логин занят' });
+            res.json({ success: true });
+        });
+});
+
+// Вход
+app.post('/api/login', (req, res) => {
+    const { login, password } = req.body;
+    db.get(`SELECT * FROM users WHERE login = ? AND password = ?`, [login, password], (err, user) => {
+        if (!user) return res.json({ success: false, message: 'Неверный логин или пароль' });
+        res.json({ success: true, user: { id: user.id, login: user.login, nickname: user.nickname, is_admin: user.is_admin } });
     });
 });
 
-// API: получить игрока
-app.get('/api/player/:id', (req, res) => {
+// Получить игрока
+app.get('/api/user/:id', (req, res) => {
     const id = req.params.id;
-    db.get(`SELECT * FROM players WHERE secret_id = ?`, [id], (err, player) => {
-        if (err || !player) return res.json({ error: 'not found' });
-        res.json(player);
+    db.get(`SELECT id, login, nickname, coins, total_boxes FROM users WHERE id = ?`, [id], (err, user) => {
+        if (!user) return res.json({ error: 'not found' });
+        res.json(user);
     });
 });
 
-// API: бан игрока
+// Админ-API: получить всех игроков
+app.get('/api/users', (req, res) => {
+    db.all(`SELECT id, login, nickname, coins, total_boxes, is_banned FROM users`, (err, users) => {
+        if (err) return res.json([]);
+        res.json(users);
+    });
+});
+
+// Админ-API: бан
 app.post('/api/ban', (req, res) => {
-    const { playerId, reason, hours } = req.body;
+    const { userId, reason, hours } = req.body;
     let expiresAt = null;
     if (hours > 0) {
         expiresAt = new Date(Date.now() + hours * 60 * 60 * 1000).toISOString();
     }
-    db.run(`UPDATE players SET is_banned = 1, ban_reason = ?, ban_expires_at = ? WHERE secret_id = ?`,
-        [reason, expiresAt, playerId]);
+    db.run(`UPDATE users SET is_banned = 1, ban_reason = ?, ban_expires_at = ? WHERE id = ?`, [reason, expiresAt, userId]);
     res.json({ success: true });
 });
 
-// API: разбан
+// Админ-API: разбан
 app.post('/api/unban', (req, res) => {
-    const { playerId } = req.body;
-    db.run(`UPDATE players SET is_banned = 0, ban_reason = NULL, ban_expires_at = NULL WHERE secret_id = ?`, [playerId]);
+    const { userId } = req.body;
+    db.run(`UPDATE users SET is_banned = 0, ban_reason = NULL, ban_expires_at = NULL WHERE id = ?`, [userId]);
     res.json({ success: true });
 });
 
-const playerSockets = new Map();
+const userSockets = new Map();
 
 io.on('connection', (socket) => {
-    console.log('✅ Игрок подключился:', socket.id);
+    console.log('✅ Подключился:', socket.id);
     
-    socket.on('register', (nickname, callback) => {
-        const secretId = 'player_' + Math.random().toString(36).substr(2, 8);
-        const visibleTag = '#' + Math.random().toString(36).substr(2, 6).toUpperCase();
-        
-        db.run(`INSERT INTO players (secret_id, visible_tag, nickname) VALUES (?, ?, ?)`,
-            [secretId, visibleTag, nickname],
-            function(err) {
-                if (err) {
-                    callback({ success: false, message: 'Ошибка' });
-                } else {
-                    socket.playerId = secretId;
-                    playerSockets.set(secretId, socket);
-                    callback({ success: true, secret_id: secretId, visible_tag: visibleTag });
-                }
-            });
+    socket.on('auth', (userId, callback) => {
+        db.get(`SELECT * FROM users WHERE id = ?`, [userId], (err, user) => {
+            if (err || !user) {
+                callback({ success: false });
+            } else {
+                socket.userId = userId;
+                socket.isAdmin = user.is_admin === 1;
+                userSockets.set(userId, socket);
+                callback({ success: true, is_admin: socket.isAdmin });
+            }
+        });
     });
     
     socket.on('open_box', () => {
-        const playerId = socket.playerId;
-        if (!playerId) return;
+        const userId = socket.userId;
+        if (!userId) return;
         
-        db.get(`SELECT is_banned FROM players WHERE secret_id = ?`, [playerId], (err, player) => {
-            if (player && player.is_banned) {
+        db.get(`SELECT is_banned FROM users WHERE id = ?`, [userId], (err, user) => {
+            if (user && user.is_banned) {
                 socket.emit('session_terminated');
                 socket.disconnect(true);
                 return;
@@ -137,16 +137,14 @@ io.on('connection', (socket) => {
                 rewardName = 'РЕДКИЙ СКИН!';
             }
             
-            db.run(`UPDATE players SET coins = coins + ?, total_boxes = total_boxes + 1 WHERE secret_id = ?`,
-                [coinsReward, playerId]);
-            
+            db.run(`UPDATE users SET coins = coins + ?, total_boxes = total_boxes + 1 WHERE id = ?`, [coinsReward, userId]);
             socket.emit('box_opened', { name: rewardName });
         });
     });
     
     socket.on('disconnect', () => {
-        if (socket.playerId) playerSockets.delete(socket.playerId);
-        console.log('❌ Игрок отключился:', socket.id);
+        if (socket.userId) userSockets.delete(socket.userId);
+        console.log('❌ Отключился:', socket.id);
     });
 });
 
