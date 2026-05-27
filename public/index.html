@@ -19,7 +19,7 @@
             padding: 20px;
         }
 
-        /* Плавающая аватарка (с ником снизу, как в Brawl Stars) */
+        /* Плавающая аватарка (с ником снизу) */
         .floating-avatar {
             position: fixed;
             top: 20px;
@@ -42,25 +42,22 @@
             justify-content: center;
             font-size: 35px;
             border: 2px solid #e94560;
-            position: relative;
-            transition: 0.2s;
         }
 
         .nickname-overlay {
             font-size: 11px;
             font-weight: bold;
             background: rgba(0,0,0,0.7);
-            padding: 2px 8px;
+            padding: 3px 8px;
             border-radius: 30px;
-            max-width: 80px;
+            max-width: 85px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            color: white;
             text-align: center;
         }
 
-        /* Модальное окно профиля */
+        /* Модальное окно профиля (без изменений) */
         .modal {
             display: none;
             position: fixed;
@@ -121,7 +118,6 @@
             border: 3px solid #e94560;
             cursor: pointer;
             overflow: hidden;
-            position: relative;
         }
 
         .avatar-large img {
@@ -289,13 +285,13 @@
     </style>
 </head>
 <body>
-    <!-- ПЛАВАЮЩАЯ АВАТАРКА С НИКНЕЙМОМ СНИЗУ -->
+    <!-- ПЛАВАЮЩАЯ АВАТАРКА С ЦВЕТНЫМ НИКНЕЙМОМ -->
     <div class="floating-avatar" onclick="openProfile()">
         <div class="mini-avatar" id="miniAvatar">🎮</div>
         <div class="nickname-overlay" id="miniNickname">-</div>
     </div>
 
-    <!-- ОСНОВНОЙ ПРОФИЛЬ (без изменений) -->
+    <!-- ПРОФИЛЬ (без изменений) -->
     <div id="profileModal" class="modal">
         <div class="profile-container">
             <button class="close-profile" onclick="closeProfile()">✖</button>
@@ -322,7 +318,7 @@
         </div>
     </div>
 
-    <!-- ВЫБОР АВАТАРКИ -->
+    <!-- ОКНА ВЫБОРА (аватарки, ника, цвета) — без изменений -->
     <div id="avatarPickerModal" class="avatar-modal">
         <div class="avatar-selector" id="avatarSelector">
             <div class="avatar-option" data-avatar="🎮">🎮</div>
@@ -337,7 +333,6 @@
         </div>
     </div>
 
-    <!-- СМЕНА НИКНЕЙМА -->
     <div id="nicknameEditorModal" class="nickname-modal">
         <div class="nickname-container">
             <h3>✏️ СМЕНИТЬ НИКНЕЙМ</h3>
@@ -347,7 +342,6 @@
         </div>
     </div>
 
-    <!-- ВЫБОР ЦВЕТА -->
     <div id="colorPickerModal" class="color-modal">
         <div class="color-container">
             <h3>🎨 ВЫБЕРИ ЦВЕТ НИКНЕЙМА</h3>
@@ -396,7 +390,10 @@
             if (!data.error) {
                 const avatar = data.avatar || '🎮';
                 const nickname = data.nickname;
+                const nicknameColor = data.nickname_color || '#ffffff';
+                // Обновляем мини-аватарку и её никнейм с цветом
                 document.getElementById('miniNickname').innerText = nickname.length > 10 ? nickname.slice(0, 9) + '…' : nickname;
+                document.getElementById('miniNickname').style.color = nicknameColor;
                 if (avatar.startsWith('http')) {
                     document.getElementById('miniAvatar').innerHTML = `<img src="${avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
                     document.getElementById('largeAvatar').innerHTML = `<img src="${avatar}" style="width:100%;height:100%;object-fit:cover;">`;
@@ -405,7 +402,7 @@
                     document.getElementById('largeAvatar').innerHTML = avatar;
                 }
                 document.getElementById('profileNick').innerText = nickname;
-                document.getElementById('profileNick').style.color = data.nickname_color || '#ffffff';
+                document.getElementById('profileNick').style.color = nicknameColor;
                 document.getElementById('profileTag').innerText = data.tag || '#----';
                 document.getElementById('profileCups').innerText = data.cups || 0;
                 document.getElementById('profileBoxes').innerText = data.total_boxes || 0;
