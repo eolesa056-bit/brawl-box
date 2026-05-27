@@ -7,49 +7,60 @@ const db = new sqlite3.Database('database.db');
 
 // Таблица игроков
 db.serialize(() => {
-    db.run(`CREATE TABLE IF NOT EXISTS users (
+    db.run(`CREATE TABLE IF NOT EXISTS players (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        login TEXT UNIQUE,
-        password TEXT,
-        nickname TEXT,
+        nickname TEXT UNIQUE,
         coins INTEGER DEFAULT 100,
         total_boxes INTEGER DEFAULT 0,
         is_admin INTEGER DEFAULT 0
     )`);
-    
-    // Админ
-    db.get(`SELECT * FROM users WHERE login = 'unity'`, (err, row) => {
-        if (!row) {
-            db.run(`INSERT INTO users (login, password, nickname, is_admin) VALUES (?, ?, ?, ?)`, 
-                ['unity', 'ALT F4', 'Администратор', 1]);
-        }
-    });
 });
 
 app.use(express.static('public'));
 app.use(express.json());
 
-// Регистрация
-app.post('/api/register', (req, res) => {
-    const { login, password, nickname } = req.body;
-    db.run(`INSERT INTO users (login, password, nickname) VALUES (?, ?, ?)`, [login, password, nickname], function(err) {
-        if (err) return res.json({ success: false, message: 'Логин занят' });
-        res.json({ success: true });
+// Проверка существования ника
+app.post('/api/check_nickname', (req, res) => {
+    const { nickname } = req.body;
+    db.get(`SELECT * FROM players WHERE nickname = ?`, [nickname], (err, player) => {
+        if (player) {
+            res.json({ exists: true, is_admin: player.is_admin === 1 });
+        } else {
+            res.json({ exists: false });
+        }
     });
 });
 
-// Вход
+// Вход/регистрация
 app.post('/api/login', (req, res) => {
-    const { login, password } = req.body;
-    db.get(`SELECT * FROM users WHERE login = ? AND password = ?`, [login, password], (err, user) => {
-        if (!user) return res.json({ success: false, message: 'Неверный логин или пароль' });
-        res.json({ success: true, user: { id: user.id, nickname: user.nickname, coins: user.coins, total_boxes: user.total_boxes, is_admin: user.is_admin } });
+    const { nickname, password } = req.body;
+    
+    db.get(`SELECT * FROM players WHERE nickname = ?`, [nickname], (err, player) => {
+        if (player) {
+            // Админ проверяет пароль
+            if (player.is_admin === 1) {
+                if (password === 'ALT F4') {
+                    res.json({ success: true, player: { id: player.id, nickname: player.nickname, coins: player.coins, total_boxes: player.total_boxes, is_admin: true } });
+                } else {
+                    res.json({ success: false, message: 'Неверный пароль администратора' });
+                }
+            } else {
+                // Обычный игрок — просто входим
+                res.json({ success: true, player: { id: player.id, nickname: player.nickname, coins: player.coins, total_boxes: player.total_boxes, is_admin: false } });
+            }
+        } else {
+            // Создаём нового игрока
+            db.run(`INSERT INTO players (nickname) VALUES (?)`, [nickname], function(err) {
+                if (err) return res.json({ success: false, message: 'Ошибка создания' });
+                res.json({ success: true, player: { id: this.lastID, nickname: nickname, coins: 100, total_boxes: 0, is_admin: false } });
+            });
+        }
     });
 });
 
-// Открыть ящик (простой GET-запрос)
-app.get('/api/open_box/:userId', (req, res) => {
-    const userId = req.params.userId;
+// Открыть ящик
+app.get('/api/open_box/:playerId', (req, res) => {
+    const playerId = req.params.playerId;
     
     const rand = Math.random() * 100;
     let reward = '';
@@ -60,10 +71,10 @@ app.get('/api/open_box/:userId', (req, res) => {
     else if (rand < 90) { reward = 'Обычный ящик'; }
     else { reward = 'РЕДКИЙ СКИН!'; }
     
-    db.run(`UPDATE users SET coins = coins + ?, total_boxes = total_boxes + 1 WHERE id = ?`, [coinsGain, userId]);
+    db.run(`UPDATE players SET coins = coins + ?, total_boxes = total_boxes + 1 WHERE id = ?`, [coinsGain, playerId]);
     
-    db.get(`SELECT coins, total_boxes FROM users WHERE id = ?`, [userId], (err, user) => {
-        res.json({ success: true, reward: reward, coins: user.coins, total_boxes: user.total_boxes });
+    db.get(`SELECT coins, total_boxes FROM players WHERE id = ?`, [playerId], (err, player) => {
+        res.json({ success: true, reward: reward, coins: player.coins, total_boxes: player.total_boxes });
     });
 });
 
