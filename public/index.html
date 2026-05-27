@@ -19,12 +19,17 @@
             padding: 20px;
         }
 
+        /* Плавающая аватарка (с ником снизу, как в Brawl Stars) */
         .floating-avatar {
             position: fixed;
             top: 20px;
             left: 20px;
             z-index: 100;
             cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
         }
 
         .mini-avatar {
@@ -37,8 +42,25 @@
             justify-content: center;
             font-size: 35px;
             border: 2px solid #e94560;
+            position: relative;
+            transition: 0.2s;
         }
 
+        .nickname-overlay {
+            font-size: 11px;
+            font-weight: bold;
+            background: rgba(0,0,0,0.7);
+            padding: 2px 8px;
+            border-radius: 30px;
+            max-width: 80px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: white;
+            text-align: center;
+        }
+
+        /* Модальное окно профиля */
         .modal {
             display: none;
             position: fixed;
@@ -99,6 +121,7 @@
             border: 3px solid #e94560;
             cursor: pointer;
             overflow: hidden;
+            position: relative;
         }
 
         .avatar-large img {
@@ -251,12 +274,6 @@
             transition: 0.2s;
         }
 
-        .color-circle.selected {
-            border: 4px solid #e94560;
-            box-shadow: 0 0 15px #e94560;
-            transform: scale(1.05);
-        }
-
         .btn {
             background: linear-gradient(135deg, #e94560, #b91c3c);
             padding: 12px 25px;
@@ -272,11 +289,13 @@
     </style>
 </head>
 <body>
+    <!-- ПЛАВАЮЩАЯ АВАТАРКА С НИКНЕЙМОМ СНИЗУ -->
     <div class="floating-avatar" onclick="openProfile()">
         <div class="mini-avatar" id="miniAvatar">🎮</div>
+        <div class="nickname-overlay" id="miniNickname">-</div>
     </div>
 
-    <!-- ОСНОВНОЙ ПРОФИЛЬ -->
+    <!-- ОСНОВНОЙ ПРОФИЛЬ (без изменений) -->
     <div id="profileModal" class="modal">
         <div class="profile-container">
             <button class="close-profile" onclick="closeProfile()">✖</button>
@@ -328,7 +347,7 @@
         </div>
     </div>
 
-    <!-- ВЫБОР ЦВЕТА (моментальная смена) -->
+    <!-- ВЫБОР ЦВЕТА -->
     <div id="colorPickerModal" class="color-modal">
         <div class="color-container">
             <h3>🎨 ВЫБЕРИ ЦВЕТ НИКНЕЙМА</h3>
@@ -376,6 +395,8 @@
             const data = await res.json();
             if (!data.error) {
                 const avatar = data.avatar || '🎮';
+                const nickname = data.nickname;
+                document.getElementById('miniNickname').innerText = nickname.length > 10 ? nickname.slice(0, 9) + '…' : nickname;
                 if (avatar.startsWith('http')) {
                     document.getElementById('miniAvatar').innerHTML = `<img src="${avatar}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
                     document.getElementById('largeAvatar').innerHTML = `<img src="${avatar}" style="width:100%;height:100%;object-fit:cover;">`;
@@ -383,7 +404,7 @@
                     document.getElementById('miniAvatar').innerText = avatar;
                     document.getElementById('largeAvatar').innerHTML = avatar;
                 }
-                document.getElementById('profileNick').innerText = data.nickname;
+                document.getElementById('profileNick').innerText = nickname;
                 document.getElementById('profileNick').style.color = data.nickname_color || '#ffffff';
                 document.getElementById('profileTag').innerText = data.tag || '#----';
                 document.getElementById('profileCups').innerText = data.cups || 0;
@@ -451,13 +472,12 @@
                     }
                 });
 
-                // Моментальная смена цвета при клике
                 document.querySelectorAll('.color-circle').forEach(circle => {
                     const color = circle.getAttribute('data-color');
                     circle.onclick = async () => {
                         await changeColorOnly(color);
                         closeColorPicker();
-                        openProfile(); // обновляем профиль, чтобы показать новый цвет
+                        openProfile();
                     };
                 });
             } else document.getElementById('authMessage').innerText = data.message;
