@@ -9,6 +9,27 @@ const io = socketIo(server);
 
 const port = process.env.PORT || 3000;
 
+// Простая защита паролем (только для админки)
+const adminPassword = 'admin123';  // Смени на свой пароль!
+
+// Проверка пароля для админки
+app.use('/admin.html', (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+        res.setHeader('WWW-Authenticate', 'Basic realm="Admin Panel"');
+        return res.status(401).send('Требуется пароль');
+    }
+    
+    const base64 = authHeader.split(' ')[1];
+    const [login, password] = Buffer.from(base64, 'base64').toString().split(':');
+    
+    if (password !== adminPassword) {
+        res.setHeader('WWW-Authenticate', 'Basic realm="Admin Panel"');
+        return res.status(401).send('Неверный пароль');
+    }
+    next();
+});
+
 // База данных
 const db = new sqlite3.Database('database.db');
 
