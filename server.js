@@ -76,15 +76,15 @@ app.get('/api/users', (req, res) => {
     });
 });
 
-// Админ-API: бан (МГНОВЕННЫЙ, без таймера)
+// Админ-API: бан (МГНОВЕННЫЙ, с причиной)
 app.post('/api/ban', (req, res) => {
     const { userId, reason } = req.body;
     db.run(`UPDATE users SET is_banned = 1, ban_reason = ? WHERE id = ?`, [reason, userId]);
     
-    // Мгновенный кик забаненного игрока
+    // Мгновенный кик забаненного игрока с указанием причины
     const userSocket = userSockets.get(userId);
     if (userSocket) {
-        userSocket.emit('session_terminated');
+        userSocket.emit('session_terminated', { reason: reason });
         userSocket.disconnect(true);
     }
     res.json({ success: true });
@@ -185,7 +185,7 @@ io.on('connection', (socket) => {
         
         db.get(`SELECT is_banned FROM users WHERE id = ?`, [userId], (err, user) => {
             if (user && user.is_banned) {
-                socket.emit('session_terminated');
+                socket.emit('session_terminated', { reason: user.ban_reason || 'Нарушение правил' });
                 socket.disconnect(true);
                 return;
             }
