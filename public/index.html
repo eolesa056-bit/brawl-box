@@ -15,90 +15,132 @@
             background: #e94560;
             color: white;
             border: none;
-            padding: 15px 30px;
-            font-size: 18px;
+            padding: 12px 25px;
+            font-size: 16px;
             margin: 10px;
             border-radius: 10px;
             cursor: pointer;
         }
-        button:hover {
-            background: #ff6b8b;
+        input {
+            padding: 10px;
+            margin: 5px;
+            border-radius: 8px;
+            border: none;
+            width: 200px;
         }
-        #box {
+        #authBox, #gameBox {
             background: #16213e;
             padding: 20px;
             border-radius: 20px;
-            margin: 20px auto;
             max-width: 400px;
+            margin: 20px auto;
         }
         .reward {
             font-size: 24px;
             margin: 10px 0;
             color: #f9a826;
         }
-        #stats {
-            background: #0f3460;
-            padding: 15px;
-            border-radius: 15px;
-            max-width: 300px;
-            margin: 20px auto;
+        .admin-link {
+            margin-top: 10px;
+            font-size: 12px;
+        }
+        .admin-link a {
+            color: #e94560;
         }
     </style>
 </head>
 <body>
     <h1>🎁 Brawl Box Simulator</h1>
     
-    <div id="game">
-        <div id="box">
-            <h2>📦 Ящик</h2>
-            <button id="openBtn" disabled>🔓 ОТКРЫТЬ ЯЩИК</button>
-            <div id="reward" class="reward"></div>
+    <div id="authBox">
+        <h2>🔐 Вход / Регистрация</h2>
+        <input type="text" id="login" placeholder="Логин"><br>
+        <input type="password" id="password" placeholder="Пароль"><br>
+        <input type="text" id="nickname" placeholder="Ник (для регистрации)"><br>
+        <button onclick="register()">📝 Регистрация</button>
+        <button onclick="login()">🔓 Вход</button>
+        <div id="authMessage"></div>
+    </div>
+    
+    <div id="gameBox" style="display:none">
+        <div id="adminPanel" style="display:none; background:#0f3460; padding:10px; border-radius:10px; margin-bottom:20px">
+            <h3>👑 Админ-панель</h3>
+            <button onclick="location.href='/admin.html'">📋 Управление игроками</button>
         </div>
-        
+        <h2>📦 Ящик</h2>
+        <button id="openBtn">🔓 ОТКРЫТЬ ЯЩИК</button>
+        <div id="reward" class="reward"></div>
         <div id="stats">
-            <h3>📊 Статистика</h3>
             <p>💰 Монет: <span id="coins">0</span></p>
             <p>🎁 Открыто ящиков: <span id="boxes">0</span></p>
-            <p>🏷️ Тег: <span id="tag">-</span></p>
+            <p>👤 Игрок: <span id="nicknameDisplay"></span></p>
         </div>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
-        let playerId = null;
+        let currentUserId = null;
         
-        socket.on('connect', () => {
-            const nickname = prompt("Введи свой ник:", "Игрок");
-            if (nickname) {
-                socket.emit('register', nickname, (response) => {
-                    if (response.success) {
-                        playerId = response.secret_id;
-                        document.getElementById('tag').innerText = response.visible_tag;
-                        document.getElementById('openBtn').disabled = false;
-                        updateStats();
-                    } else {
-                        alert("Ошибка: " + response.message);
-                    }
-                });
+        async function register() {
+            const login = document.getElementById('login').value;
+            const password = document.getElementById('password').value;
+            const nickname = document.getElementById('nickname').value;
+            if (!login || !password || !nickname) {
+                alert('Заполни все поля');
+                return;
             }
-        });
+            const res = await fetch('/api/register', {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({login, password, nickname})
+            });
+            const data = await res.json();
+            if (data.success) {
+                alert('Регистрация успешна! Теперь войди.');
+            } else {
+                document.getElementById('authMessage').innerText = data.message;
+            }
+        }
         
-        function updateStats() {
-            if (!playerId) return;
-            fetch('/api/player/' + playerId)
-                .then(res => res.json())
-                .then(data => {
-                    if (!data.error) {
-                        document.getElementById('coins').innerText = data.coins;
-                        document.getElementById('boxes').innerText = data.total_boxes;
-                    }
+        async function login() {
+            const login = document.getElementById('login').value;
+            const password = document.getElementById('password').value;
+            const res = await fetch('/api/login', {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({login, password})
+            });
+            const data = await res.json();
+            if (data.success) {
+                currentUserId = data.user.id;
+                document.getElementById('nicknameDisplay').innerText = data.user.nickname;
+                document.getElementById('authBox').style.display = 'none';
+                document.getElementById('gameBox').style.display = 'block';
+                if (data.user.is_admin) {
+                    document.getElementById('adminPanel').style.display = 'block';
+                }
+                socket.emit('auth', currentUserId, (resp) => {
+                    if (!resp.success) alert('Ошибка подключения');
                 });
+                updateStats();
+            } else {
+                document.getElementById('authMessage').innerText = data.message;
+            }
+        }
+        
+        async function updateStats() {
+            if (!currentUserId) return;
+            const res = await fetch('/api/user/' + currentUserId);
+            const data = await res.json();
+            if (!data.error) {
+                document.getElementById('coins').innerText = data.coins;
+                document.getElementById('boxes').innerText = data.total_boxes;
+            }
         }
         
         document.getElementById('openBtn').onclick = () => {
-            if (playerId) socket.emit('open_box');
-            else alert("Подожди, идёт подключение...");
+            if (currentUserId) socket.emit('open_box');
         };
         
         socket.on('box_opened', (reward) => {
